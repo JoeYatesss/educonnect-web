@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -18,26 +18,41 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
+  // Debug: removed form watching - too noisy and security risk
+  // Only log on submit now
+
   const onSubmit = async (data: LoginFormData) => {
+    console.log('=== LOGIN onSubmit FUNCTION CALLED ===');
+    console.log('Login data:', {
+      email: data.email,
+      password: '***REDACTED***',
+    });
+
     setError(null);
+    console.log('Setting loading to true...');
     setLoading(true);
+    console.log('Loading state set to:', true);
 
     try {
+      console.log('Calling signIn...');
       await signIn(data.email, data.password);
+      console.log('signIn completed successfully!');
 
-      // Wait a moment for the auth context to update with user profile
-      // The AuthContext will automatically fetch the teacher profile
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 500);
+      console.log('About to redirect to /dashboard...');
+      router.push('/dashboard');
+      console.log('router.push called');
     } catch (err: any) {
+      console.error('Login error:', err);
       setError(err.message || 'Failed to sign in. Please check your credentials.');
       setLoading(false);
     }
+    // Note: We intentionally don't set loading to false on success
+    // Let the redirect happen while still showing loading state
   };
 
   return (
@@ -57,15 +72,27 @@ export default function LoginPage() {
 
         <form
           className="mt-8 space-y-6"
-          method="post"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit(onSubmit)(e);
-          }}
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
         >
           {error && (
             <div className="rounded-md bg-red-50 p-4">
               <p className="text-sm text-red-800">{error}</p>
+            </div>
+          )}
+
+          {Object.keys(errors).length > 0 && (
+            <div className="rounded-md bg-yellow-50 p-4">
+              <h3 className="text-sm font-medium text-yellow-800 mb-2">
+                Please fix the following errors:
+              </h3>
+              <ul className="list-disc list-inside text-sm text-yellow-700">
+                {Object.entries(errors).map(([field, error]) => (
+                  <li key={field}>
+                    <strong className="capitalize">{field}:</strong> {error?.message}
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
 
@@ -124,6 +151,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
+              onClick={() => console.log('Login button clicked, loading:', loading, 'disabled:', loading, 'errors:', Object.keys(errors).length)}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Signing in...' : 'Sign in'}

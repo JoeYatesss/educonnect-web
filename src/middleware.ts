@@ -1,0 +1,108 @@
+import { createServerClient } from '@supabase/ssr';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+export async function middleware(req: NextRequest) {
+  const res = NextResponse.next();
+  const { pathname } = req.nextUrl;
+
+  // Marketing pages that don't require authentication
+  const marketingRoutes = ['/integration-guide', '/language-course', '/blog'];
+  const isMarketingRoute = marketingRoutes.some(route => pathname.startsWith(route));
+
+  if (isMarketingRoute) {
+    return res;
+  }
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            res.cookies.set(name, value, options);
+          });
+        },
+      },
+    }
+  );
+
+  // Get authenticated user (secure - verifies with auth server)
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  // Public routes (accessible without auth)
+  const publicRoutes = ['/', '/login', '/signup', '/forgot-password', '/reset-password', '/auth/callback'];
+  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+
+  // Protected routes that require authentication
+  const isTeacherRoute = pathname.startsWith('/dashboard') || pathname.startsWith('/profile') || pathname.startsWith('/matches') || pathname.startsWith('/payment');
+  const isAdminRoute = pathname.startsWith('/admin');
+
+  // If not logged in and trying to access protected route
+  if (!session?.user && (isTeacherRoute || isAdminRoute)) {
+    const redirectUrl = new URL('/login', req.url);
+    redirectUrl.searchParams.set('redirectTo', pathname);
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  // If logged in, check user type and route access via backend API
+  if (session?.access_token) {
+    try {
+      // Call backend API to get user profile and role
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const profileResponse = await fetch(`${API_URL}/api/v1/auth/me`, {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (profileResponse.ok) {
+        const { teacher, admin } = await profileResponse.json();
+
+        // Teacher trying to access admin routes
+        if (teacher && isAdminRoute) {
+          return NextResponse.redirect(new URL('/dashboard', req.url));
+        }
+
+        // Admin trying to access teacher routes
+        if (admin && isTeacherRoute) {
+          return NextResponse.redirect(new URL('/admin', req.url));
+        }
+
+        // Redirect unpaid teachers trying to access matches
+        if (teacher && !teacher.has_paid && pathname.startsWith('/matches')) {
+          return NextResponse.redirect(new URL('/payment', req.url));
+        }
+
+        // Redirect logged-in users away from auth pages
+        if (isPublicRoute && pathname !== '/') {
+          if (teacher) {
+            return NextResponse.redirect(new URL('/dashboard', req.url));
+          }
+          if (admin) {
+            return NextResponse.redirect(new URL('/admin', req.url));
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user profile in middleware:', error);
+      // On error, allow request to proceed
+      // The page itself will handle authorization
+    }
+  }
+
+  return res;
+}
+
+export const config = {
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|images|audio).*)',
+  ],
+};

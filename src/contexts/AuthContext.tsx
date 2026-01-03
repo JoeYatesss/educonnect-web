@@ -1,9 +1,10 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useMemo } from 'react';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { apiClient } from '@/lib/api/client';
 import type { AuthContextType, Teacher, AdminUser } from '@/types';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -14,40 +15,57 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
-    // Get initial session
-    const getSession = async () => {
+    // Get initial user (secure - verifies with auth server)
+    const getUser = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        setUser(session?.user ?? null);
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
 
-        if (session?.user) {
-          await fetchUserProfile(session.user.id);
+        if (user) {
+          await fetchUserProfile(user.id);
         }
       } catch (error) {
-        console.error('Error getting session:', error);
+        console.error('Error getting user:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    getSession();
+    getUser();
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      async (event, session) => {
+        console.log('[AuthContext] onAuthStateChange triggered:', event);
+
+        // Set user immediately
         setUser(session?.user ?? null);
 
         if (session?.user) {
-          await fetchUserProfile(session.user.id);
+          // Don't block on profile fetching - let it happen in background
+          // This allows login to redirect immediately
+          console.log('[AuthContext] User signed in, fetching profile in background...');
+
+          // Fetch profile asynchronously without blocking
+          setTimeout(async () => {
+            try {
+              await fetchUserProfile(session.user.id);
+            } catch (error) {
+              console.error('[AuthContext] Error fetching profile:', error);
+            }
+          }, 500); // Wait 500ms to ensure session is fully stored
         } else {
           setTeacher(null);
           setAdminUser(null);
         }
 
-        setLoading(false);
+        // Don't set loading during sign in events - let the page handle its own loading
+        if (event === 'INITIAL_SESSION') {
+          setLoading(false);
+        }
       }
     );
 
@@ -55,37 +73,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [supabase]);
 
   const fetchUserProfile = async (userId: string) => {
+    console.log('[AuthContext] Fetching profile for user:', userId);
+
     try {
-      // Check if user is a teacher
-      const { data: teacherData, error: teacherError } = await supabase
-        .from('teachers')
-        .select('*')
-        .eq('user_id', userId)
-        .single();
+      // Fetch user profile from backend API (includes teacher and admin data)
+      console.log('[AuthContext] Calling apiClient.getCurrentUserProfile()...');
+      const profileData = await apiClient.getCurrentUserProfile();
+      console.log('[AuthContext] User profile loaded from API:', profileData);
 
-      if (teacherData && !teacherError) {
-        setTeacher(teacherData);
+      if (profileData.teacher) {
+        setTeacher(profileData.teacher);
         setAdminUser(null);
-        return;
-      }
-
-      // Check if user is an admin
-      const { data: adminData, error: adminError } = await supabase
-        .from('admin_users')
-        .select('*')
-        .eq('id', userId)
-        .single();
-
-      if (adminData && !adminError) {
-        setAdminUser(adminData);
+        console.log('Teacher profile loaded');
+      } else if (profileData.admin) {
+        setAdminUser(profileData.admin);
         setTeacher(null);
-        return;
+        console.log('Admin profile loaded');
+      } else {
+        // User exists in auth but not in teachers or admin_users
+        console.warn('User not found in teachers or admin_users tables');
+        setTeacher(null);
+        setAdminUser(null);
       }
-
-      // User exists in auth but not in teachers or admin_users
-      console.warn('User not found in teachers or admin_users tables');
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
+    } catch (error: any) {
+      console.error('Failed to fetch user profile:', error.message);
+      setTeacher(null);
+      setAdminUser(null);
     }
   };
 
@@ -102,12 +115,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
+    console.log('[AuthContext] signIn called');
+
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    if (error) throw error;
+    console.log('[AuthContext] signInWithPassword result:', {
+      hasUser: !!data?.user,
+      hasSession: !!data?.session,
+      error: error?.message
+    });
+
+    if (error) {
+      // Provide helpful error messages
+      if (error.message.includes('Email not confirmed')) {
+        throw new Error('Please verify your email before signing in. Check your inbox for the verification link.');
+      }
+      if (error.message.includes('Invalid login credentials')) {
+        throw new Error('Invalid email or password. Please check your credentials and try again.');
+      }
+      throw error;
+    }
+
+    console.log('[AuthContext] signIn completed successfully, returning...');
+    // Session is automatically stored by Supabase
+    // The onAuthStateChange listener will handle fetching the profile
+    // Just return and let the login page redirect
   };
 
   const signOut = async () => {

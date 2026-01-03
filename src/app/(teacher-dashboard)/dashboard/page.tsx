@@ -22,6 +22,12 @@ function DashboardContent() {
     }
   }, [searchParams]);
 
+  useEffect(() => {
+    if (!authLoading && !teacher) {
+      router.push('/login');
+    }
+  }, [authLoading, teacher, router]);
+
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -31,11 +37,11 @@ function DashboardContent() {
   }
 
   if (!teacher) {
-    router.push('/login');
     return null;
   }
 
-  const profileCompleteness = calculateProfileCompleteness(teacher);
+  // Use backend-calculated profile completeness (defaults to 0 if not available)
+  const profileCompleteness = teacher.profile_completeness ?? 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -272,22 +278,4 @@ export default function TeacherDashboard() {
       <DashboardContent />
     </Suspense>
   );
-}
-
-function calculateProfileCompleteness(teacher: any): number {
-  const fields = [
-    teacher.phone,
-    teacher.nationality,
-    teacher.years_experience,
-    teacher.education,
-    teacher.teaching_experience,
-    teacher.subject_specialty?.length,
-    teacher.preferred_location?.length,
-    teacher.preferred_age_group?.length,
-    teacher.cv_path,
-    teacher.headshot_photo_path,
-  ];
-
-  const completed = fields.filter((field) => field !== null && field !== undefined).length;
-  return Math.round((completed / fields.length) * 100);
 }

@@ -18,7 +18,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} ${montserrat.variable} font-sans`}>
+      <body
+        className={`${inter.variable} ${playfair.variable} ${montserrat.variable} font-sans`}
+        suppressHydrationWarning
+      >
         {children}
       </body>
     </html>
