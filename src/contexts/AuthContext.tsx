@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, useMemo } from 'react';
+import { createContext, useContext, useEffect, useState, useMemo, useRef } from 'react';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
@@ -14,91 +14,128 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [teacher, setTeacher] = useState<Teacher | null>(null);
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileError, setProfileError] = useState<string | null>(null);
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
 
+  // Track if we're currently fetching to prevent duplicates
+  const fetchingRef = useRef(false);
+
   useEffect(() => {
-    // Get initial user (secure - verifies with auth server)
-    const getUser = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        setUser(user);
-
-        if (user) {
-          await fetchUserProfile(user.id);
-        }
-      } catch (error) {
-        console.error('Error getting user:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getUser();
+    console.log('[AuthContext] useEffect MOUNTED - setting up auth listener');
+    let mounted = true;
+    let profileFetched = false;
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('[AuthContext] onAuthStateChange triggered:', event);
+        console.log('[AuthContext] onAuthStateChange triggered:', event, 'Session exists:', !!session);
 
-        // Set user immediately
-        setUser(session?.user ?? null);
+        if (!mounted) return;
 
-        if (session?.user) {
-          // Don't block on profile fetching - let it happen in background
-          // This allows login to redirect immediately
-          console.log('[AuthContext] User signed in, fetching profile in background...');
-
-          // Fetch profile asynchronously without blocking
-          setTimeout(async () => {
-            try {
-              await fetchUserProfile(session.user.id);
-            } catch (error) {
-              console.error('[AuthContext] Error fetching profile:', error);
-            }
-          }, 500); // Wait 500ms to ensure session is fully stored
-        } else {
+        // Handle sign out / no session
+        if (!session?.user) {
+          setUser(null);
           setTeacher(null);
           setAdminUser(null);
+          setProfileError(null);
+          setLoading(false);
+          profileFetched = false;
+          return;
         }
 
-        // Don't set loading during sign in events - let the page handle its own loading
+        // Set user immediately
+        setUser(session.user);
+
         if (event === 'INITIAL_SESSION') {
+          // On app load, fetch profile and then set loading to false
+          if (!profileFetched) {
+            profileFetched = true;
+            console.log('[AuthContext] INITIAL_SESSION - fetching profile');
+            fetchUserProfile(session.user.id)
+              .catch(error => {
+                console.error('[AuthContext] Initial profile fetch failed:', error);
+              })
+              .finally(() => {
+                if (mounted) {
+                  setLoading(false);
+                }
+              });
+          }
+        } else if (event === 'SIGNED_IN') {
+          // For explicit sign-in, profile is fetched synchronously by signIn()
+          // Don't fetch here to avoid duplicate calls
+          console.log('[AuthContext] SIGNED_IN event - profile already fetched by signIn()');
+          setLoading(false);
+        } else if (event === 'TOKEN_REFRESHED') {
+          // Token refreshed, don't fetch profile again
+          console.log('[AuthContext] TOKEN_REFRESHED event - keeping existing profile');
+        } else {
+          // For other events, just set loading false
           setLoading(false);
         }
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      console.log('[AuthContext] useEffect CLEANUP - unsubscribing auth listener');
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, [supabase]);
 
-  const fetchUserProfile = async (userId: string) => {
+  const fetchUserProfile = async (userId: string): Promise<void> => {
+    // Prevent duplicate fetches
+    if (fetchingRef.current) {
+      console.log('[AuthContext] Already fetching profile, skipping...');
+      return;
+    }
+
+    fetchingRef.current = true;
     console.log('[AuthContext] Fetching profile for user:', userId);
+    setProfileLoading(true);
+    setProfileError(null);
 
     try {
-      // Fetch user profile from backend API (includes teacher and admin data)
-      console.log('[AuthContext] Calling apiClient.getCurrentUserProfile()...');
       const profileData = await apiClient.getCurrentUserProfile();
-      console.log('[AuthContext] User profile loaded from API:', profileData);
+      console.log('[AuthContext] Profile data received:', profileData);
 
       if (profileData.teacher) {
         setTeacher(profileData.teacher);
         setAdminUser(null);
-        console.log('Teacher profile loaded');
+        console.log('[AuthContext] Teacher profile loaded');
       } else if (profileData.admin) {
         setAdminUser(profileData.admin);
         setTeacher(null);
-        console.log('Admin profile loaded');
+        console.log('[AuthContext] Admin profile loaded');
       } else {
-        // User exists in auth but not in teachers or admin_users
-        console.warn('User not found in teachers or admin_users tables');
+        // User exists in auth but not in teachers/admin tables
+        console.warn('[AuthContext] User authenticated but no profile found');
         setTeacher(null);
         setAdminUser(null);
+        setProfileError('Profile not found. Please complete your signup.');
+        throw new Error('Profile not found');
       }
     } catch (error: any) {
-      console.error('Failed to fetch user profile:', error.message);
+      console.error('[AuthContext] Profile fetch error:', error);
+
+      // Handle different error types
+      if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+        setProfileError('Session expired. Please sign in again.');
+        await signOut();
+      } else if (error.message.includes('403') || error.message.includes('Forbidden')) {
+        setProfileError('Access denied. Please contact support.');
+      } else {
+        setProfileError('Failed to load profile. Please try again.');
+      }
+
       setTeacher(null);
       setAdminUser(null);
+      throw error; // Re-throw so signIn can catch it
+    } finally {
+      setProfileLoading(false);
+      fetchingRef.current = false;
     }
   };
 
@@ -139,10 +176,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       throw error;
     }
 
-    console.log('[AuthContext] signIn completed successfully, returning...');
-    // Session is automatically stored by Supabase
-    // The onAuthStateChange listener will handle fetching the profile
-    // Just return and let the login page redirect
+    if (!data.user) {
+      throw new Error('Authentication failed - no user returned');
+    }
+
+    // CRITICAL: Fetch profile synchronously BEFORE returning
+    // This ensures profile is loaded when login page redirects to dashboard
+    console.log('[AuthContext] User authenticated, fetching profile synchronously...');
+    await fetchUserProfile(data.user.id);
+    console.log('[AuthContext] signIn completed successfully with profile loaded');
   };
 
   const signOut = async () => {
@@ -175,6 +217,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     teacher,
     adminUser,
     loading,
+    profileLoading,
+    profileError,
     signUp,
     signIn,
     signOut,

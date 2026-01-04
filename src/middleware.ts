@@ -51,51 +51,10 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  // If logged in, check user type and route access via backend API
-  if (session?.access_token) {
-    try {
-      // Call backend API to get user profile and role
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-      const profileResponse = await fetch(`${API_URL}/api/v1/auth/me`, {
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (profileResponse.ok) {
-        const { teacher, admin } = await profileResponse.json();
-
-        // Teacher trying to access admin routes
-        if (teacher && isAdminRoute) {
-          return NextResponse.redirect(new URL('/dashboard', req.url));
-        }
-
-        // Admin trying to access teacher routes
-        if (admin && isTeacherRoute) {
-          return NextResponse.redirect(new URL('/admin', req.url));
-        }
-
-        // Redirect unpaid teachers trying to access matches
-        if (teacher && !teacher.has_paid && pathname.startsWith('/matches')) {
-          return NextResponse.redirect(new URL('/payment', req.url));
-        }
-
-        // Redirect logged-in users away from auth pages
-        if (isPublicRoute && pathname !== '/') {
-          if (teacher) {
-            return NextResponse.redirect(new URL('/dashboard', req.url));
-          }
-          if (admin) {
-            return NextResponse.redirect(new URL('/admin', req.url));
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching user profile in middleware:', error);
-      // On error, allow request to proceed
-      // The page itself will handle authorization
-    }
+  // If logged in and on login/signup page → redirect to dashboard
+  // (Dashboard will handle redirecting to correct role-based page)
+  if (session?.user && (pathname === '/login' || pathname === '/signup')) {
+    return NextResponse.redirect(new URL('/dashboard', req.url));
   }
 
   return res;

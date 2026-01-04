@@ -1,43 +1,56 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { useState } from 'react';
+import { X, ChevronDown, ChevronRight } from 'lucide-react';
 import { guideSections } from '@/data/integration-guide';
 
 interface GuideSidebarProps {
-  activeSection?: string;
+  activeSection: string;
+  activeSubsection: string;
+  onSectionChange: (sectionId: string) => void;
+  onSubsectionChange: (subsectionId: string) => void;
 }
 
-export default function GuideSidebar({ activeSection }: GuideSidebarProps) {
+export default function GuideSidebar({
+  activeSection,
+  activeSubsection,
+  onSectionChange,
+  onSubsectionChange
+}: GuideSidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeId, setActiveId] = useState(activeSection || '');
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(
+    new Set() // Start with all sections collapsed
+  );
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = document.querySelectorAll('[data-section-id]');
-      let current = '';
+  const handleSectionClick = (sectionId: string) => {
+    onSectionChange(sectionId);
+    // Expand the section when it's clicked
+    setExpandedSections(prev => {
+      const newSet = new Set(prev);
+      newSet.add(sectionId);
+      return newSet;
+    });
+  };
 
-      sections.forEach((section) => {
-        const sectionTop = (section as HTMLElement).offsetTop;
-        const sectionHeight = (section as HTMLElement).clientHeight;
-        if (window.pageYOffset >= sectionTop - 200) {
-          current = section.getAttribute('data-section-id') || '';
-        }
-      });
-
-      if (current) {
-        setActiveId(current);
+  const toggleSection = (sectionId: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setExpandedSections(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(sectionId)) {
+        newSet.delete(sectionId);
+      } else {
+        newSet.add(sectionId);
       }
-    };
+      return newSet;
+    });
+  };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
+  const handleSubsectionClick = (subsectionId: string) => {
+    onSubsectionChange(subsectionId);
+    // Scroll to the subsection
+    const element = document.getElementById(subsectionId);
     if (element) {
-      const offset = 100; // Account for fixed header
+      const offset = 100;
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = element.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
@@ -47,8 +60,8 @@ export default function GuideSidebar({ activeSection }: GuideSidebarProps) {
         top: offsetPosition,
         behavior: 'smooth',
       });
-      setIsOpen(false);
     }
+    setIsOpen(false); // Close mobile menu
   };
 
   return (
@@ -87,29 +100,54 @@ export default function GuideSidebar({ activeSection }: GuideSidebarProps) {
             <X className="w-6 h-6" />
           </button>
 
-          {guideSections.map((section) => (
-            <div key={section.id} className="mb-6">
-              <div className="flex items-center gap-2 font-semibold text-gray-900 mb-3">
-                <span className="text-2xl">{section.emoji}</span>
-                <span>{section.title}</span>
-              </div>
-              <div className="space-y-1 ml-8">
-                {section.subsections.map((subsection) => (
+          {guideSections.map((section) => {
+            const isExpanded = expandedSections.has(section.id);
+            const isActive = activeSection === section.id;
+            return (
+              <div key={section.id} className="mb-4">
+                <div
+                  className={`flex items-center gap-2 w-full font-semibold transition-colors py-2 rounded-md ${
+                    isActive ? 'bg-brand-red text-white' : 'text-gray-900'
+                  }`}
+                >
                   <button
-                    key={subsection.id}
-                    onClick={() => scrollToSection(subsection.id)}
-                    className={`block w-full text-left py-2 px-3 rounded-md text-sm transition-colors ${
-                      activeId === subsection.id
-                        ? 'bg-gray-900 text-white font-medium'
-                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                    }`}
+                    onClick={(e) => toggleSection(section.id, e)}
+                    className="p-1 hover:bg-gray-100 hover:bg-opacity-20 rounded"
                   >
-                    {subsection.title}
+                    {isExpanded ? (
+                      <ChevronDown className="w-5 h-5" />
+                    ) : (
+                      <ChevronRight className="w-5 h-5" />
+                    )}
                   </button>
-                ))}
+                  <button
+                    onClick={() => handleSectionClick(section.id)}
+                    className="flex items-center gap-2 flex-1 hover:opacity-80"
+                  >
+                    <span className="text-2xl">{section.emoji}</span>
+                    <span className="text-sm">{section.title}</span>
+                  </button>
+                </div>
+                {isExpanded && (
+                  <div className="space-y-1 ml-8 mt-2">
+                    {section.subsections.map((subsection) => (
+                      <button
+                        key={subsection.id}
+                        onClick={() => handleSubsectionClick(subsection.id)}
+                        className={`block w-full text-left py-2 px-3 rounded-md text-sm transition-colors ${
+                          activeSubsection === subsection.id
+                            ? 'bg-gray-900 text-white font-medium'
+                            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                        }`}
+                      >
+                        {subsection.title}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </nav>
       </aside>
     </>

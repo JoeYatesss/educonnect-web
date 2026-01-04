@@ -9,7 +9,7 @@ import AnonymousSchoolMatches from '@/components/dashboard/AnonymousSchoolMatche
 import Link from 'next/link';
 
 function DashboardContent() {
-  const { teacher, user, loading: authLoading } = useAuth();
+  const { teacher, adminUser, user, loading: authLoading, profileError, signOut } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
@@ -23,19 +23,57 @@ function DashboardContent() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (!authLoading && !teacher) {
+    // Only redirect if done loading, no user, and no teacher
+    if (!authLoading && !user && !teacher) {
       router.push('/login');
     }
-  }, [authLoading, teacher, router]);
+  }, [authLoading, user, teacher, router]);
 
+  // Redirect admin users to /admin
+  useEffect(() => {
+    if (!authLoading && adminUser && !teacher) {
+      router.push('/admin');
+    }
+  }, [authLoading, adminUser, teacher, router]);
+
+  // Show loading spinner
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto" />
+          <p className="mt-4 text-gray-600">Loading your dashboard...</p>
+        </div>
       </div>
     );
   }
 
+  // Show error if profile failed to load
+  if (profileError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
+          <div className="text-red-600 mb-4">
+            <svg className="h-12 w-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            Unable to Load Profile
+          </h2>
+          <p className="text-gray-600 mb-6">{profileError}</p>
+          <button
+            onClick={() => router.push('/login')}
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+          >
+            Return to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect handled by useEffect
   if (!teacher) {
     return null;
   }
@@ -65,8 +103,12 @@ function DashboardContent() {
                 Edit Profile
               </Link>
               <button
-                onClick={() => {
-                  /* TODO: Implement signOut */
+                onClick={async () => {
+                  try {
+                    await signOut();
+                  } catch (error) {
+                    console.error('Sign out error:', error);
+                  }
                 }}
                 className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
               >

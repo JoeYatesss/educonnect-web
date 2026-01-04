@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Metadata } from 'next';
 import CourseNav from '@/components/marketing/language/CourseNav';
 import VocabularyTable from '@/components/marketing/language/VocabularyTable';
@@ -8,25 +8,6 @@ import { courseModules } from '@/data/language-course';
 
 export default function LanguageCoursePage() {
   const [activeModule, setActiveModule] = useState(courseModules[0].id);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const modules = document.querySelectorAll('[data-module-id]');
-      let current = courseModules[0].id;
-
-      modules.forEach((module) => {
-        const moduleTop = (module as HTMLElement).offsetTop;
-        if (window.pageYOffset >= moduleTop - 150) {
-          current = module.getAttribute('data-module-id') || current;
-        }
-      });
-
-      setActiveModule(current);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <div>
@@ -50,14 +31,10 @@ export default function LanguageCoursePage() {
 
       {/* Course Modules */}
       <div className="container mx-auto px-6 py-12">
-        <div className="space-y-16">
-          {courseModules.map((module) => (
-            <section
-              key={module.id}
-              id={module.id}
-              data-module-id={module.id}
-              className="scroll-mt-32"
-            >
+        {courseModules
+          .filter(module => module.id === activeModule)
+          .map((module) => (
+            <div key={module.id}>
               {/* Module Header */}
               <div className="mb-8 bg-white p-8 rounded-xl border border-gray-200">
                 <div className="flex items-center gap-3 mb-4">
@@ -84,9 +61,8 @@ export default function LanguageCoursePage() {
                   </div>
                 ))}
               </div>
-            </section>
+            </div>
           ))}
-        </div>
 
         {/* Footer CTA */}
         <div className="mt-20 bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl p-8 text-center text-white">

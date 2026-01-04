@@ -29,6 +29,7 @@ export interface Teacher {
   stripe_customer_id: string | null;
   created_at: string;
   updated_at: string;
+  profile_completeness?: number;
 }
 
 export type ApplicationStatus =
@@ -55,6 +56,8 @@ export interface AuthContextType {
   teacher: Teacher | null;
   adminUser: AdminUser | null;
   loading: boolean;
+  profileLoading: boolean;
+  profileError: string | null;
   signUp: (email: string, password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
