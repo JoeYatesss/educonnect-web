@@ -1,6 +1,12 @@
 import { createClient } from '@/lib/supabase/client';
+import type { Teacher, AdminUser } from '@/types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+interface ProfileResponse {
+  teacher?: Teacher;
+  admin?: AdminUser;
+}
 
 class ApiClient {
   private baseUrl: string;
@@ -78,7 +84,7 @@ class ApiClient {
 
   // Auth endpoints
   async getCurrentUserProfile() {
-    return this.request('/api/v1/auth/me', {
+    return this.request<ProfileResponse>('/api/v1/auth/me', {
       method: 'GET',
     });
   }
@@ -168,14 +174,26 @@ class ApiClient {
 
   // Dashboard stats
   async getDashboardStats() {
-    return this.request('/api/v1/teachers/me/stats', {
+    return this.request<{
+      match_count: number;
+      application_count: number;
+      profile_completeness: number;
+      has_paid: boolean;
+    }>('/api/v1/teachers/me/stats', {
       method: 'GET',
     });
   }
 
   // Get teacher's uploaded files with signed URLs
   async getTeacherFiles() {
-    return this.request('/api/v1/teachers/me/files', {
+    return this.request<{
+      cv_url: string | null;
+      cv_path: string | null;
+      headshot_url: string | null;
+      headshot_path: string | null;
+      video_url: string | null;
+      video_path: string | null;
+    }>('/api/v1/teachers/me/files', {
       method: 'GET',
     });
   }

@@ -52,11 +52,11 @@ export default function ProfileCompletionWizard({ onComplete }: ProfileCompletio
     }
   }, [teacher]);
 
-  // Preferences state
+  // Preferences state - parse comma-separated strings from API into arrays
   const [preferences, setPreferences] = useState({
-    preferred_location: teacher?.preferred_location || [],
-    preferred_age_group: teacher?.preferred_age_group || [],
-    subject_specialty: teacher?.subject_specialty || [],
+    preferred_location: teacher?.preferred_location?.split(',').map(s => s.trim()).filter(Boolean) || [],
+    preferred_age_group: teacher?.preferred_age_group?.split(',').map(s => s.trim()).filter(Boolean) || [],
+    subject_specialty: teacher?.subject_specialty?.split(',').map(s => s.trim()).filter(Boolean) || [],
   });
 
   const steps = [
@@ -159,7 +159,12 @@ export default function ProfileCompletionWizard({ onComplete }: ProfileCompletio
       setUploading(true);
       setError(null);
 
-      await apiClient.updateTeacher(preferences);
+      // Convert arrays to comma-separated strings for API
+      await apiClient.updateTeacher({
+        preferred_location: preferences.preferred_location.join(','),
+        preferred_age_group: preferences.preferred_age_group.join(','),
+        subject_specialty: preferences.subject_specialty.join(','),
+      });
 
       setCurrentStep('complete');
       setTimeout(() => onComplete(), 1500);

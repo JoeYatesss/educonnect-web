@@ -266,7 +266,9 @@ export default function JobsManagementPage() {
     return matchesSearch && matchesActive && matchesCity;
   });
 
-  const uniqueCities = Array.from(new Set(jobs.map((j) => j.city).filter(Boolean))).sort();
+  const uniqueCities = Array.from(
+    new Set(jobs.map((j) => j.city).filter((city): city is string => city !== null))
+  ).sort();
 
   if (authLoading || loading) {
     return (

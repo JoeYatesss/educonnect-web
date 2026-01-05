@@ -7,13 +7,14 @@ export interface Teacher {
   last_name: string;
   email: string;
   phone: string | null;
+  country_code: string | null;
   nationality: string | null;
   years_experience: number | null;
   education: string | null;
   teaching_experience: string | null;
-  subject_specialty: string[] | null;
-  preferred_location: string[] | null;
-  preferred_age_group: string[] | null;
+  subject_specialty: string | null;
+  preferred_location: string | null;
+  preferred_age_group: string | null;
   intro_video_path: string | null;
   headshot_photo_path: string | null;
   cv_path: string | null;
