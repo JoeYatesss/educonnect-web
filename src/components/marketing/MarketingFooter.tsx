@@ -3,79 +3,84 @@ import Link from 'next/link';
 export default function MarketingFooter() {
   return (
     <footer className="bg-gray-900 text-gray-300">
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-6 py-12 max-w-7xl">
         <div className="grid md:grid-cols-3 gap-8 mb-8">
-          {/* EduConnect Column */}
+          {/* Company Column */}
           <div>
-            <h4 className="font-semibold text-white mb-4">EduConnect</h4>
+            <h4 className="font-semibold text-white mb-4">Company</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/#about" className="hover:text-white transition-colors">
-                  About
+                <Link href="/about" className="hover:text-brand-red transition-colors duration-200">
+                  About Us
                 </Link>
               </li>
               <li>
-                <Link href="/#about" className="hover:text-white transition-colors">
+                <Link href="/about#mission" className="hover:text-brand-red transition-colors duration-200">
                   Our Mission
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-white transition-colors">
-                  Contact
+                <Link href="/about#how-it-works" className="hover:text-brand-red transition-colors duration-200">
+                  How It Works
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="hover:text-white transition-colors">
-                  Blog
+                <Link href="/contact" className="hover:text-brand-red transition-colors duration-200">
+                  Contact Us
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Resources Column */}
+          {/* For Teachers Column */}
           <div>
-            <h4 className="font-semibold text-white mb-4">Resources</h4>
+            <h4 className="font-semibold text-white mb-4">For Teachers</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/integration-guide" className="hover:text-white transition-colors">
-                  China Guide
-                </Link>
-              </li>
-              <li>
-                <Link href="/language-course" className="hover:text-white transition-colors">
-                  Survival Chinese
-                </Link>
-              </li>
-              <li>
-                <Link href="/requirements" className="hover:text-white transition-colors">
+                <Link href="/requirements" className="hover:text-brand-red transition-colors duration-200">
                   Requirements
                 </Link>
               </li>
               <li>
-                <Link href="/jobs" className="hover:text-white transition-colors">
-                  Find Jobs
+                <Link href="/integration-guide" className="hover:text-brand-red transition-colors duration-200">
+                  China Integration Guide
+                </Link>
+              </li>
+              <li>
+                <Link href="/language-course" className="hover:text-brand-red transition-colors duration-200">
+                  Survival Chinese Course
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog" className="hover:text-brand-red transition-colors duration-200">
+                  Teacher Resources
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Legal Column */}
+          {/* Legal & Support Column */}
           <div>
-            <h4 className="font-semibold text-white mb-4">Legal</h4>
+            <h4 className="font-semibold text-white mb-4">Legal & Support</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/legal#privacy" className="hover:text-white transition-colors">
+                <Link href="/legal#privacy" className="hover:text-brand-red transition-colors duration-200">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/legal#terms" className="hover:text-white transition-colors">
+                <Link href="/legal#terms" className="hover:text-brand-red transition-colors duration-200">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/legal#cookies" className="hover:text-white transition-colors">
-                  Cookies
+                <Link href="/legal#cookies" className="hover:text-brand-red transition-colors duration-200">
+                  Cookie Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-brand-red transition-colors duration-200">
+                  Support
                 </Link>
               </li>
             </ul>

@@ -1,15 +1,61 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { getStripe } from '@/lib/stripe/client';
+import { createClient } from '@/lib/supabase/client';
+import type { CurrencyDetection } from '@/types';
 
 export default function PaymentPage() {
   const { teacher } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currencyData, setCurrencyData] = useState<CurrencyDetection | null>(null);
+  const [loadingCurrency, setLoadingCurrency] = useState(true);
+
+  // Detect currency on page load
+  useEffect(() => {
+    detectCurrency();
+  }, []);
+
+  const detectCurrency = async () => {
+    try {
+      setLoadingCurrency(true);
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        console.log('[PaymentPage] No session found, using default currency');
+        setLoadingCurrency(false);
+        return;
+      }
+
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      console.log('[PaymentPage] Fetching currency from:', `${API_URL}/api/v1/payments/detect-currency`);
+
+      const response = await fetch(`${API_URL}/api/v1/payments/detect-currency`, {
+        headers: { Authorization: `Bearer ${session.access_token}` }
+      });
+
+      console.log('[PaymentPage] Response status:', response.status);
+
+      if (response.ok) {
+        const data: CurrencyDetection = await response.json();
+        console.log('[PaymentPage] Currency data received:', data);
+        console.log('[PaymentPage] Auto-detected currency:', data.effective_currency);
+        setCurrencyData(data);
+      } else {
+        const errorText = await response.text();
+        console.error('[PaymentPage] API error:', response.status, errorText);
+      }
+    } catch (err) {
+      console.error('[PaymentPage] Currency detection error:', err);
+    } finally {
+      setLoadingCurrency(false);
+    }
+  };
 
   // Redirect if already paid
   if (teacher?.has_paid) {
@@ -32,8 +78,9 @@ export default function PaymentPage() {
             Authorization: `Bearer ${(await (await fetch('/api/auth/session')).json()).access_token}`,
           },
           body: JSON.stringify({
-            success_url: `${window.location.origin}/dashboard?payment=success`,
+            success_url: `${window.location.origin}/dashboard?payment=success&session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${window.location.origin}/payment?canceled=true`,
+            currency: currencyData?.effective_currency || 'USD',
           }),
         }
       );
@@ -68,8 +115,9 @@ export default function PaymentPage() {
           {/* Pricing */}
           <div className="px-6 py-8 border-b border-gray-200">
             <div className="flex items-end justify-center">
-              <span className="text-5xl font-bold text-gray-900">$99</span>
-              <span className="text-2xl text-gray-500 ml-2">.00</span>
+              <span className="text-5xl font-bold text-gray-900">
+                {loadingCurrency ? '...' : currencyData?.price_formatted || '£10'}
+              </span>
             </div>
             <p className="mt-2 text-center text-gray-600">One-time payment</p>
           </div>

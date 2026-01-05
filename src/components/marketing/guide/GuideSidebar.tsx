@@ -87,7 +87,7 @@ export default function GuideSidebar({
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-20 left-0 h-[calc(100vh-80px)] w-72 bg-white border-r border-gray-200 overflow-y-auto z-50 transition-transform duration-300 ${
+        className={`lg:sticky lg:top-24 lg:self-start fixed top-20 left-0 h-[calc(100vh-80px)] lg:h-auto lg:max-h-[calc(100vh-6rem)] w-72 flex-shrink-0 bg-white border border-gray-200 rounded-lg overflow-y-auto z-50 transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >

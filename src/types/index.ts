@@ -27,9 +27,23 @@ export interface Teacher {
   payment_id: string | null;
   payment_date: string | null;
   stripe_customer_id: string | null;
+  detected_country: string | null;
+  detected_currency: string | null;
+  preferred_currency: string | null;
   created_at: string;
   updated_at: string;
   profile_completeness?: number;
+}
+
+export interface CurrencyDetection {
+  detected_country: string;
+  detected_country_name: string;
+  detected_currency: string;
+  preferred_currency: string | null;
+  effective_currency: string;
+  price_amount: number;
+  price_formatted: string;
+  available_currencies: string[];
 }
 
 export type ApplicationStatus =

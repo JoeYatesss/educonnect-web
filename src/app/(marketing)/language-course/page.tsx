@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Metadata } from 'next';
-import CourseNav from '@/components/marketing/language/CourseNav';
+import CourseSidebar from '@/components/marketing/language/CourseSidebar';
 import VocabularyTable from '@/components/marketing/language/VocabularyTable';
 import { courseModules } from '@/data/language-course';
 
@@ -10,27 +10,29 @@ export default function LanguageCoursePage() {
   const [activeModule, setActiveModule] = useState(courseModules[0].id);
 
   return (
-    <div>
+    <div className="min-h-screen bg-white pt-20">
       {/* Header */}
-      <div className="bg-slate-50 border-b border-gray-200 py-20">
-        <div className="container mx-auto px-6 text-center">
+      <section className="py-20 bg-slate-50 border-b border-gray-200">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="font-playfair text-5xl md:text-6xl font-bold text-gray-900 mb-4 leading-tight">
             Survival Chinese Course
           </h1>
-          <p className="text-xl text-gray-600 mb-2 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 mb-2 max-w-3xl mx-auto">
             Master essential Chinese vocabulary with audio pronunciation guides
           </p>
           <p className="text-gray-500 text-lg">
             236 vocabulary items across 7 practical modules
           </p>
         </div>
-      </div>
+      </section>
 
-      {/* Course Navigation */}
-      <CourseNav activeModule={activeModule} onModuleChange={setActiveModule} />
+      <section className="py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+          <div className="flex gap-8">
+            <CourseSidebar activeModule={activeModule} onModuleChange={setActiveModule} />
 
-      {/* Course Modules */}
-      <div className="container mx-auto px-6 py-12">
+            {/* Course Modules */}
+            <div className="flex-1 max-w-4xl">
         {courseModules
           .filter(module => module.id === activeModule)
           .map((module) => (
@@ -64,20 +66,23 @@ export default function LanguageCoursePage() {
             </div>
           ))}
 
-        {/* Footer CTA */}
-        <div className="mt-20 bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl p-8 text-center text-white">
-          <h3 className="text-2xl font-bold mb-4">Ready to Teach in China?</h3>
-          <p className="text-gray-300 mb-6">
-            Start your journey with confidence using these essential phrases
-          </p>
-          <a
-            href="/signup"
-            className="inline-block bg-brand-red text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-red-600 transition-colors"
-          >
-            Apply Now
-          </a>
+            {/* Footer CTA */}
+            <div className="mt-20 bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl p-8 text-center text-white">
+              <h3 className="text-2xl font-bold mb-4">Ready to Teach in China?</h3>
+              <p className="text-gray-300 mb-6">
+                Start your journey with confidence using these essential phrases
+              </p>
+              <a
+                href="/signup"
+                className="inline-block bg-brand-red text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-red-600 transition-colors"
+              >
+                Apply Now
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
+        </div>
+      </section>
     </div>
   );
 }

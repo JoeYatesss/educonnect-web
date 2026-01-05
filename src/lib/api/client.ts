@@ -199,12 +199,19 @@ class ApiClient {
   }
 
   async updateTeacher(data: Partial<{
-    first_name: string;
-    last_name: string;
-    preferred_location: string;
-    preferred_age_group: string;
-    subject_specialty: string;
+    phone: string;
+    nationality: string;
+    years_experience: number;
+    education: string;
+    teaching_experience: string;
+    subject_specialty: string;  // comma-separated
+    preferred_location: string;  // comma-separated
+    preferred_age_group: string;  // comma-separated
     linkedin: string;
+    instagram: string;
+    wechat_id: string;
+    professional_experience: string;
+    additional_info: string;
   }>) {
     return this.request('/api/v1/teachers/me', {
       method: 'PATCH',
@@ -222,6 +229,62 @@ class ApiClient {
 
   async uploadVideo(file: File) {
     return this.uploadFile('/api/v1/teachers/upload-video', file);
+  }
+
+  // Dashboard stats
+  async getDashboardStats() {
+    return this.request('/api/v1/teachers/me/stats', {
+      method: 'GET',
+    });
+  }
+
+  // Get teacher's uploaded files with signed URLs
+  async getTeacherFiles() {
+    return this.request('/api/v1/teachers/me/files', {
+      method: 'GET',
+    });
+  }
+
+  // Preview matches (for unpaid users)
+  async getPreviewMatches() {
+    return this.request('/api/v1/matching/preview', {
+      method: 'GET',
+    });
+  }
+
+  // Full matches (for paid users)
+  async getMyMatches() {
+    return this.request('/api/v1/matching/me', {
+      method: 'GET',
+    });
+  }
+
+  // Apply to a match (for paid users)
+  async applyToMatch(matchId: number) {
+    return this.request(`/api/v1/applications/apply-to-match?match_id=${matchId}`, {
+      method: 'POST',
+    });
+  }
+
+  // Applications
+  async getMyApplications() {
+    return this.request('/api/v1/applications/me', {
+      method: 'GET',
+    });
+  }
+
+  // Admin: Get matched teachers for a school
+  async getSchoolMatches(schoolId: number) {
+    return this.request(`/api/v1/matching/school/${schoolId}`, {
+      method: 'GET',
+    });
+  }
+
+  // Admin: Get school by ID
+  async getSchool(schoolId: number) {
+    return this.request(`/api/v1/schools/${schoolId}`, {
+      method: 'GET',
+    });
   }
 }
 

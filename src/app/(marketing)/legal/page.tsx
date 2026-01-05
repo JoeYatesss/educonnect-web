@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 
 export default function LegalPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pt-20">
       {/* Header */}
-      <section className="pt-32 pb-16 bg-slate-50 border-b border-gray-200">
+      <section className="py-20 bg-slate-50 border-b border-gray-200">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="font-playfair text-5xl md:text-6xl font-bold text-gray-900 mb-4 leading-tight">
             Legal Information

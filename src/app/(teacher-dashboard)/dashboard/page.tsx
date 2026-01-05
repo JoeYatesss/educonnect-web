@@ -4,23 +4,107 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
 import PaymentGate from '@/components/dashboard/PaymentGate';
-import ProgressTracker from '@/components/dashboard/ProgressTracker';
 import AnonymousSchoolMatches from '@/components/dashboard/AnonymousSchoolMatches';
+import ProfileCompletionWizard from '@/components/dashboard/ProfileCompletionWizard';
+import FloatingActionButton from '@/components/dashboard/FloatingActionButton';
+import ApplicationsList from '@/components/dashboard/ApplicationsList';
 import Link from 'next/link';
+import { apiClient } from '@/lib/api/client';
+import { createClient } from '@/lib/supabase/client';
+import { BookOpen, User, Settings, TrendingUp, Building2, CheckCircle2, ArrowRight, Mail } from 'lucide-react';
 
 function DashboardContent() {
   const { teacher, adminUser, user, loading: authLoading, profileError, signOut } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
+  const [showWizard, setShowWizard] = useState(false);
+  const [verifyingPayment, setVerifyingPayment] = useState(false);
+  const [stats, setStats] = useState({
+    match_count: 0,
+    application_count: 0,
+    profile_completeness: 0,
+    has_paid: false
+  });
+  const [statsLoading, setStatsLoading] = useState(true);
+
+  // Verify payment when returning from Stripe checkout
+  useEffect(() => {
+    const verifyPayment = async () => {
+      const paymentStatus = searchParams.get('payment');
+      const sessionId = searchParams.get('session_id');
+
+      if (paymentStatus === 'success' && sessionId) {
+        setVerifyingPayment(true);
+
+        try {
+          const supabase = createClient();
+          const { data: { session } } = await supabase.auth.getSession();
+
+          if (session) {
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+            const response = await fetch(`${API_URL}/api/v1/payments/verify-session`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.access_token}`,
+              },
+              body: JSON.stringify({ session_id: sessionId }),
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              console.log('[Dashboard] Payment verification result:', result);
+
+              if (result.verified || result.already_processed) {
+                setShowPaymentSuccess(true);
+                // Refresh the page to get updated teacher data (remove query params)
+                setTimeout(() => {
+                  window.location.href = '/dashboard';
+                }, 2000);
+              }
+            } else {
+              console.error('[Dashboard] Payment verification failed:', await response.text());
+              // Still show success message even if verification fails
+              // (webhook may have already processed it)
+              setShowPaymentSuccess(true);
+              setTimeout(() => setShowPaymentSuccess(false), 5000);
+            }
+          }
+        } catch (error) {
+          console.error('[Dashboard] Error verifying payment:', error);
+          setShowPaymentSuccess(true);
+          setTimeout(() => setShowPaymentSuccess(false), 5000);
+        } finally {
+          setVerifyingPayment(false);
+        }
+      } else if (paymentStatus === 'success') {
+        // Fallback for old URLs without session_id
+        setShowPaymentSuccess(true);
+        setTimeout(() => setShowPaymentSuccess(false), 5000);
+      }
+    };
+
+    verifyPayment();
+  }, [searchParams]);
 
   useEffect(() => {
-    if (searchParams.get('payment') === 'success') {
-      setShowPaymentSuccess(true);
-      // Remove query param after showing message
-      setTimeout(() => setShowPaymentSuccess(false), 5000);
+    const fetchStats = async () => {
+      try {
+        const data = await apiClient.getDashboardStats();
+        setStats(data);
+      } catch (err) {
+        console.error('Failed to fetch stats:', err);
+      } finally {
+        setStatsLoading(false);
+      }
+    };
+
+    if (teacher) {
+      fetchStats();
     }
-  }, [searchParams]);
+  }, [teacher]);
 
   useEffect(() => {
     // Only redirect if done loading, no user, and no teacher
@@ -36,12 +120,22 @@ function DashboardContent() {
     }
   }, [authLoading, adminUser, teacher, router]);
 
+  // Check if profile is complete and show wizard if needed
+  // This must be before any conditional returns to maintain hook order
+  const isProfileComplete = teacher?.cv_path && teacher?.headshot_photo_path && teacher?.intro_video_path;
+
+  useEffect(() => {
+    if (teacher && !isProfileComplete) {
+      setShowWizard(true);
+    }
+  }, [teacher, isProfileComplete]);
+
   // Show loading spinner
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto" />
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-red mx-auto" />
           <p className="mt-4 text-gray-600">Loading your dashboard...</p>
         </div>
       </div>
@@ -64,7 +158,7 @@ function DashboardContent() {
           <p className="text-gray-600 mb-6">{profileError}</p>
           <button
             onClick={() => router.push('/login')}
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand-red hover:bg-red-600"
           >
             Return to Login
           </button>
@@ -83,25 +177,67 @@ function DashboardContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Welcome back, {teacher.first_name}!
-              </h1>
-              <p className="mt-1 text-sm text-gray-500">
-                Track your application progress and manage your profile
-              </p>
-            </div>
-            <div className="flex items-center gap-4">
+      {/* Navigation Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+        <nav className="container mx-auto px-6 h-20 max-w-7xl">
+          <div className="flex justify-between items-center h-full">
+            {/* Logo */}
+            <Link href="/dashboard" className="flex items-center gap-2 group">
+              <span className="text-gray-900 font-montserrat text-2xl font-bold tracking-tight group-hover:text-gray-700 transition-colors">
+                EduConnect
+              </span>
+              <span
+                className="text-brand-red font-chinese text-[1.75rem] font-bold group-hover:scale-105 transition-transform duration-200"
+                style={{textShadow: '1px 1px 3px rgba(230, 74, 74, 0.3)'}}
+              >
+                中国
+              </span>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-6">
+              <Link
+                href="/dashboard"
+                className="text-brand-red font-semibold text-[15px] tracking-tight transition-all duration-200 flex items-center gap-2"
+              >
+                <BookOpen className="w-4 h-4" />
+                Dashboard
+              </Link>
+              <Link
+                href="/matches"
+                className="text-gray-700 hover:text-brand-red font-medium text-[15px] tracking-tight transition-all duration-200 flex items-center gap-2"
+              >
+                <User className="w-4 h-4" />
+                Matches
+              </Link>
               <Link
                 href="/profile"
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                className="text-gray-700 hover:text-brand-red font-medium text-[15px] tracking-tight transition-all duration-200 flex items-center gap-2"
               >
-                Edit Profile
+                <Settings className="w-4 h-4" />
+                Profile
               </Link>
+              <div className="flex items-center gap-3 ml-4 border-l border-gray-200 pl-6">
+                <span className="text-sm text-gray-600">
+                  {teacher.first_name} {teacher.last_name}
+                </span>
+                <button
+                  onClick={async () => {
+                    try {
+                      await signOut();
+                    } catch (error) {
+                      console.error('Sign out error:', error);
+                    }
+                  }}
+                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 transition-all duration-200"
+                >
+                  Sign Out
+                </button>
+              </div>
+            </div>
+
+            {/* Mobile Menu - Sign Out */}
+            <div className="md:hidden">
               <button
                 onClick={async () => {
                   try {
@@ -110,37 +246,57 @@ function DashboardContent() {
                     console.error('Sign out error:', error);
                   }
                 }}
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800"
               >
                 Sign Out
               </button>
             </div>
           </div>
-        </div>
+        </nav>
+      </header>
+
+      {/* Page Header */}
+      <div className="pt-20 bg-gradient-to-b from-white to-gray-50">
+        {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-gray-900 mb-2">
+                Welcome back, {teacher.first_name}!
+              </h1>
+              <p className="text-lg text-gray-600">
+                Track your progress and discover new opportunities
+              </p>
+            </div>
+            <div className="mt-4 md:mt-0">
+              <Link
+                href="/profile"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-brand-red rounded-lg shadow-sm text-sm font-semibold text-brand-red bg-white hover:bg-red-50 transition-all duration-200"
+              >
+                <Settings className="w-4 h-4" />
+                Edit Profile
+              </Link>
+            </div>
+          </div>
+        </div> */}
       </div>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Payment Success Message */}
         {showPaymentSuccess && (
-          <div className="mb-6 rounded-md bg-green-50 p-4">
-            <div className="flex">
+          <div className="mb-6 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 p-6 border border-green-200 shadow-lg">
+            <div className="flex items-center gap-4">
               <div className="flex-shrink-0">
-                <svg
-                  className="h-5 w-5 text-green-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                  <CheckCircle2 className="h-6 w-6 text-green-600" />
+                </div>
               </div>
-              <div className="ml-3">
-                <p className="text-sm font-medium text-green-800">
-                  Payment successful! You now have full access to the platform.
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-green-900 mb-1">
+                  Payment Successful!
+                </h3>
+                <p className="text-sm text-green-700">
+                  You now have full access to the platform and can view all your school matches.
                 </p>
               </div>
             </div>
@@ -152,159 +308,74 @@ function DashboardContent() {
 
         {/* Profile Completeness */}
         {profileCompleteness < 100 && (
-          <div className="mb-6 bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-lg font-medium text-gray-900">Complete Your Profile</h3>
-              <span className="text-sm font-medium text-gray-600">
-                {profileCompleteness}% complete
-              </span>
+          <div className="mb-6 bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-lg p-8 border border-gray-100">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-lg bg-brand-red/10 flex items-center justify-center flex-shrink-0">
+                <TrendingUp className="w-6 h-6 text-brand-red" />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xl font-semibold text-gray-900">Complete Your Profile</h3>
+                  <span className="text-sm font-bold text-brand-red bg-red-50 px-3 py-1 rounded-full">
+                    {profileCompleteness}% complete
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-3 mb-3 shadow-inner">
+                  <div
+                    className="bg-gradient-to-r from-brand-red to-red-500 h-3 rounded-full transition-all duration-500 shadow-sm"
+                    style={{ width: `${profileCompleteness}%` }}
+                  />
+                </div>
+                <p className="text-sm text-gray-600">
+                  A complete profile helps you get better matches with schools.{' '}
+                  <Link href="/profile" className="text-brand-red hover:text-red-600 font-semibold inline-flex items-center gap-1 group">
+                    Continue editing
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </p>
+              </div>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5">
-              <div
-                className="bg-blue-600 h-2.5 rounded-full transition-all duration-500"
-                style={{ width: `${profileCompleteness}%` }}
-              />
-            </div>
-            <p className="mt-2 text-sm text-gray-600">
-              Complete your profile to improve your matches.{' '}
-              <Link href="/profile" className="text-blue-600 hover:text-blue-700 font-medium">
-                Continue editing →
-              </Link>
-            </p>
           </div>
         )}
 
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left Column */}
-          <div className="space-y-6">
-            <ProgressTracker currentStatus={teacher.status} />
-
-            {/* Stats Cards */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-white rounded-lg shadow p-6">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <svg
-                      className="h-8 w-8 text-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                      />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-500">School Matches</p>
-                    <p className="text-2xl font-semibold text-gray-900">
-                      {teacher.has_paid ? '0' : '-'}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow p-6">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <svg
-                      className="h-8 w-8 text-green-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-500">Applications</p>
-                    <p className="text-2xl font-semibold text-gray-900">0</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column */}
-          <div>
-            <AnonymousSchoolMatches />
-          </div>
+        {/* Applications Section - At the top */}
+        <div className="mb-6">
+          <ApplicationsList />
         </div>
 
-        {/* Quick Actions */}
-        <div className="mt-8 bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Link
-              href="/profile"
-              className="flex items-center p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
-            >
-              <svg
-                className="h-6 w-6 text-blue-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                />
-              </svg>
-              <span className="ml-3 font-medium text-gray-900">Update Profile</span>
-            </Link>
-
-            <Link
-              href="/matches"
-              className="flex items-center p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
-            >
-              <svg
-                className="h-6 w-6 text-blue-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-              <span className="ml-3 font-medium text-gray-900">View Matches</span>
-            </Link>
-
-            <a
-              href="mailto:support@educonnect.com"
-              className="flex items-center p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
-            >
-              <svg
-                className="h-6 w-6 text-blue-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                />
-              </svg>
-              <span className="ml-3 font-medium text-gray-900">Contact Support</span>
-            </a>
-          </div>
+        {/* School Matches Section */}
+        <div>
+          <AnonymousSchoolMatches />
         </div>
+
+        {/* Floating Action Button */}
+        <FloatingActionButton
+          actions={[
+            {
+              label: 'Update Profile',
+              icon: User,
+              href: '/profile'
+            },
+            {
+              label: 'View Matches',
+              icon: Building2,
+              href: '/matches'
+            },
+            {
+              label: 'Contact Support',
+              icon: Mail,
+              href: 'mailto:support@educonnect.com'
+            }
+          ]}
+        />
+
+        {/* Profile Completion Wizard Modal */}
+        {showWizard && !isProfileComplete && (
+          <ProfileCompletionWizard onComplete={() => {
+            setShowWizard(false);
+            window.location.reload();
+          }} />
+        )}
       </div>
     </div>
   );
@@ -313,8 +384,11 @@ function DashboardContent() {
 export default function TeacherDashboard() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-red mx-auto" />
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
       </div>
     }>
       <DashboardContent />

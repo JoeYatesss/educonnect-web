@@ -3,12 +3,12 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { MDXRemote } from 'next-mdx-remote/rsc';
+import { BlogCTA } from '@/components/marketing/blog/BlogCTA';
 
 interface BlogPostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 // Generate static params for all blog posts
@@ -21,7 +21,8 @@ export async function generateStaticParams() {
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     return {
@@ -41,7 +42,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = await getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     notFound();
@@ -54,7 +56,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   });
 
   return (
-    <article className="min-h-screen bg-gray-50">
+    <article className="min-h-screen bg-gray-50 pt-20">
       {/* Hero section with image */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -119,26 +121,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               prose-code:text-brand-red prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
               prose-pre:bg-gray-900 prose-pre:text-gray-100
               prose-img:rounded-lg prose-img:shadow-md"
-          >
-            <MDXRemote source={post.content} />
-          </div>
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
         </div>
 
         {/* Related posts or CTA section */}
-        <div className="mt-12 p-8 bg-gradient-to-br from-brand-red to-red-600 rounded-xl text-white text-center">
-          <h3 className="text-2xl font-bold mb-3">
-            Ready to Start Your Teaching Journey in China?
-          </h3>
-          <p className="text-lg text-white/90 mb-6">
-            Explore our current job opportunities and join thousands of teachers making a difference.
-          </p>
-          <Link
-            href="/jobs"
-            className="inline-block px-8 py-3 bg-white text-brand-red rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-          >
-            View Available Jobs
-          </Link>
-        </div>
+        <BlogCTA />
       </div>
     </article>
   );

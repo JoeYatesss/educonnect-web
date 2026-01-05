@@ -5,9 +5,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '@/contexts/AuthContext';
+import { apiClient } from '@/lib/api/client';
+import { useRouter } from 'next/navigation';
+import { User, Briefcase, MapPin, Heart, MessageCircle, Save } from 'lucide-react';
 
 const profileSchema = z.object({
   phone: z.string().optional(),
+  country_code: z.string().optional(),
   nationality: z.string().optional(),
   years_experience: z.number().min(0).optional(),
   education: z.string().optional(),
@@ -49,8 +53,69 @@ const LOCATION_OPTIONS = [
 
 const AGE_GROUP_OPTIONS = ['Kindergarten', 'Primary', 'Middle School', 'High School'];
 
+const COUNTRY_CODES = [
+  { code: '+1', country: 'US/Canada', flag: '🇺🇸' },
+  { code: '+44', country: 'UK', flag: '🇬🇧' },
+  { code: '+86', country: 'China', flag: '🇨🇳' },
+  { code: '+61', country: 'Australia', flag: '🇦🇺' },
+  { code: '+33', country: 'France', flag: '🇫🇷' },
+  { code: '+49', country: 'Germany', flag: '🇩🇪' },
+  { code: '+91', country: 'India', flag: '🇮🇳' },
+  { code: '+81', country: 'Japan', flag: '🇯🇵' },
+  { code: '+82', country: 'South Korea', flag: '🇰🇷' },
+  { code: '+65', country: 'Singapore', flag: '🇸🇬' },
+  { code: '+852', country: 'Hong Kong', flag: '🇭🇰' },
+  { code: '+971', country: 'UAE', flag: '🇦🇪' },
+];
+
+const COUNTRIES = [
+  'United States',
+  'United Kingdom',
+  'Canada',
+  'Australia',
+  'New Zealand',
+  'Ireland',
+  'South Africa',
+  'China',
+  'Japan',
+  'South Korea',
+  'Singapore',
+  'India',
+  'Philippines',
+  'Thailand',
+  'Vietnam',
+  'Malaysia',
+  'Indonesia',
+  'France',
+  'Germany',
+  'Spain',
+  'Italy',
+  'Netherlands',
+  'Belgium',
+  'Switzerland',
+  'Austria',
+  'Sweden',
+  'Norway',
+  'Denmark',
+  'Finland',
+  'Poland',
+  'Russia',
+  'Brazil',
+  'Mexico',
+  'Argentina',
+  'Chile',
+  'Colombia',
+  'UAE',
+  'Saudi Arabia',
+  'Egypt',
+  'Nigeria',
+  'Kenya',
+  'Other',
+];
+
 export default function TeacherProfileForm() {
   const { teacher } = useAuth();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -65,13 +130,21 @@ export default function TeacherProfileForm() {
     resolver: zodResolver(profileSchema),
     defaultValues: {
       phone: teacher?.phone || '',
+      country_code: teacher?.country_code || '+1',
       nationality: teacher?.nationality || '',
       years_experience: teacher?.years_experience || 0,
       education: teacher?.education || '',
       teaching_experience: teacher?.teaching_experience || '',
-      subject_specialty: teacher?.subject_specialty || [],
-      preferred_location: teacher?.preferred_location || [],
-      preferred_age_group: teacher?.preferred_age_group || [],
+      // Convert comma-separated strings to arrays
+      subject_specialty: teacher?.subject_specialty
+        ? teacher.subject_specialty.split(',').map(s => s.trim())
+        : [],
+      preferred_location: teacher?.preferred_location
+        ? teacher.preferred_location.split(',').map(s => s.trim())
+        : [],
+      preferred_age_group: teacher?.preferred_age_group
+        ? teacher.preferred_age_group.split(',').map(s => s.trim())
+        : [],
       linkedin: teacher?.linkedin || '',
       instagram: teacher?.instagram || '',
       wechat_id: teacher?.wechat_id || '',
@@ -98,11 +171,42 @@ export default function TeacherProfileForm() {
     setLoading(true);
 
     try {
-      // TODO: Implement API call
-      console.log('Profile update:', data);
+      // Transform array fields to comma-separated strings for API
+      const apiData = {
+        phone: data.phone,
+        country_code: data.country_code,
+        nationality: data.nationality,
+        years_experience: data.years_experience,
+        education: data.education,
+        teaching_experience: data.teaching_experience,
+        subject_specialty: data.subject_specialty?.join(', ') || undefined,
+        preferred_location: data.preferred_location?.join(', ') || undefined,
+        preferred_age_group: data.preferred_age_group?.join(', ') || undefined,
+        linkedin: data.linkedin || undefined,
+        instagram: data.instagram,
+        wechat_id: data.wechat_id,
+        professional_experience: data.professional_experience,
+        additional_info: data.additional_info,
+      };
+
+      // Call API to update teacher profile
+      await apiClient.updateTeacher(apiData);
+
       setSuccess(true);
+
+      // Reload page after 1.5 seconds to show updated data
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (err: any) {
-      setError(err.message || 'Failed to update profile');
+      // Enhanced error handling
+      if (err.message?.includes('401') || err.message?.includes('Unauthorized')) {
+        setError('Session expired. Please log in again.');
+        setTimeout(() => router.push('/login'), 2000);
+      } else {
+        setError(err.message || 'Failed to update profile');
+      }
+      console.error('Profile update error:', err);
     } finally {
       setLoading(false);
     }
@@ -112,51 +216,94 @@ export default function TeacherProfileForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
       {/* Success Message */}
       {success && (
-        <div className="rounded-md bg-green-50 p-4">
-          <p className="text-sm text-green-800">Profile updated successfully!</p>
+        <div className="rounded-lg bg-green-50 p-4 border border-green-200">
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <p className="text-sm font-medium text-green-800">Profile updated successfully!</p>
+          </div>
         </div>
       )}
 
       {/* Error Message */}
       {error && (
-        <div className="rounded-md bg-red-50 p-4">
-          <p className="text-sm text-red-800">{error}</p>
+        <div className="rounded-lg bg-red-50 p-4 border border-red-200">
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+            <p className="text-sm font-medium text-red-800">{error}</p>
+          </div>
         </div>
       )}
 
       {/* Personal Information */}
-      <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Personal Information</h3>
+      <div className="bg-gradient-to-br from-white to-gray-50 shadow-lg rounded-xl p-8 border border-gray-100">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+            <User className="w-5 h-5 text-brand-red" />
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold text-gray-900">Personal Information</h3>
+            <p className="text-sm text-gray-600">Your contact details and nationality</p>
+          </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
               Phone Number
             </label>
-            <input
-              {...register('phone')}
-              type="tel"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-              placeholder="+1 234 567 8900"
-            />
+            <div className="mt-1 flex gap-2">
+              <select
+                {...register('country_code')}
+                className="block w-32 rounded-lg border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red focus:ring-2 sm:text-sm"
+              >
+                {COUNTRY_CODES.map((item) => (
+                  <option key={item.code} value={item.code}>
+                    {item.flag} {item.code}
+                  </option>
+                ))}
+              </select>
+              <input
+                {...register('phone')}
+                type="tel"
+                className="block flex-1 rounded-lg border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red focus:ring-2 sm:text-sm"
+                placeholder="234 567 8900"
+              />
+            </div>
           </div>
 
           <div>
             <label htmlFor="nationality" className="block text-sm font-medium text-gray-700">
               Nationality
             </label>
-            <input
+            <select
               {...register('nationality')}
-              type="text"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-              placeholder="United States"
-            />
+              className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red focus:ring-2 sm:text-sm"
+            >
+              <option value="">Select a country</option>
+              {COUNTRIES.map((country) => (
+                <option key={country} value={country}>
+                  {country}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
 
       {/* Professional Information */}
-      <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Professional Information</h3>
+      <div className="bg-gradient-to-br from-white to-gray-50 shadow-lg rounded-xl p-8 border border-gray-100">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+            <Briefcase className="w-5 h-5 text-brand-red" />
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold text-gray-900">Professional Information</h3>
+            <p className="text-sm text-gray-600">Your teaching qualifications and experience</p>
+          </div>
+        </div>
         <div className="space-y-6">
           <div>
             <label htmlFor="years_experience" className="block text-sm font-medium text-gray-700">
@@ -166,7 +313,7 @@ export default function TeacherProfileForm() {
               {...register('years_experience', { valueAsNumber: true })}
               type="number"
               min="0"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red focus:ring-2 sm:text-sm"
             />
           </div>
 
@@ -177,7 +324,7 @@ export default function TeacherProfileForm() {
             <input
               {...register('education')}
               type="text"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red focus:ring-2 sm:text-sm"
               placeholder="Bachelor's in Education, University of..."
             />
           </div>
@@ -194,8 +341,8 @@ export default function TeacherProfileForm() {
                   onClick={() => toggleArrayValue('subject_specialty', subject)}
                   className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                     selectedSubjects.includes(subject)
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-brand-red text-white shadow-sm'
+                      : 'bg-white text-gray-700 border border-gray-200 hover:border-brand-red/30 hover:bg-red-50'
                   }`}
                 >
                   {subject}
@@ -211,7 +358,7 @@ export default function TeacherProfileForm() {
             <textarea
               {...register('teaching_experience')}
               rows={4}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red focus:ring-2 sm:text-sm"
               placeholder="Describe your teaching experience..."
             />
           </div>
@@ -223,7 +370,7 @@ export default function TeacherProfileForm() {
             <textarea
               {...register('professional_experience')}
               rows={4}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red focus:ring-2 sm:text-sm"
               placeholder="List your work history..."
             />
           </div>
@@ -231,8 +378,16 @@ export default function TeacherProfileForm() {
       </div>
 
       {/* Preferences */}
-      <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Teaching Preferences</h3>
+      <div className="bg-gradient-to-br from-white to-gray-50 shadow-lg rounded-xl p-8 border border-gray-100">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+            <Heart className="w-5 h-5 text-brand-red" />
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold text-gray-900">Teaching Preferences</h3>
+            <p className="text-sm text-gray-600">Your preferred locations and age groups</p>
+          </div>
+        </div>
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -246,8 +401,8 @@ export default function TeacherProfileForm() {
                   onClick={() => toggleArrayValue('preferred_location', location)}
                   className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                     selectedLocations.includes(location)
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-brand-red text-white shadow-sm'
+                      : 'bg-white text-gray-700 border border-gray-200 hover:border-brand-red/30 hover:bg-red-50'
                   }`}
                 >
                   {location}
@@ -268,8 +423,8 @@ export default function TeacherProfileForm() {
                   onClick={() => toggleArrayValue('preferred_age_group', ageGroup)}
                   className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                     selectedAgeGroups.includes(ageGroup)
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-brand-red text-white shadow-sm'
+                      : 'bg-white text-gray-700 border border-gray-200 hover:border-brand-red/30 hover:bg-red-50'
                   }`}
                 >
                   {ageGroup}
@@ -281,8 +436,16 @@ export default function TeacherProfileForm() {
       </div>
 
       {/* Social Links */}
-      <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Social & Contact</h3>
+      <div className="bg-gradient-to-br from-white to-gray-50 shadow-lg rounded-xl p-8 border border-gray-100">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+            <MessageCircle className="w-5 h-5 text-brand-red" />
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold text-gray-900">Social & Contact</h3>
+            <p className="text-sm text-gray-600">Your social media profiles and contact methods</p>
+          </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
             <label htmlFor="linkedin" className="block text-sm font-medium text-gray-700">
@@ -291,7 +454,7 @@ export default function TeacherProfileForm() {
             <input
               {...register('linkedin')}
               type="url"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red focus:ring-2 sm:text-sm"
               placeholder="https://linkedin.com/in/..."
             />
             {errors.linkedin && (
@@ -306,7 +469,7 @@ export default function TeacherProfileForm() {
             <input
               {...register('instagram')}
               type="text"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red focus:ring-2 sm:text-sm"
               placeholder="@username"
             />
           </div>
@@ -318,7 +481,7 @@ export default function TeacherProfileForm() {
             <input
               {...register('wechat_id')}
               type="text"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red focus:ring-2 sm:text-sm"
               placeholder="your_wechat_id"
             />
           </div>
@@ -326,13 +489,21 @@ export default function TeacherProfileForm() {
       </div>
 
       {/* Additional Information */}
-      <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Additional Information</h3>
+      <div className="bg-gradient-to-br from-white to-gray-50 shadow-lg rounded-xl p-8 border border-gray-100">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+            <MessageCircle className="w-5 h-5 text-brand-red" />
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold text-gray-900">Additional Information</h3>
+            <p className="text-sm text-gray-600">Any other details you'd like to share</p>
+          </div>
+        </div>
         <textarea
           {...register('additional_info')}
-          rows={4}
-          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-          placeholder="Any other information you'd like to share..."
+          rows={5}
+          className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red focus:ring-2 sm:text-sm"
+          placeholder="Share any additional information about yourself, your teaching philosophy, or special skills..."
         />
       </div>
 
@@ -341,9 +512,10 @@ export default function TeacherProfileForm() {
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-2 justify-center py-3 px-8 border border-transparent shadow-lg text-base font-semibold rounded-lg text-white bg-brand-red hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
         >
-          {loading ? 'Saving...' : 'Save Changes'}
+          <Save className="w-5 h-5" />
+          {loading ? 'Saving Changes...' : 'Save Changes'}
         </button>
       </div>
     </form>

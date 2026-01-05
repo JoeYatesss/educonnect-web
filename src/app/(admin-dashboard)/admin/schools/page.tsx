@@ -105,19 +105,19 @@ export default function SchoolsManagementPage() {
     if (school) {
       setEditingSchool(school);
       setFormData({
-        name: school.name,
-        city: school.city,
-        province: school.province,
-        school_type: school.school_type,
-        age_groups: school.age_groups,
-        subjects_needed: school.subjects_needed,
-        experience_required: school.experience_required,
-        chinese_required: school.chinese_required,
-        salary_range: school.salary_range,
+        name: school.name || '',
+        city: school.city || '',
+        province: school.province || '',
+        school_type: school.school_type || '',
+        age_groups: school.age_groups || [],
+        subjects_needed: school.subjects_needed || [],
+        experience_required: school.experience_required || '',
+        chinese_required: school.chinese_required || false,
+        salary_range: school.salary_range || '',
         benefits: school.benefits || '',
         description: school.description || '',
-        contact_name: school.contact_name,
-        contact_email: school.contact_email,
+        contact_name: school.contact_name || '',
+        contact_email: school.contact_email || '',
         contact_phone: school.contact_phone || '',
       });
     } else {
@@ -367,6 +367,12 @@ export default function SchoolsManagementPage() {
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <Link
+                        href={`/admin/schools/${school.id}/matches`}
+                        className="text-green-600 hover:text-green-900 mr-4"
+                      >
+                        Matches
+                      </Link>
                       <button
                         onClick={() => handleOpenModal(school)}
                         className="text-blue-600 hover:text-blue-900 mr-4"

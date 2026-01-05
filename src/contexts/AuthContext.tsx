@@ -193,12 +193,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     setTeacher(null);
     setAdminUser(null);
-    router.push('/');
+
+    // Use window.location for a hard redirect to avoid middleware race condition
+    window.location.href = '/';
   };
 
   const resetPassword = async (email: string) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/reset-password`,
+      redirectTo: `${window.location.origin}/reset-password`,
     });
 
     if (error) throw error;

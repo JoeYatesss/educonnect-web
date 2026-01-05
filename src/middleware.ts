@@ -7,7 +7,15 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Marketing pages that don't require authentication
-  const marketingRoutes = ['/integration-guide', '/language-course', '/blog'];
+  const marketingRoutes = [
+    '/about',
+    '/requirements',
+    '/integration-guide',
+    '/language-course',
+    '/blog',
+    '/contact',
+    '/legal'
+  ];
   const isMarketingRoute = marketingRoutes.some(route => pathname.startsWith(route));
 
   if (isMarketingRoute) {
@@ -51,9 +59,13 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  // If logged in and on login/signup page → redirect to dashboard
-  // (Dashboard will handle redirecting to correct role-based page)
+  // If logged in and on login/signup page, check redirectTo param or use default
   if (session?.user && (pathname === '/login' || pathname === '/signup')) {
+    const redirectTo = req.nextUrl.searchParams.get('redirectTo');
+    if (redirectTo) {
+      return NextResponse.redirect(new URL(redirectTo, req.url));
+    }
+    // Default: redirect to dashboard (teacher dashboard will redirect admins to /admin)
     return NextResponse.redirect(new URL('/dashboard', req.url));
   }
 

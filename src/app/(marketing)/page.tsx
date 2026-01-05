@@ -1,21 +1,16 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
-import { Metadata } from 'next';
-import MarketingNav from '@/components/marketing/MarketingNav';
-import MarketingFooter from '@/components/marketing/MarketingFooter';
-
-export const metadata: Metadata = {
-  title: 'EduConnect - Teaching Jobs in China',
-  description: 'Find high-paying teaching jobs in China with EduConnect. 25K-40K RMB monthly salary, full support, guaranteed interviews. English teachers for Shanghai, Beijing, Shenzhen international schools.',
-};
+import { useModal } from '@/contexts/ModalContext';
 
 export default function HomePage() {
+  const { openSignup } = useModal();
+
   return (
-    <>
-      <MarketingNav />
-      <div className="min-h-screen pt-20">
+    <div className="min-h-screen">
         {/* Hero Section */}
-        <section className="relative min-h-screen flex items-center bg-white">
+        <section className="relative h-screen flex items-center justify-center bg-white pt-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Hero Content */}
@@ -35,6 +30,7 @@ export default function HomePage() {
                 <div>
                   <div className="text-3xl font-bold text-gray-900">25K+</div>
                   <div className="text-sm text-gray-600">RMB Monthly</div>
+                  <div className="text-xs text-gray-500 mt-1">≈ £2,700 / $3,400</div>
                 </div>
                 <div>
                   <div className="text-3xl font-bold text-gray-900">100%</div>
@@ -48,12 +44,12 @@ export default function HomePage() {
 
               {/* CTAs */}
               <div className="flex flex-wrap gap-4">
-                <Link
-                  href="/signup"
+                <button
+                  onClick={openSignup}
                   className="px-8 py-4 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   Start Your Journey
-                </Link>
+                </button>
                 <Link
                   href="#opportunities"
                   className="px-8 py-4 bg-white text-gray-900 font-semibold rounded-lg border-2 border-gray-900 hover:bg-gray-50 transition-colors"
@@ -155,16 +151,14 @@ export default function HomePage() {
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
             Join hundreds of teachers who have transformed their careers by teaching in China.
           </p>
-          <Link
-            href="/signup"
+          <button
+            onClick={openSignup}
             className="inline-block px-8 py-4 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
           >
             Apply Now
-          </Link>
+          </button>
         </div>
       </section>
-      </div>
-      <MarketingFooter />
-    </>
+    </div>
   );
 }

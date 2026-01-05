@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import FilePreviewModal from '@/components/modals/FilePreviewModal';
 
 interface FileUploadProps {
   label: string;
@@ -22,6 +23,8 @@ export default function FileUpload({
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dragActive, setDragActive] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [fileUrl, setFileUrl] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = async (file: File) => {
@@ -79,6 +82,29 @@ export default function FileUpload({
     const file = e.dataTransfer.files?.[0];
     if (file) {
       handleFile(file);
+    }
+  };
+
+  const handleView = async () => {
+    const endpoint = fileType === 'photo' ? 'headshot' : fileType;
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/teachers/download/${endpoint}`;
+
+    try {
+      // Fetch with auth
+      const { data: { session } } = await (await import('@/lib/supabase/client')).createClient().auth.getSession();
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${session?.access_token}`,
+        },
+      });
+
+      if (response.redirected) {
+        setFileUrl(response.url);
+        setShowPreview(true);
+      }
+    } catch (err) {
+      console.error('Failed to get file URL:', err);
+      setError('Failed to load file preview');
     }
   };
 
@@ -161,14 +187,32 @@ export default function FileUpload({
                 />
               </svg>
               <p className="text-sm text-green-800 font-medium">File uploaded successfully</p>
-              <button
-                type="button"
-                onClick={() => inputRef.current?.click()}
-                disabled={uploading}
-                className="mt-2 text-sm text-blue-600 hover:text-blue-700 font-medium"
-              >
-                Replace file
-              </button>
+              <p className="text-xs text-gray-600 mt-1 truncate px-4">{currentFile}</p>
+              <div className="mt-3 flex items-center justify-center gap-4">
+                <button
+                  type="button"
+                  onClick={handleView}
+                  className="inline-flex items-center gap-1 text-sm text-brand-red hover:text-red-600 font-medium"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  View
+                </button>
+                <span className="text-gray-300">|</span>
+                <button
+                  type="button"
+                  onClick={() => inputRef.current?.click()}
+                  disabled={uploading}
+                  className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                  </svg>
+                  Replace
+                </button>
+              </div>
             </div>
           ) : (
             <div className="space-y-2">
@@ -201,6 +245,15 @@ export default function FileUpload({
       {error && (
         <p className="text-sm text-red-600">{error}</p>
       )}
+
+      {/* File Preview Modal */}
+      <FilePreviewModal
+        isOpen={showPreview}
+        onClose={() => setShowPreview(false)}
+        fileUrl={fileUrl}
+        fileType={fileType}
+        fileName={currentFile || ''}
+      />
     </div>
   );
 }
