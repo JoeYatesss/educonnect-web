@@ -23,15 +23,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const fetchingRef = useRef(false);
 
   useEffect(() => {
-    console.log('[AuthContext] useEffect MOUNTED - setting up auth listener');
     let mounted = true;
     let profileFetched = false;
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('[AuthContext] onAuthStateChange triggered:', event, 'Session exists:', !!session);
-
         if (!mounted) return;
 
         // Handle sign out / no session
@@ -52,10 +49,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           // On app load, fetch profile and then set loading to false
           if (!profileFetched) {
             profileFetched = true;
-            console.log('[AuthContext] INITIAL_SESSION - fetching profile');
             fetchUserProfile(session.user.id)
-              .catch(error => {
-                console.error('[AuthContext] Initial profile fetch failed:', error);
+              .catch(() => {
+                // Error already handled in fetchUserProfile
               })
               .finally(() => {
                 if (mounted) {
@@ -65,12 +61,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         } else if (event === 'SIGNED_IN') {
           // For explicit sign-in, profile is fetched synchronously by signIn()
-          // Don't fetch here to avoid duplicate calls
-          console.log('[AuthContext] SIGNED_IN event - profile already fetched by signIn()');
           setLoading(false);
         } else if (event === 'TOKEN_REFRESHED') {
           // Token refreshed, don't fetch profile again
-          console.log('[AuthContext] TOKEN_REFRESHED event - keeping existing profile');
         } else {
           // For other events, just set loading false
           setLoading(false);
@@ -79,7 +72,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 
     return () => {
-      console.log('[AuthContext] useEffect CLEANUP - unsubscribing auth listener');
       mounted = false;
       subscription.unsubscribe();
     };
@@ -88,38 +80,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const fetchUserProfile = async (userId: string): Promise<void> => {
     // Prevent duplicate fetches
     if (fetchingRef.current) {
-      console.log('[AuthContext] Already fetching profile, skipping...');
       return;
     }
 
     fetchingRef.current = true;
-    console.log('[AuthContext] Fetching profile for user:', userId);
     setProfileLoading(true);
     setProfileError(null);
 
     try {
       const profileData = await apiClient.getCurrentUserProfile();
-      console.log('[AuthContext] Profile data received:', profileData);
 
       if (profileData.teacher) {
         setTeacher(profileData.teacher);
         setAdminUser(null);
-        console.log('[AuthContext] Teacher profile loaded');
       } else if (profileData.admin) {
         setAdminUser(profileData.admin);
         setTeacher(null);
-        console.log('[AuthContext] Admin profile loaded');
       } else {
         // User exists in auth but not in teachers/admin tables
-        console.warn('[AuthContext] User authenticated but no profile found');
         setTeacher(null);
         setAdminUser(null);
         setProfileError('Profile not found. Please complete your signup.');
         throw new Error('Profile not found');
       }
     } catch (error: any) {
-      console.error('[AuthContext] Profile fetch error:', error);
-
       // Handle different error types
       if (error.message.includes('401') || error.message.includes('Unauthorized')) {
         setProfileError('Session expired. Please sign in again.');
@@ -152,17 +136,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
-    console.log('[AuthContext] signIn called');
-
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
-    });
-
-    console.log('[AuthContext] signInWithPassword result:', {
-      hasUser: !!data?.user,
-      hasSession: !!data?.session,
-      error: error?.message
     });
 
     if (error) {
@@ -180,11 +156,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       throw new Error('Authentication failed - no user returned');
     }
 
-    // CRITICAL: Fetch profile synchronously BEFORE returning
+    // Fetch profile synchronously BEFORE returning
     // This ensures profile is loaded when login page redirects to dashboard
-    console.log('[AuthContext] User authenticated, fetching profile synchronously...');
     await fetchUserProfile(data.user.id);
-    console.log('[AuthContext] signIn completed successfully with profile loaded');
   };
 
   const signOut = async () => {

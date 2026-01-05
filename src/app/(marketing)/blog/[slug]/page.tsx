@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import { BlogCTA } from '@/components/marketing/blog/BlogCTA';
+import DOMPurify from 'isomorphic-dompurify';
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -121,7 +122,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               prose-code:text-brand-red prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
               prose-pre:bg-gray-900 prose-pre:text-gray-100
               prose-img:rounded-lg prose-img:shadow-md"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
           />
         </div>
 

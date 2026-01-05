@@ -12,64 +12,34 @@ class ApiClient {
   private async getAuthToken(): Promise<string | null> {
     const supabase = createClient();
     const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token || null;
-    console.log('[API Client] getAuthToken:', {
-      hasSession: !!session,
-      hasToken: !!token,
-      tokenPreview: token ? `${token.substring(0, 20)}...` : 'null'
-    });
-    return token;
+    return session?.access_token || null;
   }
 
   private async request<T>(
     endpoint: string,
     options: RequestInit = {}
   ): Promise<T> {
-    try {
-      console.log(`[API Client] request() called for ${endpoint}`);
+    const token = await this.getAuthToken();
 
-      const token = await this.getAuthToken();
-      console.log(`[API Client] Making request to ${endpoint}`, {
-        method: options.method || 'GET',
-        hasToken: !!token,
-        baseUrl: this.baseUrl,
-      });
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+      ...(token && { 'Authorization': `Bearer ${token}` }),
+      ...options.headers,
+    };
 
-      const headers: HeadersInit = {
-        'Content-Type': 'application/json',
-        ...(token && { 'Authorization': `Bearer ${token}` }),
-        ...options.headers,
-      };
+    const url = `${this.baseUrl}${endpoint}`;
 
-      const url = `${this.baseUrl}${endpoint}`;
-      console.log(`[API Client] Full URL: ${url}`);
+    const response = await fetch(url, {
+      ...options,
+      headers,
+    });
 
-      console.log(`[API Client] About to call fetch...`);
-      const response = await fetch(url, {
-        ...options,
-        headers,
-      });
-      console.log(`[API Client] Fetch completed`);
-
-      console.log(`[API Client] Response from ${endpoint}:`, {
-        status: response.status,
-        statusText: response.statusText,
-        ok: response.ok,
-      });
-
-      if (!response.ok) {
-        const error = await response.json().catch(() => ({ detail: 'Request failed' }));
-        console.error(`[API Client] Error response:`, error);
-        throw new Error(error.detail || `HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      console.log(`[API Client] Success response from ${endpoint}:`, data);
-      return data;
-    } catch (error) {
-      console.error(`[API Client] request() caught error:`, error);
-      throw error;
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ detail: 'Request failed' }));
+      throw new Error(error.detail || `HTTP ${response.status}: ${response.statusText}`);
     }
+
+    return response.json();
   }
 
   private async uploadFile(
@@ -108,17 +78,9 @@ class ApiClient {
 
   // Auth endpoints
   async getCurrentUserProfile() {
-    console.log('[API Client] getCurrentUserProfile called');
-    try {
-      const result = await this.request('/api/v1/auth/me', {
-        method: 'GET',
-      });
-      console.log('[API Client] getCurrentUserProfile success:', result);
-      return result;
-    } catch (error) {
-      console.error('[API Client] getCurrentUserProfile error:', error);
-      throw error;
-    }
+    return this.request('/api/v1/auth/me', {
+      method: 'GET',
+    });
   }
 
   // Signup endpoint (no auth required)
@@ -132,37 +94,21 @@ class ApiClient {
     subject_specialty: string;
     linkedin?: string;
   }) {
-    console.log('[API Client] createTeacherSignup method called (no auth)');
-    console.log('[API Client] Data to send:', data);
+    // This endpoint doesn't require authentication
+    const response = await fetch(`${this.baseUrl}/api/v1/signup/create-teacher-profile`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
 
-    try {
-      // This endpoint doesn't require authentication
-      const response = await fetch(`${this.baseUrl}/api/v1/signup/create-teacher-profile`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      console.log('[API Client] Signup response:', {
-        status: response.status,
-        ok: response.ok,
-      });
-
-      if (!response.ok) {
-        const error = await response.json().catch(() => ({ detail: 'Request failed' }));
-        console.error('[API Client] Signup error response:', error);
-        throw new Error(error.detail || `HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      const result = await response.json();
-      console.log('[API Client] Signup success:', result);
-      return result;
-    } catch (error) {
-      console.error('[API Client] createTeacherSignup error:', error);
-      throw error;
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ detail: 'Request failed' }));
+      throw new Error(error.detail || `HTTP ${response.status}: ${response.statusText}`);
     }
+
+    return response.json();
   }
 
   // Teacher endpoints
@@ -175,21 +121,10 @@ class ApiClient {
     subject_specialty: string;
     linkedin?: string;
   }) {
-    console.log('[API Client] createTeacher method called');
-    console.log('[API Client] Data to send:', data);
-    console.log('[API Client] Base URL:', this.baseUrl);
-
-    try {
-      const result = await this.request('/api/v1/teachers/', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
-      console.log('[API Client] createTeacher success:', result);
-      return result;
-    } catch (error) {
-      console.error('[API Client] createTeacher error:', error);
-      throw error;
-    }
+    return this.request('/api/v1/teachers/', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
   }
 
   async getCurrentTeacher() {
@@ -284,6 +219,80 @@ class ApiClient {
   async getSchool(schoolId: number) {
     return this.request(`/api/v1/schools/${schoolId}`, {
       method: 'GET',
+    });
+  }
+
+  // Payment endpoints
+  async detectCurrency() {
+    return this.request('/api/v1/payments/detect-currency', {
+      method: 'GET',
+    });
+  }
+
+  async createCheckoutSession(data: {
+    success_url: string;
+    cancel_url: string;
+    currency?: string;
+  }) {
+    return this.request('/api/v1/payments/create-checkout-session', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async verifyPaymentSession(sessionId: string) {
+    return this.request('/api/v1/payments/verify-session', {
+      method: 'POST',
+      body: JSON.stringify({ session_id: sessionId }),
+    });
+  }
+
+  // Blog endpoints
+  async getPublicBlogPosts() {
+    return this.request('/api/v1/blog/public', {
+      method: 'GET',
+    });
+  }
+
+  async getPublicBlogPost(slug: string) {
+    return this.request(`/api/v1/blog/public/${slug}`, {
+      method: 'GET',
+    });
+  }
+
+  async createBlogPost(data: {
+    title: string;
+    slug: string;
+    content: string;
+    excerpt?: string;
+    featured_image?: string;
+    status: 'draft' | 'published';
+    category?: string;
+  }) {
+    return this.request('/api/v1/blog', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateBlogPost(postId: number, data: {
+    title?: string;
+    slug?: string;
+    content?: string;
+    excerpt?: string;
+    featured_image?: string;
+    status?: 'draft' | 'published';
+    category?: string;
+  }) {
+    return this.request(`/api/v1/blog/${postId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteBlogPost(postId: number) {
+    return this.request(`/api/v1/blog/${postId}`, {
+      method: 'DELETE',
     });
   }
 }

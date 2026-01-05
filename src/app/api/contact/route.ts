@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
+// RFC 5322 compliant email regex (simplified)
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+
+// Max lengths for input validation
+const MAX_NAME_LENGTH = 100;
+const MAX_EMAIL_LENGTH = 254;
+const MAX_SUBJECT_LENGTH = 200;
+const MAX_MESSAGE_LENGTH = 5000;
+
 export async function POST(request: NextRequest) {
   try {
     const { name, email, subject, message } = await request.json();
@@ -13,8 +22,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate field lengths
+    if (name.length > MAX_NAME_LENGTH ||
+        email.length > MAX_EMAIL_LENGTH ||
+        subject.length > MAX_SUBJECT_LENGTH ||
+        message.length > MAX_MESSAGE_LENGTH) {
+      return NextResponse.json(
+        { error: 'One or more fields exceed maximum length' },
+        { status: 400 }
+      );
+    }
+
     // Validate email format
-    if (!email.includes('@')) {
+    if (!EMAIL_REGEX.test(email)) {
       return NextResponse.json(
         { error: 'Valid email is required' },
         { status: 400 }

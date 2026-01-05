@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Teacher Requirements for China Jobs | Qualifications Needed | EduConnect',
-  description: 'Qualify to teach in China with EduConnect. Requirements: Bachelor\'s degree, teaching experience, TEFL/PGCE certification. Learn what you need for international school positions in China.',
+  description: 'Qualify to teach in China with EduConnect. Requirements: Bachelor\'s degree, professional experience, excellent English skills. Learn what you need for international school positions in China.',
 };
 
 export default function RequirementsPage() {
@@ -35,15 +35,6 @@ export default function RequirementsPage() {
                   ✓
                 </span>
                 <div>
-                  <strong className="text-gray-900">Teaching Experience:</strong>
-                  <span className="text-gray-700"> At least one year of teaching experience in a formal educational setting</span>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
-                  ✓
-                </span>
-                <div>
                   <strong className="text-gray-900">Professional Experience:</strong>
                   <span className="text-gray-700"> Relevant professional experience in a well-regarded company or industry</span>
                 </div>
@@ -62,8 +53,8 @@ export default function RequirementsPage() {
                   ✓
                 </span>
                 <div>
-                  <strong className="text-gray-900">Teaching Qualification:</strong>
-                  <span className="text-gray-700"> A recognized teaching qualification such as TEFL or PGCE</span>
+                  <strong className="text-gray-900">Excellent English Skills:</strong>
+                  <span className="text-gray-700"> A native English speaker from an English-speaking country</span>
                 </div>
               </li>
               <li className="flex items-start gap-3">
@@ -71,8 +62,35 @@ export default function RequirementsPage() {
                   ✓
                 </span>
                 <div>
-                  <strong className="text-gray-900">Excellent English Skills:</strong>
-                  <span className="text-gray-700"> A native English speaker from an English-speaking country</span>
+                  <strong className="text-gray-900">Valid Passport:</strong>
+                  <span className="text-gray-700"> A valid passport with at least 6 months remaining validity</span>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
+                  ✓
+                </span>
+                <div>
+                  <strong className="text-gray-900">Clean Background Check:</strong>
+                  <span className="text-gray-700"> A clear criminal record, verified through a police background check</span>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
+                  ✓
+                </span>
+                <div>
+                  <strong className="text-gray-900">Health Clearance:</strong>
+                  <span className="text-gray-700"> Ability to pass a medical examination (required for Z-Visa)</span>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
+                  ✓
+                </span>
+                <div>
+                  <strong className="text-gray-900">Contract Commitment:</strong>
+                  <span className="text-gray-700"> Willingness to commit to a minimum one-year contract</span>
                 </div>
               </li>
             </ul>
