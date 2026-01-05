@@ -2,7 +2,89 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
 import { useModal } from '@/contexts/ModalContext';
+
+const faqs = [
+  {
+    question: "How much can I earn teaching in China?",
+    answer: "Our teaching positions offer 25,000-40,000 RMB monthly (approximately £3,000-£4,800), plus benefits including housing assistance, medical insurance, and paid holidays. Many teachers save 60-70% of their salary."
+  },
+  {
+    question: "What qualifications do I need to teach in China?",
+    answer: "You need a Bachelor's degree, at least one year of teaching experience, a teaching qualification (TEFL/PGCE), and to be a native English speaker from an English-speaking country."
+  },
+  {
+    question: "Which cities in China offer the best teaching opportunities?",
+    answer: "Shanghai, Beijing, Shenzhen, and Guangzhou offer the highest salaries and most international schools. We also place teachers in Nanjing, Hangzhou, and other tier-1 cities with excellent opportunities."
+  },
+  {
+    question: "Do you help with visa applications for China?",
+    answer: "Yes, we provide complete visa support including Z-visa applications, work permit assistance, and guidance through all required documentation and legalization processes."
+  },
+  {
+    question: "What subjects are most in demand in Chinese international schools?",
+    answer: "English, Mathematics, Science, and Physical Education are in highest demand. We also regularly place Art, Music, History, and Computer Science teachers in top international schools."
+  },
+  {
+    question: "Is it difficult to adapt to living in China as a foreign teacher?",
+    answer: "We provide comprehensive support including free Mandarin lessons, expat community connections, and ongoing assistance to help you settle in. Most teachers find the experience rewarding and exciting."
+  }
+];
+
+const testimonials = [
+  {
+    name: "Emma Richardson",
+    role: "Head of English, Shanghai",
+    quote: "Best decision I ever made. The progression opportunities here are incredible - I became Head of English in just two years. Highly recommend.",
+    image: "/images/Teacher Testimonials/teacher-asian-lady.png"
+  },
+  {
+    name: "James Carter",
+    role: "Geography Teacher, Beijing",
+    quote: "Genuinely life-changing experience. The support from EduConnect was exceptional, and working in Beijing's international schools has accelerated my career development beyond what I thought possible. The students are brilliant and the teaching facilities are world-class.",
+    image: "/images/Teacher Testimonials/teacher-white_man_shirt.png"
+  },
+  {
+    name: "Tom Fletcher",
+    role: "PE Teacher, Shenzhen",
+    quote: "Salary's great, kids love sport, saved loads. Would definitely do again!",
+    image: "/images/Teacher Testimonials/teacher-PE-man.png"
+  },
+  {
+    name: "Alex Murphy",
+    role: "Science Teacher, Guangzhou",
+    quote: "Honestly, I was skeptical at first. Moving halfway across the world seemed crazy. But the resources here are unbelievable - smart boards, VR labs, robotics kits I'd only dreamed of. Yes, there's a learning curve, and yes, some days are tough when you can't find familiar food. But watching these kids light up when they finally grasp a complex concept... that's universal. Plus, the other expat teachers become like family.",
+    image: "/images/Teacher Testimonials/teacher_nerdy_guy.png"
+  },
+  {
+    name: "Ben Clarke",
+    role: "Mathematics Teacher, Chengdu",
+    quote: "Outstanding opportunity. Professional development beyond expectations. Highly organized placement process. Would recommend to any serious educator seeking international experience.",
+    image: "/images/Teacher Testimonials/teacher-hispanic_man.png"
+  }
+];
+
+function FAQItem({ question, answer }: { question: string; answer: string }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="border-b border-gray-200">
+      <button
+        className="w-full py-6 text-left flex justify-between items-center hover:text-brand-red transition-colors"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="text-lg font-semibold text-gray-900 pr-8">{question}</span>
+        <span className={`text-2xl text-gray-500 transition-transform duration-200 ${isOpen ? 'rotate-45' : ''}`}>
+          +
+        </span>
+      </button>
+      <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-96 pb-6' : 'max-h-0'}`}>
+        <p className="text-gray-600 leading-relaxed">{answer}</p>
+      </div>
+    </div>
+  );
+}
 
 export default function HomePage() {
   const { openSignup } = useModal();
@@ -10,9 +92,9 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
         {/* Hero Section */}
-        <section className="relative h-screen flex items-center justify-center bg-white pt-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <section className="relative min-h-screen flex items-center justify-center bg-white pt-20">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Hero Content */}
             <div className="space-y-8">
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
@@ -73,9 +155,181 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Connect with Excellence Section */}
+      <section className="py-20 bg-slate-50">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+                Connect with Excellence
+              </h2>
+              <p className="text-xl text-gray-600 leading-relaxed">
+                EduConnect bridges the gap between exceptional Western educators and premier international schools across China. We specialize in placing qualified teachers in Shanghai, Beijing, Shenzhen, and Guangzhou&apos;s top educational institutions, offering competitive salaries and comprehensive support.
+              </p>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
+                    &#10003;
+                  </span>
+                  <span className="text-gray-700">Certified teacher matching with top international schools</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
+                    &#10003;
+                  </span>
+                  <span className="text-gray-700">Full visa and relocation support for China</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
+                    &#10003;
+                  </span>
+                  <span className="text-gray-700">Ongoing career guidance and cultural integration</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
+                    &#10003;
+                  </span>
+                  <span className="text-gray-700">Established since 2020 with 500+ successful placements</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
+                    &#10003;
+                  </span>
+                  <span className="text-gray-700">UK registered company (EduConnect Asia Ltd)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
+                    &#10003;
+                  </span>
+                  <span className="text-gray-700">Partnerships with leading schools across China</span>
+                </li>
+              </ul>
+            </div>
+            <div className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-xl">
+              <Image
+                src="/images/international_school_campus.jpg"
+                alt="Beautiful international school campus in China where EduConnect places teachers"
+                fill
+                className="object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Partner Schools Section */}
+      <section className="py-20 bg-white overflow-hidden">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Our Partner Schools Across China
+            </h2>
+            <p className="text-xl text-gray-600">
+              We work with leading international schools in Shanghai, Beijing, Shenzhen, and Guangzhou
+            </p>
+          </div>
+        </div>
+        {/* Marquee Container */}
+        <div className="relative">
+          {/* Gradient overlays for smooth fade effect */}
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10" />
+
+          {/* Scrolling track */}
+          <div className="flex animate-marquee">
+            {/* First set of logos */}
+            <div className="flex items-center gap-16 px-8">
+              <div className="relative w-40 h-24 flex-shrink-0">
+                <Image
+                  src="/images/Schools/dulwich.png"
+                  alt="Dulwich College China"
+                  fill
+                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
+                />
+              </div>
+              <div className="relative w-40 h-24 flex-shrink-0">
+                <Image
+                  src="/images/Schools/NAS.png"
+                  alt="Nord Anglia School China"
+                  fill
+                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
+                />
+              </div>
+              <div className="relative w-40 h-24 flex-shrink-0">
+                <Image
+                  src="/images/Schools/SAS.png"
+                  alt="Shanghai American School"
+                  fill
+                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
+                />
+              </div>
+              <div className="relative w-40 h-24 flex-shrink-0">
+                <Image
+                  src="/images/Schools/WISS.png"
+                  alt="Western International School Shanghai"
+                  fill
+                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
+                />
+              </div>
+              <div className="relative w-40 h-24 flex-shrink-0">
+                <Image
+                  src="/images/Schools/SUIS.png"
+                  alt="Shanghai United International School"
+                  fill
+                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
+                />
+              </div>
+            </div>
+            {/* Duplicate set for seamless loop */}
+            <div className="flex items-center gap-16 px-8">
+              <div className="relative w-40 h-24 flex-shrink-0">
+                <Image
+                  src="/images/Schools/dulwich.png"
+                  alt="Dulwich College China"
+                  fill
+                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
+                />
+              </div>
+              <div className="relative w-40 h-24 flex-shrink-0">
+                <Image
+                  src="/images/Schools/NAS.png"
+                  alt="Nord Anglia School China"
+                  fill
+                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
+                />
+              </div>
+              <div className="relative w-40 h-24 flex-shrink-0">
+                <Image
+                  src="/images/Schools/SAS.png"
+                  alt="Shanghai American School"
+                  fill
+                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
+                />
+              </div>
+              <div className="relative w-40 h-24 flex-shrink-0">
+                <Image
+                  src="/images/Schools/WISS.png"
+                  alt="Western International School Shanghai"
+                  fill
+                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
+                />
+              </div>
+              <div className="relative w-40 h-24 flex-shrink-0">
+                <Image
+                  src="/images/Schools/SUIS.png"
+                  alt="Shanghai United International School"
+                  fill
+                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Opportunities Section */}
       <section id="opportunities" className="py-20 bg-slate-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto px-6 max-w-7xl">
           {/* Section Header */}
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -142,9 +396,70 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Success Stories Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Success Stories
+            </h2>
+            <p className="text-xl text-gray-600">
+              Hear from teachers who&apos;ve transformed their careers
+            </p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-6">
+            {testimonials.map((testimonial, index) => (
+              <div
+                key={index}
+                className="bg-slate-50 p-6 rounded-xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1 w-full max-w-[340px]"
+              >
+                <div className="flex flex-col h-full text-center">
+                  <div className="flex flex-col items-center mb-4">
+                    <div className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-brand-red/20 mb-3">
+                      <Image
+                        src={testimonial.image}
+                        alt={testimonial.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900">{testimonial.name}</p>
+                      <p className="text-sm text-brand-red">{testimonial.role}</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 leading-relaxed flex-grow text-[15px]">
+                    &ldquo;{testimonial.quote}&rdquo;
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 bg-slate-50">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xl text-gray-600">
+              Everything you need to know about teaching in China
+            </p>
+          </div>
+          <div className="max-w-3xl mx-auto bg-white rounded-xl p-8 shadow-sm">
+            {faqs.map((faq, index) => (
+              <FAQItem key={index} question={faq.question} answer={faq.answer} />
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 bg-gray-900 text-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="container mx-auto px-6 max-w-7xl text-center">
           <h2 className="font-montserrat text-4xl md:text-5xl font-bold mb-6">
             Ready to start your adventure?
           </h2>
