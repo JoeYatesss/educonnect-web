@@ -9,12 +9,14 @@ import ApplicationStatusModal from '@/components/admin/ApplicationStatusModal';
 interface Application {
   id: number;
   teacher_id: number;
-  school_id: number;
+  school_id: number | null;
+  job_id?: number | null;
   status: string;
   submitted_at: string;
   notes: string | null;
   role_name: string | null;
   expiry_date: string | null;
+  is_job_application?: boolean;
   teacher: {
     id: number;
     first_name: string;
@@ -28,7 +30,16 @@ interface Application {
     city: string;
     province: string;
     school_type: string;
-  };
+  } | null;
+  job?: {
+    id: number;
+    title: string;
+    company: string;
+    city: string;
+    province: string;
+    external_url?: string;
+    source?: string;
+  } | null;
 }
 
 export default function ApplicationsOverviewPage() {
