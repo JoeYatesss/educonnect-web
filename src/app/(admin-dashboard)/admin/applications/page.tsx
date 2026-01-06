@@ -100,15 +100,17 @@ export default function ApplicationsOverviewPage() {
 
   const filteredApplications = applications.filter((app) => {
     const matchesSearch =
-      app.teacher.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.teacher.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.school.name.toLowerCase().includes(searchTerm.toLowerCase());
+      app.teacher.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      app.teacher.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      app.school?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      app.job?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      app.job?.company?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = !filterStatus || app.status === filterStatus;
-    const matchesCity = !filterCity || app.school.city === filterCity;
+    const matchesCity = !filterCity || app.school?.city === filterCity || app.job?.city === filterCity;
     return matchesSearch && matchesStatus && matchesCity;
   });
 
-  const uniqueCities = Array.from(new Set(applications.map((app) => app.school.city))).sort();
+  const uniqueCities = Array.from(new Set(applications.map((app) => app.school?.city || app.job?.city).filter(Boolean))).sort();
   const uniqueStatuses = Array.from(new Set(applications.map((app) => app.status))).sort();
 
   const statusColors: { [key: string]: string } = {

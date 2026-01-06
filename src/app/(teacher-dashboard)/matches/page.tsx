@@ -100,7 +100,7 @@ export default function MatchesPage() {
     if (filters.locations.length > 0) {
       filtered = filtered.filter(match =>
         filters.locations.some(loc =>
-          match.city.toLowerCase().includes(loc.toLowerCase()) ||
+          match.city?.toLowerCase().includes(loc.toLowerCase()) ||
           match.province?.toLowerCase().includes(loc.toLowerCase())
         )
       );
@@ -109,7 +109,7 @@ export default function MatchesPage() {
     // Apply school type filter
     if (filters.schoolTypes.length > 0) {
       filtered = filtered.filter(match =>
-        filters.schoolTypes.includes(match.school_type)
+        match.school_type && filters.schoolTypes.includes(match.school_type)
       );
     }
 
