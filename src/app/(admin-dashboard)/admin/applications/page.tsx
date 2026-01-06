@@ -55,8 +55,6 @@ export default function ApplicationsOverviewPage() {
     id: number;
     school_name: string;
     status: string;
-    role_name?: string;
-    expiry_date?: string;
   } | null>(null);
 
   useEffect(() => {
@@ -98,8 +96,6 @@ export default function ApplicationsOverviewPage() {
       id: app.id,
       school_name: app.school?.name || app.job?.company || 'Unknown',
       status: app.status,
-      role_name: app.role_name || undefined,
-      expiry_date: app.expiry_date || undefined,
     });
     setStatusModalOpen(true);
   };

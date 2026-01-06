@@ -13,15 +13,25 @@ import {
   Clock,
   Calendar,
   Home,
-  Plane
+  Plane,
+  Briefcase,
+  Building2,
+  Languages,
+  FileText,
+  Award,
+  Gift,
+  Sparkles,
+  BookOpen
 } from 'lucide-react';
 
 export interface SchoolMatch {
   id: number;
   city: string;
   province: string;
+  location_chinese?: string;
   school_type: string;
   age_groups: string[];
+  subjects?: string[];
   salary_range: string;
   match_score: number;
   match_reasons: string[];
@@ -40,6 +50,29 @@ export interface SchoolMatch {
   visa_sponsorship?: boolean;
   accommodation_provided?: string;
   external_url?: string;
+  description?: string;
+  // Structured fields from job detail pages
+  job_type?: string;
+  apply_by?: string;
+  recruiter_email?: string;
+  recruiter_phone?: string;
+  about_school?: string;
+  school_address?: {
+    street?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    postal_code?: string;
+  };
+  // Additional job fields
+  chinese_required?: boolean;
+  qualification?: string;
+  contract_type?: string;
+  contract_term?: string;
+  job_functions?: string;
+  requirements?: string;
+  benefits?: string;
+  is_new?: boolean;
 }
 
 interface MatchCardProps {
@@ -74,6 +107,67 @@ const formatDeadline = (deadline: string): string => {
     day: 'numeric',
     year: 'numeric'
   });
+};
+
+// Decode HTML entities like &nbsp; &amp; etc.
+const decodeHtmlEntities = (text: string | undefined | null): string => {
+  if (!text || typeof window === 'undefined') return text || '';
+  const textarea = document.createElement('textarea');
+  textarea.innerHTML = text;
+  return textarea.value;
+};
+
+// Format job description for better readability
+const formatJobDescription = (text: string | undefined | null): string => {
+  if (!text) return '';
+
+  // First decode HTML entities
+  let formatted = decodeHtmlEntities(text);
+
+  // Replace multiple spaces with single space
+  formatted = formatted.replace(/\s+/g, ' ');
+
+  // Add line breaks before common section headers
+  const sectionHeaders = [
+    'The Role',
+    'Key Responsibilities:',
+    'Responsibilities:',
+    'Duties:',
+    'Requirements:',
+    'Qualifications:',
+    'About Role',
+    'About the Role',
+    'Job Summary',
+    'About Us',
+    'Benefits:',
+    'What we offer:',
+    'About the School',
+    'The School',
+    'The Position',
+    'Position Summary',
+    'Essential Duties',
+    'Primary Responsibilities',
+  ];
+
+  sectionHeaders.forEach(header => {
+    const regex = new RegExp(`\\s*(${header})`, 'gi');
+    formatted = formatted.replace(regex, '\n\n$1');
+  });
+
+  // Add line breaks before bullet points (•, -, *)
+  formatted = formatted.replace(/\s*([•\-\*])\s+/g, '\n$1 ');
+
+  // Add line breaks before numbered items (1., 2., A., B., etc.)
+  formatted = formatted.replace(/\s+(\d+\.)\s+/g, '\n$1 ');
+  formatted = formatted.replace(/\s+([A-Z]\.)\s+/g, '\n$1 ');
+
+  // Clean up multiple newlines
+  formatted = formatted.replace(/\n{3,}/g, '\n\n');
+
+  // Trim whitespace
+  formatted = formatted.trim();
+
+  return formatted;
 };
 
 export default function MatchCard({ match, children }: MatchCardProps) {
@@ -167,21 +261,21 @@ export default function MatchCard({ match, children }: MatchCardProps) {
       {/* Job Title (for external jobs) */}
       {match.title && (
         <div className="mb-2">
-          <span className="text-lg font-bold text-gray-900">{match.title}</span>
+          <span className="text-lg font-bold text-gray-900">{decodeHtmlEntities(match.title)}</span>
         </div>
       )}
 
       {/* Company/School Name (for external jobs) */}
       {match.company && (
         <div className="mb-2">
-          <span className="text-base font-medium text-gray-700">{match.company}</span>
+          <span className="text-base font-medium text-gray-700">{decodeHtmlEntities(match.company)}</span>
         </div>
       )}
 
       {/* Role Name (for school matches) */}
       {!match.title && match.role_name && (
         <div className="mb-3">
-          <span className="text-lg font-semibold text-gray-900">{match.role_name}</span>
+          <span className="text-lg font-semibold text-gray-900">{decodeHtmlEntities(match.role_name)}</span>
         </div>
       )}
 
@@ -234,19 +328,55 @@ export default function MatchCard({ match, children }: MatchCardProps) {
 
       {/* Badges */}
       <div className="flex flex-wrap gap-2 mb-4">
+        {/* New Job Badge */}
+        {match.is_new && (
+          <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-rose-100 text-rose-800">
+            <Sparkles className="w-4 h-4 mr-1" />
+            New
+          </span>
+        )}
         {match.school_type && (
           <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-purple-100 text-purple-800">
+            <Building2 className="w-4 h-4 mr-1" />
             {match.school_type}
           </span>
         )}
         {match.age_groups?.map((age, idx) => (
           <span key={idx} className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-blue-100 text-blue-800">
+            <Users className="w-4 h-4 mr-1" />
             {age}
           </span>
         ))}
+        {match.subjects?.slice(0, 3).map((subject, idx) => (
+          <span key={idx} className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-indigo-100 text-indigo-800">
+            <BookOpen className="w-4 h-4 mr-1" />
+            {subject}
+          </span>
+        ))}
+        {match.subjects && match.subjects.length > 3 && (
+          <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-indigo-50 text-indigo-600">
+            +{match.subjects.length - 3} more
+          </span>
+        )}
         {match.salary_range && (
           <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-green-100 text-green-800">
             💰 {match.salary_range}
+          </span>
+        )}
+        {/* Chinese Required */}
+        {match.chinese_required !== undefined && (
+          <span className={`inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium ${
+            match.chinese_required ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-600'
+          }`}>
+            <Languages className="w-4 h-4 mr-1" />
+            {match.chinese_required ? 'Chinese Required' : 'No Chinese'}
+          </span>
+        )}
+        {/* Contract Type - only show if different from job_type */}
+        {match.contract_type && match.contract_type !== match.job_type && (
+          <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-slate-100 text-slate-800">
+            <FileText className="w-4 h-4 mr-1" />
+            {match.contract_type}
           </span>
         )}
       </div>
@@ -254,23 +384,35 @@ export default function MatchCard({ match, children }: MatchCardProps) {
       {/* External Job Info (TES-specific) */}
       {isExternalJob && (
         <div className="flex flex-wrap gap-2 mb-4">
-          {/* Application Deadline */}
-          {match.application_deadline && daysUntilDeadline !== null && (
+          {/* Job Type */}
+          {match.job_type && (
+            <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-violet-100 text-violet-800">
+              <Briefcase className="w-4 h-4 mr-1" />
+              {match.job_type}
+            </span>
+          )}
+
+          {/* Application Deadline / Apply By */}
+          {(match.apply_by || (match.application_deadline && daysUntilDeadline !== null)) && (
             <span className={`inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium ${
-              daysUntilDeadline <= 7
+              daysUntilDeadline !== null && daysUntilDeadline <= 7
                 ? 'bg-red-100 text-red-800'
-                : daysUntilDeadline <= 14
+                : daysUntilDeadline !== null && daysUntilDeadline <= 14
                 ? 'bg-orange-100 text-orange-800'
                 : 'bg-amber-100 text-amber-800'
             }`}>
               <Clock className="w-4 h-4 mr-1" />
-              {daysUntilDeadline <= 0
+              {match.apply_by
+                ? `Apply by: ${match.apply_by}`
+                : daysUntilDeadline !== null && daysUntilDeadline <= 0
                 ? 'Deadline passed'
                 : daysUntilDeadline === 1
                 ? '1 day left'
                 : `${daysUntilDeadline} days left`
               }
-              <span className="ml-1 text-xs opacity-75">({formatDeadline(match.application_deadline)})</span>
+              {match.application_deadline && !match.apply_by && (
+                <span className="ml-1 text-xs opacity-75">({formatDeadline(match.application_deadline)})</span>
+              )}
             </span>
           )}
 
@@ -297,6 +439,109 @@ export default function MatchCard({ match, children }: MatchCardProps) {
               {match.accommodation_provided}
             </span>
           )}
+        </div>
+      )}
+
+      {/* Job Description (for external jobs) */}
+      {isExternalJob && match.description && (
+        <div className="mb-4">
+          <p className="text-sm text-gray-600 font-semibold mb-2">Job Description:</p>
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
+              {formatJobDescription(match.description)}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Qualification (for external jobs) */}
+      {isExternalJob && match.qualification && (
+        <div className="mb-4">
+          <p className="text-sm text-gray-600 font-semibold mb-2 flex items-center gap-2">
+            <Award className="w-4 h-4 text-amber-600" />
+            Qualifications Required:
+          </p>
+          <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">
+            <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
+              {formatJobDescription(match.qualification)}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Requirements (for external jobs) */}
+      {isExternalJob && match.requirements && (
+        <div className="mb-4">
+          <p className="text-sm text-gray-600 font-semibold mb-2 flex items-center gap-2">
+            <FileText className="w-4 h-4 text-blue-600" />
+            Requirements:
+          </p>
+          <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+            <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
+              {formatJobDescription(match.requirements)}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Job Functions (for external jobs) */}
+      {isExternalJob && match.job_functions && (
+        <div className="mb-4">
+          <p className="text-sm text-gray-600 font-semibold mb-2 flex items-center gap-2">
+            <Briefcase className="w-4 h-4 text-indigo-600" />
+            Job Functions:
+          </p>
+          <div className="bg-indigo-50 rounded-lg p-4 border border-indigo-200">
+            <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
+              {formatJobDescription(match.job_functions)}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Benefits (for external jobs) */}
+      {isExternalJob && match.benefits && (
+        <div className="mb-4">
+          <p className="text-sm text-gray-600 font-semibold mb-2 flex items-center gap-2">
+            <Gift className="w-4 h-4 text-green-600" />
+            Benefits:
+          </p>
+          <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+            <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
+              {formatJobDescription(match.benefits)}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* NOTE: Recruiter contact and external links are only shown in admin dashboard */}
+
+      {/* About the School (for external jobs) */}
+      {isExternalJob && match.about_school && (
+        <div className="mb-4">
+          <p className="text-sm text-gray-600 font-semibold mb-2 flex items-center gap-2">
+            <Building2 className="w-4 h-4" />
+            About the School:
+          </p>
+          <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+            <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
+              {formatJobDescription(match.about_school)}
+            </p>
+            {match.school_address && (
+              <div className="mt-3 pt-3 border-t border-purple-200">
+                <p className="text-xs text-gray-500 font-medium mb-1">School Address:</p>
+                <p className="text-sm text-gray-700">
+                  {[
+                    match.school_address.street,
+                    match.school_address.city,
+                    match.school_address.state,
+                    match.school_address.country,
+                    match.school_address.postal_code
+                  ].filter(Boolean).join(', ')}
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       )}
 

@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import ApplicationStatusModal from '@/components/admin/ApplicationStatusModal';
 
 interface Stats {
   total_teachers: number;
@@ -17,6 +18,9 @@ interface RecentApplication {
   id: number;
   status: string;
   submitted_at: string;
+  is_job_application?: boolean;
+  role_name?: string;
+  expiry_date?: string;
   teacher: {
     first_name: string;
     last_name: string;
@@ -24,7 +28,12 @@ interface RecentApplication {
   school: {
     name: string;
     city: string;
-  };
+  } | null;
+  job?: {
+    title: string;
+    company: string;
+    city: string;
+  } | null;
 }
 
 export default function AdminDashboard() {
@@ -33,6 +42,12 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [recentApplications, setRecentApplications] = useState<RecentApplication[]>([]);
   const [loading, setLoading] = useState(true);
+  const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const [selectedApplication, setSelectedApplication] = useState<{
+    id: number;
+    school_name: string;
+    status: string;
+  } | null>(null);
 
   useEffect(() => {
     if (!authLoading && !adminUser) {
@@ -107,6 +122,25 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleOpenStatusModal = (app: RecentApplication) => {
+    setSelectedApplication({
+      id: app.id,
+      school_name: app.school?.name || app.job?.company || 'Unknown',
+      status: app.status,
+    });
+    setStatusModalOpen(true);
+  };
+
+  const handleCloseStatusModal = () => {
+    setStatusModalOpen(false);
+    setSelectedApplication(null);
+  };
+
+  const handleStatusUpdate = () => {
+    fetchRecentApplications();
+    fetchStats();
+  };
+
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
       case 'pending':
@@ -166,8 +200,10 @@ export default function AdminDashboard() {
               </p>
             </div>
             <button
-              onClick={() => {
-                /* TODO: signOut */
+              onClick={async () => {
+                const { createClient } = await import('@/lib/supabase/client');
+                await createClient().auth.signOut();
+                router.push('/');
               }}
               className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
             >
@@ -414,25 +450,6 @@ export default function AdminDashboard() {
               <span className="ml-3 font-medium text-gray-900">Manage Blog</span>
             </Link>
 
-            <Link
-              href="/admin/matching"
-              className="flex items-center p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
-            >
-              <svg
-                className="h-6 w-6 text-blue-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                />
-              </svg>
-              <span className="ml-3 font-medium text-gray-900">Run Matching</span>
-            </Link>
           </div>
         </div>
 
@@ -469,7 +486,13 @@ export default function AdminDashboard() {
                         {app.teacher.first_name} {app.teacher.last_name}
                       </p>
                       <p className="text-sm text-gray-500">
-                        Applied to {app.school.name} ({app.school.city})
+                        {app.is_job_application && app.job ? (
+                          <>Applied to {app.job.company} ({app.job.city})</>
+                        ) : app.school ? (
+                          <>Applied to {app.school.name} ({app.school.city})</>
+                        ) : (
+                          <>Application pending</>
+                        )}
                       </p>
                     </div>
                   </div>
@@ -484,6 +507,12 @@ export default function AdminDashboard() {
                     <span className="text-xs text-gray-500">
                       {formatDate(app.submitted_at)}
                     </span>
+                    <button
+                      onClick={() => handleOpenStatusModal(app)}
+                      className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      Update
+                    </button>
                   </div>
                 </div>
               ))}
@@ -491,6 +520,16 @@ export default function AdminDashboard() {
           )}
         </div>
       </div>
+
+      {/* Application Status Modal */}
+      {statusModalOpen && selectedApplication && (
+        <ApplicationStatusModal
+          isOpen={statusModalOpen}
+          onClose={handleCloseStatusModal}
+          application={selectedApplication}
+          onUpdate={handleStatusUpdate}
+        />
+      )}
     </div>
   );
 }

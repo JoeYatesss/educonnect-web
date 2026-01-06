@@ -9,14 +9,12 @@ interface ApplicationStatusModalProps {
     id: number;
     school_name: string;
     status: string;
-    role_name?: string;
-    expiry_date?: string;
   };
   onUpdate: () => void;
 }
 
 const statusOptions = [
-  { value: 'submitted', label: 'Application Submitted' },
+  { value: 'pending', label: 'Pending' },
   { value: 'document_verification', label: 'Document Verification' },
   { value: 'school_matching', label: 'School Matching' },
   { value: 'interview_scheduled', label: 'Interview Scheduled' },
@@ -33,11 +31,6 @@ export default function ApplicationStatusModal({
   onUpdate,
 }: ApplicationStatusModalProps) {
   const [newStatus, setNewStatus] = useState(application.status);
-  const [notes, setNotes] = useState('');
-  const [roleName, setRoleName] = useState(application.role_name || '');
-  const [expiryDate, setExpiryDate] = useState(
-    application.expiry_date ? application.expiry_date.split('T')[0] : ''
-  );
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
@@ -61,17 +54,14 @@ export default function ApplicationStatusModal({
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            status: newStatus !== application.status ? newStatus : undefined,
-            notes: notes || undefined,
-            role_name: roleName || undefined,
-            expiry_date: expiryDate ? new Date(expiryDate).toISOString() : undefined,
+            status: newStatus,
           }),
         }
       );
 
       if (!response.ok) throw new Error('Failed to update status');
 
-      alert('Application status updated successfully!');
+      alert('Status updated successfully!');
       onUpdate();
       onClose();
     } catch (error) {
@@ -84,24 +74,14 @@ export default function ApplicationStatusModal({
 
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Update Application Status</h3>
-        <p className="text-sm text-gray-600 mb-4">School: {application.school_name}</p>
+      <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+        <h3 className="text-lg font-medium text-gray-900 mb-2">Update Status</h3>
+        <p className="text-sm text-gray-600 mb-4">{application.school_name}</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Current Status
-            </label>
-            <p className="text-sm text-gray-900 px-3 py-2 bg-gray-100 rounded-md">
-              {statusOptions.find((s) => s.value === application.status)?.label ||
-                application.status}
-            </p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              New Status *
+              Status
             </label>
             <select
               required
@@ -117,48 +97,10 @@ export default function ApplicationStatusModal({
             </select>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Role Name
-            </label>
-            <input
-              type="text"
-              value={roleName}
-              onChange={(e) => setRoleName(e.target.value)}
-              placeholder="e.g., English Teacher, Math Instructor"
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Expiry Date
-            </label>
-            <input
-              type="date"
-              value={expiryDate}
-              onChange={(e) => setExpiryDate(e.target.value)}
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Notes (optional)
-            </label>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              rows={3}
-              placeholder="Add any notes about this status change..."
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-            />
-          </div>
-
-          <div className="flex gap-3 mt-6">
+          <div className="flex gap-3 mt-4">
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || newStatus === application.status}
               className="flex-1 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Updating...' : 'Update'}

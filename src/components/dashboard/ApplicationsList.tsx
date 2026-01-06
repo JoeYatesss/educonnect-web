@@ -3,12 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiClient } from '@/lib/api/client';
-import { FileText, Calendar, MapPin, Check, Clock, Briefcase } from 'lucide-react';
+import { FileText, Calendar, MapPin, Check, Clock, Briefcase, Building2, Languages, Award, Gift, BookOpen, Users, Sparkles, Home, Plane } from 'lucide-react';
 
 interface Application {
   id: number;
   city: string;
   province: string;
+  location_chinese?: string;
   school_type: string;
   salary_range: string;
   status: 'pending' | 'document_verification' | 'school_matching' |
@@ -18,6 +19,36 @@ interface Application {
   updated_at: string;
   role_name?: string;
   expiry_date?: string;
+  is_job_application?: boolean;
+  job_description?: string;
+  external_url?: string;
+  company?: string;
+  // Job-specific fields
+  age_groups?: string[];
+  subjects?: string[];
+  chinese_required?: boolean;
+  qualification?: string;
+  contract_type?: string;
+  job_functions?: string;
+  requirements?: string;
+  benefits?: string;
+  is_new?: boolean;
+  contract_term?: string;
+  job_type?: string;
+  start_date?: string;
+  apply_by?: string;
+  recruiter_email?: string;
+  recruiter_phone?: string;
+  about_school?: string;
+  school_address?: {
+    street?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    postal_code?: string;
+  };
+  visa_sponsorship?: boolean;
+  accommodation_provided?: string;
 }
 
 // Progress stages for each application
@@ -63,6 +94,63 @@ export default function ApplicationsList() {
     } catch {
       return dateString;
     }
+  };
+
+  // Decode HTML entities like &nbsp; &amp; etc.
+  const decodeHtmlEntities = (text: string | undefined | null): string => {
+    if (!text) return '';
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+  };
+
+  // Format job description for better readability
+  const formatJobDescription = (text: string | undefined | null): string => {
+    if (!text) return '';
+
+    // First decode HTML entities
+    let formatted = decodeHtmlEntities(text);
+
+    // Replace multiple &nbsp; or spaces with a single space first
+    formatted = formatted.replace(/\s+/g, ' ');
+
+    // Add line breaks before common section headers
+    const sectionHeaders = [
+      'The Role',
+      'Key Responsibilities:',
+      'Responsibilities:',
+      'Duties:',
+      'Requirements:',
+      'Qualifications:',
+      'About Role',
+      'About the Role',
+      'Job Summary',
+      'About Us',
+      'Benefits:',
+      'What we offer:',
+    ];
+
+    sectionHeaders.forEach(header => {
+      const regex = new RegExp(`\\s*(${header})`, 'gi');
+      formatted = formatted.replace(regex, '\n\n$1');
+    });
+
+    // Add line breaks before bullet points (•, -, *)
+    formatted = formatted.replace(/\s*([•\-\*])\s+/g, '\n$1 ');
+
+    // Add line breaks before numbered items (1., 2., etc.)
+    formatted = formatted.replace(/\s+(\d+\.)\s+/g, '\n$1 ');
+
+    // Add line breaks before capital letter sentences that follow a period
+    formatted = formatted.replace(/\.\s+([A-Z])/g, '.\n$1');
+
+    // Clean up multiple newlines
+    formatted = formatted.replace(/\n{3,}/g, '\n\n');
+
+    // Trim whitespace
+    formatted = formatted.trim();
+
+    return formatted;
   };
 
   const isExpiringSoon = (expiryDate: string | undefined) => {
@@ -163,7 +251,7 @@ export default function ApplicationsList() {
                     {application.role_name && (
                       <div className="flex items-center gap-1 mb-1">
                         <Briefcase className="w-4 h-4 text-indigo-600" />
-                        <span className="text-base font-semibold text-gray-900">{application.role_name}</span>
+                        <span className="text-base font-semibold text-gray-900">{decodeHtmlEntities(application.role_name)}</span>
                       </div>
                     )}
                     <h3 className={`${application.role_name ? 'text-sm text-gray-600' : 'text-lg font-medium text-gray-900'}`}>
@@ -209,6 +297,163 @@ export default function ApplicationsList() {
                   </div>
                 </div>
               </div>
+
+              {/* Job Info Badges (for job applications) */}
+              {application.is_job_application && (
+                <div className="mt-3 px-2 flex flex-wrap gap-2">
+                  {/* New Badge */}
+                  {application.is_new && (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-rose-100 text-rose-800">
+                      <Sparkles className="w-3 h-3 mr-1" />
+                      New
+                    </span>
+                  )}
+                  {/* Company */}
+                  {application.company && (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-800">
+                      <Building2 className="w-3 h-3 mr-1" />
+                      {decodeHtmlEntities(application.company)}
+                    </span>
+                  )}
+                  {application.job_type && (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-violet-100 text-violet-800">
+                      <Briefcase className="w-3 h-3 mr-1" />
+                      {application.job_type}
+                    </span>
+                  )}
+                  {/* Contract Type - only show if different from job_type */}
+                  {application.contract_type && application.contract_type !== application.job_type && (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-800">
+                      <FileText className="w-3 h-3 mr-1" />
+                      {application.contract_type}
+                    </span>
+                  )}
+                  {application.start_date && (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-cyan-100 text-cyan-800">
+                      <Calendar className="w-3 h-3 mr-1" />
+                      Starts: {application.start_date}
+                    </span>
+                  )}
+                  {application.apply_by && (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-amber-100 text-amber-800">
+                      <Clock className="w-3 h-3 mr-1" />
+                      Apply by: {application.apply_by}
+                    </span>
+                  )}
+                  {/* Chinese Required */}
+                  {application.chinese_required !== undefined && (
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
+                      application.chinese_required ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-600'
+                    }`}>
+                      <Languages className="w-3 h-3 mr-1" />
+                      {application.chinese_required ? 'Chinese Required' : 'No Chinese'}
+                    </span>
+                  )}
+                  {/* Visa Sponsorship */}
+                  {application.visa_sponsorship && (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-indigo-100 text-indigo-800">
+                      <Plane className="w-3 h-3 mr-1" />
+                      Visa Sponsored
+                    </span>
+                  )}
+                  {/* Accommodation */}
+                  {application.accommodation_provided && (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-teal-100 text-teal-800">
+                      <Home className="w-3 h-3 mr-1" />
+                      {application.accommodation_provided}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* Subjects and Age Groups (for job applications) */}
+              {application.is_job_application && (application.subjects?.length || application.age_groups?.length) && (
+                <div className="mt-2 px-2 flex flex-wrap gap-2">
+                  {application.age_groups?.map((age, idx) => (
+                    <span key={idx} className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800">
+                      <Users className="w-3 h-3 mr-1" />
+                      {age}
+                    </span>
+                  ))}
+                  {application.subjects?.slice(0, 3).map((subject, idx) => (
+                    <span key={idx} className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-indigo-100 text-indigo-800">
+                      <BookOpen className="w-3 h-3 mr-1" />
+                      {subject}
+                    </span>
+                  ))}
+                  {application.subjects && application.subjects.length > 3 && (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-indigo-50 text-indigo-600">
+                      +{application.subjects.length - 3} more
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* NOTE: Job description, recruiter contact, and external link are only shown in admin dashboard */}
+
+              {/* About the School (for job applications) */}
+              {application.is_job_application && application.about_school && (
+                <div className="mt-3 px-2">
+                  <p className="text-xs text-gray-500 font-medium mb-1 flex items-center gap-1">
+                    <Building2 className="w-3 h-3" />
+                    About the School:
+                  </p>
+                  <p className="text-sm text-gray-600 line-clamp-4 whitespace-pre-line leading-relaxed">
+                    {formatJobDescription(application.about_school)}
+                  </p>
+                  {application.school_address && (
+                    <p className="mt-1 text-xs text-gray-500">
+                      Address: {[
+                        application.school_address.street,
+                        application.school_address.city,
+                        application.school_address.state,
+                        application.school_address.country
+                      ].filter(Boolean).join(', ')}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Qualification (for job applications) */}
+              {application.is_job_application && application.qualification && (
+                <div className="mt-3 px-2">
+                  <p className="text-xs text-gray-500 font-medium mb-1 flex items-center gap-1">
+                    <Award className="w-3 h-3 text-amber-600" />
+                    Qualifications Required:
+                  </p>
+                  <p className="text-sm text-gray-600 line-clamp-3 whitespace-pre-line leading-relaxed">
+                    {formatJobDescription(application.qualification)}
+                  </p>
+                </div>
+              )}
+
+              {/* Requirements (for job applications) */}
+              {application.is_job_application && application.requirements && (
+                <div className="mt-3 px-2">
+                  <p className="text-xs text-gray-500 font-medium mb-1 flex items-center gap-1">
+                    <FileText className="w-3 h-3 text-blue-600" />
+                    Requirements:
+                  </p>
+                  <p className="text-sm text-gray-600 line-clamp-3 whitespace-pre-line leading-relaxed">
+                    {formatJobDescription(application.requirements)}
+                  </p>
+                </div>
+              )}
+
+              {/* Benefits (for job applications) */}
+              {application.is_job_application && application.benefits && (
+                <div className="mt-3 px-2">
+                  <p className="text-xs text-gray-500 font-medium mb-1 flex items-center gap-1">
+                    <Gift className="w-3 h-3 text-green-600" />
+                    Benefits:
+                  </p>
+                  <p className="text-sm text-gray-600 line-clamp-3 whitespace-pre-line leading-relaxed">
+                    {formatJobDescription(application.benefits)}
+                  </p>
+                </div>
+              )}
+
+              {/* NOTE: External job link is only shown in admin dashboard */}
 
               {/* Progress Steps */}
               {isDeclined ? (

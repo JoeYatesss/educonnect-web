@@ -7,7 +7,15 @@ import PaymentModal from './PaymentModal';
 import { SchoolMatch } from './MatchCard';
 import QuickApplyButton from './QuickApplyButton';
 import Link from 'next/link';
-import { MapPin, DollarSign, ArrowRight, Briefcase, Clock } from 'lucide-react';
+import { MapPin, DollarSign, ArrowRight, Briefcase, Clock, Sparkles, Languages, BookOpen, Building2 } from 'lucide-react';
+
+// Decode HTML entities like &nbsp; &amp; etc.
+const decodeHtmlEntities = (text: string | undefined | null): string => {
+  if (!text || typeof window === 'undefined') return text || '';
+  const textarea = document.createElement('textarea');
+  textarea.innerHTML = text;
+  return textarea.value;
+};
 
 export default function AnonymousSchoolMatches() {
   const { teacher } = useAuth();
@@ -188,10 +196,24 @@ export default function AnonymousSchoolMatches() {
           >
             {/* Left: Role, Location, Salary, and Expiry */}
             <div className="flex-1 min-w-0">
+              {/* Role name with optional new badge */}
               {match.role_name && (
                 <div className="flex items-center gap-2 text-gray-900 mb-1">
                   <Briefcase className="w-4 h-4 text-indigo-500 flex-shrink-0" />
-                  <span className="font-semibold truncate">{match.role_name}</span>
+                  <span className="font-semibold truncate">{decodeHtmlEntities(match.role_name)}</span>
+                  {match.is_new && (
+                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-rose-100 text-rose-800">
+                      <Sparkles className="w-3 h-3 mr-0.5" />
+                      New
+                    </span>
+                  )}
+                </div>
+              )}
+              {/* Company */}
+              {match.company && (
+                <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
+                  <Building2 className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                  <span className="truncate">{decodeHtmlEntities(match.company)}</span>
                 </div>
               )}
               <div className="flex items-center gap-2 text-gray-900">
@@ -215,15 +237,38 @@ export default function AnonymousSchoolMatches() {
                 <DollarSign className="w-4 h-4 text-gray-400 flex-shrink-0" />
                 <span className="truncate">{match.salary_range || 'Salary TBD'}</span>
               </div>
-              {match.is_submitted && match.expiry_date && (
+              {/* Subjects preview */}
+              {match.subjects && match.subjects.length > 0 && (
+                <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
+                  <BookOpen className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                  <span className="truncate">
+                    {match.subjects.slice(0, 2).join(', ')}
+                    {match.subjects.length > 2 && ` +${match.subjects.length - 2} more`}
+                  </span>
+                </div>
+              )}
+              {/* Chinese requirement indicator */}
+              {match.chinese_required !== undefined && (
+                <div className="flex items-center gap-2 mt-1 text-sm">
+                  <Languages className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                  <span className={match.chinese_required ? 'text-red-600' : 'text-gray-500'}>
+                    {match.chinese_required ? 'Chinese Required' : 'No Chinese'}
+                  </span>
+                </div>
+              )}
+              {/* Show expiry date for submitted applications, or application_deadline for job matches */}
+              {(match.expiry_date || match.application_deadline) && (
                 <div className="flex items-center gap-2 mt-1 text-sm">
                   <Clock className="w-4 h-4 text-gray-400 flex-shrink-0" />
                   {(() => {
-                    const expiry = new Date(match.expiry_date);
+                    // Use expiry_date for submitted apps, application_deadline for job matches
+                    const dateStr = match.expiry_date || match.application_deadline;
+                    const expiry = new Date(dateStr!);
                     const now = new Date();
                     const daysUntil = Math.ceil((expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
                     const isExpired = daysUntil <= 0;
                     const isExpiringSoon = daysUntil > 0 && daysUntil <= 7;
+                    const label = match.is_submitted ? 'Expires' : 'Deadline';
                     return (
                       <span className={`truncate ${
                         isExpired ? 'text-red-600 font-medium' :
@@ -231,8 +276,8 @@ export default function AnonymousSchoolMatches() {
                         'text-gray-600'
                       }`}>
                         {isExpired
-                          ? 'Expired'
-                          : `Expires: ${expiry.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+                          ? (match.is_submitted ? 'Expired' : 'Deadline passed')
+                          : `${label}: ${expiry.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
                         }
                       </span>
                     );
