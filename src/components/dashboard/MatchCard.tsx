@@ -10,7 +10,6 @@ import {
   ChevronDown,
   ChevronUp,
   CheckCircle,
-  ExternalLink,
   Clock,
   Calendar,
   Home,
@@ -304,20 +303,6 @@ export default function MatchCard({ match, children }: MatchCardProps) {
         </div>
       )}
 
-      {/* External Link to TES posting */}
-      {isExternalJob && match.external_url && (
-        <div className="mb-4">
-          <a
-            href={match.external_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
-          >
-            <ExternalLink className="w-4 h-4" />
-            View original posting on TES.com
-          </a>
-        </div>
-      )}
 
       {/* Expandable Details Section */}
       <div className="border-t border-gray-200 pt-4">
