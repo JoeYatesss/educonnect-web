@@ -124,7 +124,20 @@ export default function MatchCard({ match, children }: MatchCardProps) {
       <div className="flex items-center gap-2 mb-3">
         <MapPin className="w-5 h-5 text-blue-600" />
         <span className="text-xl font-semibold text-gray-900">
-          {match.city}, {match.province}
+          {(() => {
+            const city = match.city?.trim();
+            const province = match.province?.trim();
+            const normalizedCity = city?.toLowerCase();
+            const normalizedProvince = province?.toLowerCase();
+            // Capitalize first letter
+            const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+            const displayCity = city ? capitalize(city) : '';
+            // Only show province/country if different from city
+            if (!province || normalizedCity === normalizedProvince) {
+              return `${displayCity}, China`;
+            }
+            return `${displayCity}, ${capitalize(province)}`;
+          })()}
         </span>
       </div>
 

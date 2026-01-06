@@ -191,7 +191,18 @@ export default function AnonymousSchoolMatches() {
               <div className="flex items-center gap-2 text-gray-900">
                 <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" />
                 <span className="font-medium truncate">
-                  {match.city}{match.province ? `, ${match.province}` : ''}
+                  {(() => {
+                    const city = match.city?.trim();
+                    const province = match.province?.trim();
+                    const normalizedCity = city?.toLowerCase();
+                    const normalizedProvince = province?.toLowerCase();
+                    const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+                    const displayCity = city ? capitalize(city) : '';
+                    if (!province || normalizedCity === normalizedProvince) {
+                      return `${displayCity}, China`;
+                    }
+                    return `${displayCity}, ${capitalize(province)}`;
+                  })()}
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">

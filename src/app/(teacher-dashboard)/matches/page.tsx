@@ -57,9 +57,21 @@ export default function MatchesPage() {
     const locations = new Set<string>();
     const schoolTypes = new Set<string>();
 
+    // Helper to capitalize and normalize location names
+    const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+
     matches.forEach(match => {
-      if (match.city) locations.add(match.city);
-      if (match.province) locations.add(match.province);
+      // Normalize and dedupe city/province (they can be the same for municipalities like Beijing)
+      const city = match.city?.trim();
+      const province = match.province?.trim();
+      const normalizedCity = city?.toLowerCase();
+      const normalizedProvince = province?.toLowerCase();
+
+      if (city) locations.add(capitalize(city));
+      // Only add province if it's different from city
+      if (province && normalizedProvince !== normalizedCity) {
+        locations.add(capitalize(province));
+      }
       if (match.school_type) schoolTypes.add(match.school_type);
     });
 
