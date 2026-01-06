@@ -265,12 +265,7 @@ export default function MatchCard({ match, children }: MatchCardProps) {
         </div>
       )}
 
-      {/* Company/School Name (for external jobs) */}
-      {match.company && (
-        <div className="mb-2">
-          <span className="text-base font-medium text-gray-700">{decodeHtmlEntities(match.company)}</span>
-        </div>
-      )}
+      {/* Company/School Name removed for anonymity */}
 
       {/* Role Name (for school matches) */}
       {!match.title && match.role_name && (
@@ -527,20 +522,6 @@ export default function MatchCard({ match, children }: MatchCardProps) {
             <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
               {formatJobDescription(match.about_school)}
             </p>
-            {match.school_address && (
-              <div className="mt-3 pt-3 border-t border-purple-200">
-                <p className="text-xs text-gray-500 font-medium mb-1">School Address:</p>
-                <p className="text-sm text-gray-700">
-                  {[
-                    match.school_address.street,
-                    match.school_address.city,
-                    match.school_address.state,
-                    match.school_address.country,
-                    match.school_address.postal_code
-                  ].filter(Boolean).join(', ')}
-                </p>
-              </div>
-            )}
           </div>
         </div>
       )}

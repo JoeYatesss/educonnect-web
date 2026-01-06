@@ -308,13 +308,7 @@ export default function ApplicationsList() {
                       New
                     </span>
                   )}
-                  {/* Company */}
-                  {application.company && (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-800">
-                      <Building2 className="w-3 h-3 mr-1" />
-                      {decodeHtmlEntities(application.company)}
-                    </span>
-                  )}
+                  {/* Company/School Name removed for anonymity */}
                   {application.job_type && (
                     <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-violet-100 text-violet-800">
                       <Briefcase className="w-3 h-3 mr-1" />
@@ -401,16 +395,6 @@ export default function ApplicationsList() {
                   <p className="text-sm text-gray-600 line-clamp-4 whitespace-pre-line leading-relaxed">
                     {formatJobDescription(application.about_school)}
                   </p>
-                  {application.school_address && (
-                    <p className="mt-1 text-xs text-gray-500">
-                      Address: {[
-                        application.school_address.street,
-                        application.school_address.city,
-                        application.school_address.state,
-                        application.school_address.country
-                      ].filter(Boolean).join(', ')}
-                    </p>
-                  )}
                 </div>
               )}
 
