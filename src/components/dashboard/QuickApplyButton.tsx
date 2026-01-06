@@ -41,7 +41,6 @@ export default function QuickApplyButton({
       setIsApplied(true);
       setShowConfirm(false);
       onSuccess?.();
-      // State stays applied permanently now
     } catch (err: any) {
       console.error('Failed to apply:', err);
       setError(err.message || 'Failed to submit application');
@@ -104,10 +103,10 @@ export default function QuickApplyButton({
             <Send className="w-8 h-8 text-blue-600" />
           </div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">
-            Apply to this School?
+            Apply to this Position?
           </h3>
           <p className="text-gray-600 mb-2">
-            You're about to apply to a school in{' '}
+            You're about to apply to a position in{' '}
             <strong className="text-gray-900">
               {matchCity}, {matchProvince}
             </strong>
