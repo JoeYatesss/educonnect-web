@@ -7,7 +7,7 @@ import PaymentModal from './PaymentModal';
 import { SchoolMatch } from './MatchCard';
 import QuickApplyButton from './QuickApplyButton';
 import Link from 'next/link';
-import { MapPin, DollarSign, ArrowRight, Briefcase, Clock, Sparkles, Languages, BookOpen, Building2 } from 'lucide-react';
+import { MapPin, DollarSign, ArrowRight, Briefcase, Clock, Sparkles, Languages, BookOpen } from 'lucide-react';
 
 // Decode HTML entities like &nbsp; &amp; etc.
 const decodeHtmlEntities = (text: string | undefined | null): string => {
@@ -207,13 +207,6 @@ export default function AnonymousSchoolMatches() {
                       New
                     </span>
                   )}
-                </div>
-              )}
-              {/* Company */}
-              {match.company && (
-                <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
-                  <Building2 className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                  <span className="truncate">{decodeHtmlEntities(match.company)}</span>
                 </div>
               )}
               <div className="flex items-center gap-2 text-gray-900">
