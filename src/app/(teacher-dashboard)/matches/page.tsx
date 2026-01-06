@@ -82,7 +82,8 @@ export default function MatchesPage() {
   }, [matches]);
 
   // Parse salary range from string like "25,000-35,000 RMB/month"
-  const parseSalaryRange = (range: string): { min: number; max: number } => {
+  const parseSalaryRange = (range: string | null | undefined): { min: number; max: number } => {
+    if (!range) return { min: 0, max: 999999 };
     const numbers = range.match(/[\d,]+/g);
     if (!numbers || numbers.length < 2) return { min: 0, max: 999999 };
 
@@ -140,7 +141,7 @@ export default function MatchesPage() {
           return salaryB.max - salaryA.max;
         }
         case 'location':
-          return a.city.localeCompare(b.city);
+          return (a.city || '').localeCompare(b.city || '');
         default:
           return 0;
       }
