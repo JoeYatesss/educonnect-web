@@ -96,7 +96,7 @@ export default function ApplicationsOverviewPage() {
   const handleOpenStatusModal = (app: Application) => {
     setSelectedApplication({
       id: app.id,
-      school_name: app.school.name,
+      school_name: app.school?.name || app.job?.company || 'Unknown',
       status: app.status,
       role_name: app.role_name || undefined,
       expiry_date: app.expiry_date || undefined,
@@ -301,15 +301,23 @@ export default function ApplicationsOverviewPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{app.school.name}</div>
-                        <div className="text-sm text-gray-500">{app.school.school_type}</div>
+                        <div className="text-sm text-gray-900">
+                          {app.school?.name || app.job?.title || '-'}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {app.school?.school_type || app.job?.company || '-'}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">{app.role_name || '-'}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{app.school.city}</div>
-                        <div className="text-sm text-gray-500">{app.school.province}</div>
+                        <div className="text-sm text-gray-900">
+                          {app.school?.city || app.job?.city || '-'}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {app.school?.province || app.job?.province || '-'}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">{getStatusBadge(app.status)}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
