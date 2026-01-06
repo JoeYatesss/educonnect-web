@@ -13,8 +13,7 @@ import {
   Clock,
   Calendar,
   Home,
-  Plane,
-  Building2
+  Plane
 } from 'lucide-react';
 
 export interface SchoolMatch {
@@ -28,6 +27,7 @@ export interface SchoolMatch {
   match_reasons: string[];
   is_submitted?: boolean;
   role_name?: string;
+  expiry_date?: string;  // Application expiry date
   // Job-specific fields (for TES jobs)
   type?: 'school' | 'job';
   source?: string;
@@ -156,13 +156,6 @@ export default function MatchCard({ match, children }: MatchCardProps) {
           <div className={`inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r ${getScoreGradient(match.match_score)} text-white font-bold text-lg shadow-md`}>
             {match.match_score}% Match
           </div>
-          {/* Source badge for external jobs */}
-          {isExternalJob && (
-            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200">
-              <Building2 className="w-3 h-3 mr-1" />
-              TES.com
-            </span>
-          )}
         </div>
 
         {/* Action button slot (QuickApplyButton will go here) */}
@@ -189,6 +182,32 @@ export default function MatchCard({ match, children }: MatchCardProps) {
       {!match.title && match.role_name && (
         <div className="mb-3">
           <span className="text-lg font-semibold text-gray-900">{match.role_name}</span>
+        </div>
+      )}
+
+      {/* Expiry Date (for submitted applications) */}
+      {match.is_submitted && match.expiry_date && (
+        <div className="mb-3">
+          {(() => {
+            const daysUntil = getDaysUntilDeadline(match.expiry_date);
+            const isExpired = daysUntil !== null && daysUntil <= 0;
+            const isExpiringSoon = daysUntil !== null && daysUntil > 0 && daysUntil <= 7;
+            return (
+              <span className={`inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium ${
+                isExpired
+                  ? 'bg-red-100 text-red-800'
+                  : isExpiringSoon
+                  ? 'bg-amber-100 text-amber-800'
+                  : 'bg-blue-100 text-blue-800'
+              }`}>
+                <Clock className="w-4 h-4 mr-1" />
+                {isExpired
+                  ? 'Application Expired'
+                  : `Expires: ${formatDeadline(match.expiry_date)}`
+                }
+              </span>
+            );
+          })()}
         </div>
       )}
 

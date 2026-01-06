@@ -7,7 +7,7 @@ import PaymentModal from './PaymentModal';
 import { SchoolMatch } from './MatchCard';
 import QuickApplyButton from './QuickApplyButton';
 import Link from 'next/link';
-import { MapPin, DollarSign, ArrowRight, Briefcase } from 'lucide-react';
+import { MapPin, DollarSign, ArrowRight, Briefcase, Clock } from 'lucide-react';
 
 export default function AnonymousSchoolMatches() {
   const { teacher } = useAuth();
@@ -186,7 +186,7 @@ export default function AnonymousSchoolMatches() {
             key={match.id}
             className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors"
           >
-            {/* Left: Role, Location and Salary */}
+            {/* Left: Role, Location, Salary, and Expiry */}
             <div className="flex-1 min-w-0">
               {match.role_name && (
                 <div className="flex items-center gap-2 text-gray-900 mb-1">
@@ -215,6 +215,30 @@ export default function AnonymousSchoolMatches() {
                 <DollarSign className="w-4 h-4 text-gray-400 flex-shrink-0" />
                 <span className="truncate">{match.salary_range || 'Salary TBD'}</span>
               </div>
+              {match.is_submitted && match.expiry_date && (
+                <div className="flex items-center gap-2 mt-1 text-sm">
+                  <Clock className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                  {(() => {
+                    const expiry = new Date(match.expiry_date);
+                    const now = new Date();
+                    const daysUntil = Math.ceil((expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+                    const isExpired = daysUntil <= 0;
+                    const isExpiringSoon = daysUntil > 0 && daysUntil <= 7;
+                    return (
+                      <span className={`truncate ${
+                        isExpired ? 'text-red-600 font-medium' :
+                        isExpiringSoon ? 'text-amber-600 font-medium' :
+                        'text-gray-600'
+                      }`}>
+                        {isExpired
+                          ? 'Expired'
+                          : `Expires: ${expiry.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+                        }
+                      </span>
+                    );
+                  })()}
+                </div>
+              )}
             </div>
 
             {/* Center: Match Score */}
