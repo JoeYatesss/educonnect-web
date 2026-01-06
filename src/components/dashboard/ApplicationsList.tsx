@@ -146,7 +146,18 @@ export default function ApplicationsList() {
 
                   <div className="flex-1">
                     <h3 className="text-lg font-medium text-gray-900">
-                      {application.city}, {application.province}
+                      {(() => {
+                        const city = application.city?.trim();
+                        const province = application.province?.trim();
+                        const normalizedCity = city?.toLowerCase();
+                        const normalizedProvince = province?.toLowerCase();
+                        const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+                        const displayCity = city ? capitalize(city) : '';
+                        if (!province || normalizedCity === normalizedProvince) {
+                          return `${displayCity}, China`;
+                        }
+                        return `${displayCity}, ${capitalize(province)}`;
+                      })()}
                     </h3>
                     <div className="flex flex-wrap gap-2 mt-1">
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
