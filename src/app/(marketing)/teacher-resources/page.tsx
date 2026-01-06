@@ -1,12 +1,27 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 
+interface ResourceItem {
+  name: string;
+  description: string;
+  link: string;
+  linkText: string;
+  icon: string;
+  highlight?: boolean;
+}
+
+interface ResourceCategory {
+  category: string;
+  description: string;
+  items: ResourceItem[];
+}
+
 export const metadata: Metadata = {
   title: 'Teacher Resources | Tools & Apps for Teaching in China',
   description: 'Essential resources for teachers in China: language learning apps, classroom management tools, teaching platforms, and guides to help you thrive in your international teaching career.',
 };
 
-const resources = [
+const resources: ResourceCategory[] = [
   {
     category: 'Language Learning',
     description: 'Master Mandarin to connect with students, colleagues, and your local community',
