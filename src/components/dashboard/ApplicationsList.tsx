@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiClient } from '@/lib/api/client';
-import { FileText, Calendar, MapPin, Check } from 'lucide-react';
+import { FileText, Calendar, MapPin, Check, Clock, Briefcase } from 'lucide-react';
 
 interface Application {
   id: number;
@@ -16,6 +16,8 @@ interface Application {
           'placed' | 'declined';
   submitted_at: string;
   updated_at: string;
+  role_name?: string;
+  expiry_date?: string;
 }
 
 // Progress stages for each application
@@ -61,6 +63,19 @@ export default function ApplicationsList() {
     } catch {
       return dateString;
     }
+  };
+
+  const isExpiringSoon = (expiryDate: string | undefined) => {
+    if (!expiryDate) return false;
+    const expiry = new Date(expiryDate);
+    const now = new Date();
+    const daysUntilExpiry = Math.ceil((expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    return daysUntilExpiry <= 7 && daysUntilExpiry > 0;
+  };
+
+  const isExpired = (expiryDate: string | undefined) => {
+    if (!expiryDate) return false;
+    return new Date(expiryDate) < new Date();
   };
 
   // Loading state
@@ -145,7 +160,13 @@ export default function ApplicationsList() {
                   </div>
 
                   <div className="flex-1">
-                    <h3 className="text-lg font-medium text-gray-900">
+                    {application.role_name && (
+                      <div className="flex items-center gap-1 mb-1">
+                        <Briefcase className="w-4 h-4 text-indigo-600" />
+                        <span className="text-base font-semibold text-gray-900">{application.role_name}</span>
+                      </div>
+                    )}
+                    <h3 className={`${application.role_name ? 'text-sm text-gray-600' : 'text-lg font-medium text-gray-900'}`}>
                       {(() => {
                         const city = application.city?.trim();
                         const province = application.province?.trim();
@@ -170,6 +191,20 @@ export default function ApplicationsList() {
                         <Calendar className="w-3 h-3" />
                         {formatDate(application.submitted_at)}
                       </span>
+                      {application.expiry_date && (
+                        <span className={`inline-flex items-center gap-1 text-xs ${
+                          isExpired(application.expiry_date)
+                            ? 'text-red-600 font-medium'
+                            : isExpiringSoon(application.expiry_date)
+                              ? 'text-amber-600 font-medium'
+                              : 'text-gray-500'
+                        }`}>
+                          <Clock className="w-3 h-3" />
+                          {isExpired(application.expiry_date)
+                            ? 'Expired'
+                            : `Expires ${formatDate(application.expiry_date)}`}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>

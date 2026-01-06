@@ -9,6 +9,8 @@ interface ApplicationStatusModalProps {
     id: number;
     school_name: string;
     status: string;
+    role_name?: string;
+    expiry_date?: string;
   };
   onUpdate: () => void;
 }
@@ -32,6 +34,10 @@ export default function ApplicationStatusModal({
 }: ApplicationStatusModalProps) {
   const [newStatus, setNewStatus] = useState(application.status);
   const [notes, setNotes] = useState('');
+  const [roleName, setRoleName] = useState(application.role_name || '');
+  const [expiryDate, setExpiryDate] = useState(
+    application.expiry_date ? application.expiry_date.split('T')[0] : ''
+  );
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
@@ -55,8 +61,10 @@ export default function ApplicationStatusModal({
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            status: newStatus,
-            notes: notes || null,
+            status: newStatus !== application.status ? newStatus : undefined,
+            notes: notes || undefined,
+            role_name: roleName || undefined,
+            expiry_date: expiryDate ? new Date(expiryDate).toISOString() : undefined,
           }),
         }
       );
@@ -111,6 +119,31 @@ export default function ApplicationStatusModal({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
+              Role Name
+            </label>
+            <input
+              type="text"
+              value={roleName}
+              onChange={(e) => setRoleName(e.target.value)}
+              placeholder="e.g., English Teacher, Math Instructor"
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Expiry Date
+            </label>
+            <input
+              type="date"
+              value={expiryDate}
+              onChange={(e) => setExpiryDate(e.target.value)}
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Notes (optional)
             </label>
             <textarea
@@ -125,10 +158,10 @@ export default function ApplicationStatusModal({
           <div className="flex gap-3 mt-6">
             <button
               type="submit"
-              disabled={loading || newStatus === application.status}
+              disabled={loading}
               className="flex-1 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Updating...' : 'Update Status'}
+              {loading ? 'Updating...' : 'Update'}
             </button>
             <button
               type="button"

@@ -155,6 +155,18 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Database Banner */}
+      <section className="py-10 bg-brand-red">
+        <div className="container mx-auto px-6 max-w-7xl text-center">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3">
+            Every School. Every City. Every Opportunity.
+          </h2>
+          <p className="text-lg md:text-xl text-white/90">
+            The most comprehensive database of international teachers and teaching positions in China.
+          </p>
+        </div>
+      </section>
+
       {/* Connect with Excellence Section */}
       <section className="py-20 bg-slate-50">
         <div className="container mx-auto px-6 max-w-7xl">

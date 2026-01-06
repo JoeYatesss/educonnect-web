@@ -10,6 +10,7 @@ interface TeacherMatch {
   match_score: number;
   match_reasons: string[];
   is_submitted: boolean;
+  role_name: string | null;
   teacher_id: number;
   teacher_name: string;
   teacher_email: string;
@@ -217,6 +218,9 @@ export default function SchoolMatchesPage() {
                   Match Score
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Role
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Subjects
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -236,7 +240,7 @@ export default function SchoolMatchesPage() {
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredMatches.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-sm text-gray-500">
+                  <td colSpan={8} className="px-6 py-12 text-center text-sm text-gray-500">
                     No matching teachers found. Try lowering the minimum score filter.
                   </td>
                 </tr>
@@ -252,6 +256,11 @@ export default function SchoolMatchesPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className={`text-lg font-bold ${getScoreColor(match.match_score)}`}>
                         {match.match_score.toFixed(1)}%
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {match.role_name || '-'}
                       </div>
                     </td>
                     <td className="px-6 py-4">

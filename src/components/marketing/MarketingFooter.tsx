@@ -52,7 +52,7 @@ export default function MarketingFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="hover:text-brand-red transition-colors duration-200">
+                <Link href="/teacher-resources" className="hover:text-brand-red transition-colors duration-200">
                   Teacher Resources
                 </Link>
               </li>

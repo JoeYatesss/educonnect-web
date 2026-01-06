@@ -9,7 +9,13 @@ import {
   MessageSquare,
   ChevronDown,
   ChevronUp,
-  CheckCircle
+  CheckCircle,
+  ExternalLink,
+  Clock,
+  Calendar,
+  Home,
+  Plane,
+  Building2
 } from 'lucide-react';
 
 export interface SchoolMatch {
@@ -22,6 +28,19 @@ export interface SchoolMatch {
   match_score: number;
   match_reasons: string[];
   is_submitted?: boolean;
+  role_name?: string;
+  // Job-specific fields (for TES jobs)
+  type?: 'school' | 'job';
+  source?: string;
+  title?: string;
+  company?: string;
+  job_id?: number;
+  school_id?: number;
+  application_deadline?: string;
+  start_date?: string;
+  visa_sponsorship?: boolean;
+  accommodation_provided?: string;
+  external_url?: string;
 }
 
 interface MatchCardProps {
@@ -38,8 +57,32 @@ interface ScoreComponent {
   bgColor: string;
 }
 
+// Helper to calculate days until deadline
+const getDaysUntilDeadline = (deadline: string): number | null => {
+  if (!deadline) return null;
+  const deadlineDate = new Date(deadline);
+  const now = new Date();
+  const diffTime = deadlineDate.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+};
+
+// Helper to format deadline display
+const formatDeadline = (deadline: string): string => {
+  const date = new Date(deadline);
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
+};
+
 export default function MatchCard({ match, children }: MatchCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  // Check if this is an external job (TES)
+  const isExternalJob = match.source && match.source !== 'manual';
+  const daysUntilDeadline = match.application_deadline ? getDaysUntilDeadline(match.application_deadline) : null;
 
   // Get gradient colors based on match score
   const getScoreGradient = (score: number) => {
@@ -108,10 +151,19 @@ export default function MatchCard({ match, children }: MatchCardProps) {
 
   return (
     <div className="group bg-white rounded-xl border border-gray-200 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-      {/* Header with Score and Action Button */}
+      {/* Header with Score, Source Badge, and Action Button */}
       <div className="flex items-start justify-between mb-4">
-        <div className={`inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r ${getScoreGradient(match.match_score)} text-white font-bold text-lg shadow-md`}>
-          {match.match_score}% Match
+        <div className="flex items-center gap-2">
+          <div className={`inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r ${getScoreGradient(match.match_score)} text-white font-bold text-lg shadow-md`}>
+            {match.match_score}% Match
+          </div>
+          {/* Source badge for external jobs */}
+          {isExternalJob && (
+            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200">
+              <Building2 className="w-3 h-3 mr-1" />
+              TES.com
+            </span>
+          )}
         </div>
 
         {/* Action button slot (QuickApplyButton will go here) */}
@@ -120,10 +172,31 @@ export default function MatchCard({ match, children }: MatchCardProps) {
         </div>
       </div>
 
+      {/* Job Title (for external jobs) */}
+      {match.title && (
+        <div className="mb-2">
+          <span className="text-lg font-bold text-gray-900">{match.title}</span>
+        </div>
+      )}
+
+      {/* Company/School Name (for external jobs) */}
+      {match.company && (
+        <div className="mb-2">
+          <span className="text-base font-medium text-gray-700">{match.company}</span>
+        </div>
+      )}
+
+      {/* Role Name (for school matches) */}
+      {!match.title && match.role_name && (
+        <div className="mb-3">
+          <span className="text-lg font-semibold text-gray-900">{match.role_name}</span>
+        </div>
+      )}
+
       {/* Location */}
       <div className="flex items-center gap-2 mb-3">
         <MapPin className="w-5 h-5 text-blue-600" />
-        <span className="text-xl font-semibold text-gray-900">
+        <span className={`${match.role_name ? 'text-base' : 'text-xl'} font-semibold text-gray-900`}>
           {(() => {
             const city = match.city?.trim();
             const province = match.province?.trim();
@@ -143,18 +216,71 @@ export default function MatchCard({ match, children }: MatchCardProps) {
 
       {/* Badges */}
       <div className="flex flex-wrap gap-2 mb-4">
-        <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-purple-100 text-purple-800">
-          {match.school_type}
-        </span>
-        {match.age_groups.map((age, idx) => (
+        {match.school_type && (
+          <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-purple-100 text-purple-800">
+            {match.school_type}
+          </span>
+        )}
+        {match.age_groups?.map((age, idx) => (
           <span key={idx} className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-blue-100 text-blue-800">
             {age}
           </span>
         ))}
-        <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-green-100 text-green-800">
-          💰 {match.salary_range}
-        </span>
+        {match.salary_range && (
+          <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-green-100 text-green-800">
+            💰 {match.salary_range}
+          </span>
+        )}
       </div>
+
+      {/* External Job Info (TES-specific) */}
+      {isExternalJob && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {/* Application Deadline */}
+          {match.application_deadline && daysUntilDeadline !== null && (
+            <span className={`inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium ${
+              daysUntilDeadline <= 7
+                ? 'bg-red-100 text-red-800'
+                : daysUntilDeadline <= 14
+                ? 'bg-orange-100 text-orange-800'
+                : 'bg-amber-100 text-amber-800'
+            }`}>
+              <Clock className="w-4 h-4 mr-1" />
+              {daysUntilDeadline <= 0
+                ? 'Deadline passed'
+                : daysUntilDeadline === 1
+                ? '1 day left'
+                : `${daysUntilDeadline} days left`
+              }
+              <span className="ml-1 text-xs opacity-75">({formatDeadline(match.application_deadline)})</span>
+            </span>
+          )}
+
+          {/* Start Date */}
+          {match.start_date && (
+            <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-cyan-100 text-cyan-800">
+              <Calendar className="w-4 h-4 mr-1" />
+              Starts: {match.start_date}
+            </span>
+          )}
+
+          {/* Visa Sponsorship */}
+          {match.visa_sponsorship && (
+            <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-indigo-100 text-indigo-800">
+              <Plane className="w-4 h-4 mr-1" />
+              Visa Sponsored
+            </span>
+          )}
+
+          {/* Accommodation */}
+          {match.accommodation_provided && (
+            <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-teal-100 text-teal-800">
+              <Home className="w-4 h-4 mr-1" />
+              {match.accommodation_provided}
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Match Reasons */}
       {match.match_reasons && match.match_reasons.length > 0 && (
@@ -175,6 +301,21 @@ export default function MatchCard({ match, children }: MatchCardProps) {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {/* External Link to TES posting */}
+      {isExternalJob && match.external_url && (
+        <div className="mb-4">
+          <a
+            href={match.external_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
+          >
+            <ExternalLink className="w-4 h-4" />
+            View original posting on TES.com
+          </a>
         </div>
       )}
 

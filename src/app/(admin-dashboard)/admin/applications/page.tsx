@@ -13,6 +13,8 @@ interface Application {
   status: string;
   submitted_at: string;
   notes: string | null;
+  role_name: string | null;
+  expiry_date: string | null;
   teacher: {
     id: number;
     first_name: string;
@@ -42,6 +44,8 @@ export default function ApplicationsOverviewPage() {
     id: number;
     school_name: string;
     status: string;
+    role_name?: string;
+    expiry_date?: string;
   } | null>(null);
 
   useEffect(() => {
@@ -83,6 +87,8 @@ export default function ApplicationsOverviewPage() {
       id: app.id,
       school_name: app.school.name,
       status: app.status,
+      role_name: app.role_name || undefined,
+      expiry_date: app.expiry_date || undefined,
     });
     setStatusModalOpen(true);
   };
@@ -239,16 +245,19 @@ export default function ApplicationsOverviewPage() {
                   School
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Location
+                  Role
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  School Type
+                  Location
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Submitted
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Expires
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
@@ -258,53 +267,75 @@ export default function ApplicationsOverviewPage() {
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredApplications.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-sm text-gray-500">
+                  <td colSpan={8} className="px-6 py-12 text-center text-sm text-gray-500">
                     No applications found.
                   </td>
                 </tr>
               ) : (
-                filteredApplications.map((app) => (
-                  <tr key={app.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">
-                          {app.teacher.first_name} {app.teacher.last_name}
+                filteredApplications.map((app) => {
+                  const isExpired = app.expiry_date && new Date(app.expiry_date) < new Date();
+                  const isExpiringSoon = app.expiry_date && !isExpired &&
+                    (new Date(app.expiry_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24) <= 7;
+
+                  return (
+                    <tr key={app.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {app.teacher.first_name} {app.teacher.last_name}
+                          </div>
+                          <div className="text-sm text-gray-500">{app.teacher.email}</div>
                         </div>
-                        <div className="text-sm text-gray-500">{app.teacher.email}</div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{app.school.name}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{app.school.city}</div>
-                      <div className="text-sm text-gray-500">{app.school.province}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{app.school.school_type}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">{getStatusBadge(app.status)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {new Date(app.submitted_at).toLocaleDateString()}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <button
-                        onClick={() => handleOpenStatusModal(app)}
-                        className="text-blue-600 hover:text-blue-900 mr-4"
-                      >
-                        Update Status
-                      </button>
-                      <Link
-                        href={`/admin/teachers/${app.teacher_id}`}
-                        className="text-blue-600 hover:text-blue-900"
-                      >
-                        View Teacher
-                      </Link>
-                    </td>
-                  </tr>
-                ))
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{app.school.name}</div>
+                        <div className="text-sm text-gray-500">{app.school.school_type}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{app.role_name || '-'}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{app.school.city}</div>
+                        <div className="text-sm text-gray-500">{app.school.province}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">{getStatusBadge(app.status)}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {new Date(app.submitted_at).toLocaleDateString()}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {app.expiry_date ? (
+                          <div className={`text-sm ${
+                            isExpired
+                              ? 'text-red-600 font-medium'
+                              : isExpiringSoon
+                                ? 'text-amber-600 font-medium'
+                                : 'text-gray-900'
+                          }`}>
+                            {isExpired ? 'Expired' : new Date(app.expiry_date).toLocaleDateString()}
+                          </div>
+                        ) : (
+                          <div className="text-sm text-gray-400">-</div>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button
+                          onClick={() => handleOpenStatusModal(app)}
+                          className="text-blue-600 hover:text-blue-900 mr-4"
+                        >
+                          Update Status
+                        </button>
+                        <Link
+                          href={`/admin/teachers/${app.teacher_id}`}
+                          className="text-blue-600 hover:text-blue-900"
+                        >
+                          View Teacher
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

@@ -7,7 +7,7 @@ import PaymentModal from './PaymentModal';
 import { SchoolMatch } from './MatchCard';
 import QuickApplyButton from './QuickApplyButton';
 import Link from 'next/link';
-import { MapPin, DollarSign, ArrowRight } from 'lucide-react';
+import { MapPin, DollarSign, ArrowRight, Briefcase } from 'lucide-react';
 
 export default function AnonymousSchoolMatches() {
   const { teacher } = useAuth();
@@ -186,11 +186,17 @@ export default function AnonymousSchoolMatches() {
             key={match.id}
             className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors"
           >
-            {/* Left: Location and Salary */}
+            {/* Left: Role, Location and Salary */}
             <div className="flex-1 min-w-0">
+              {match.role_name && (
+                <div className="flex items-center gap-2 text-gray-900 mb-1">
+                  <Briefcase className="w-4 h-4 text-indigo-500 flex-shrink-0" />
+                  <span className="font-semibold truncate">{match.role_name}</span>
+                </div>
+              )}
               <div className="flex items-center gap-2 text-gray-900">
                 <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                <span className="font-medium truncate">
+                <span className={`${match.role_name ? 'text-sm text-gray-600' : 'font-medium'} truncate`}>
                   {(() => {
                     const city = match.city?.trim();
                     const province = match.province?.trim();
