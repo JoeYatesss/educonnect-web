@@ -36,31 +36,31 @@ const testimonials = [
   {
     name: "Emma Richardson",
     role: "Head of English, Shanghai",
-    quote: "Best decision I ever made. The progression opportunities here are incredible - I became Head of English in just two years. Highly recommend.",
+    quote: "I went from classroom teacher to Head of English in two years - that would've taken a decade in the UK. The career progression here is unreal. Plus, I'm saving £1,500 a month while living in a gorgeous apartment in the French Concession. My Mandarin's coming along too - ordering street food like a local now!",
     image: "/images/Teacher Testimonials/teacher-asian-lady.png"
   },
   {
     name: "James Carter",
     role: "Geography Teacher, Beijing",
-    quote: "Genuinely life-changing experience. The support from EduConnect was exceptional, and working in Beijing's international schools has accelerated my career development beyond what I thought possible. The students are brilliant and the teaching facilities are world-class.",
+    quote: "The tech in these schools blew my mind. AI-powered learning tools, VR field trips to the Great Wall, interactive everything. Back home I was fighting for a working projector. Here, I'm teaching with resources I didn't know existed. And with housing covered and tax at just 3%, I'm actually building real savings for the first time in my teaching career.",
     image: "/images/Teacher Testimonials/teacher-white_man_shirt.png"
   },
   {
     name: "Tom Fletcher",
     role: "PE Teacher, Shenzhen",
-    quote: "Salary's great, kids love sport, saved loads. Would definitely do again!",
+    quote: "Shenzhen is like living in the future - you can pay for everything with your phone, take bullet trains across the country for weekend trips, and the sports facilities here are Olympic-standard. I'm saving 70% of my salary, eating incredible food for £3 a meal, and my flat is twice the size of my London studio. Why would I go back?",
     image: "/images/Teacher Testimonials/teacher-PE-man.png"
   },
   {
     name: "Alex Murphy",
     role: "Science Teacher, Guangzhou",
-    quote: "Honestly, I was skeptical at first. Moving halfway across the world seemed crazy. But the resources here are unbelievable - smart boards, VR labs, robotics kits I'd only dreamed of. Yes, there's a learning curve, and yes, some days are tough when you can't find familiar food. But watching these kids light up when they finally grasp a complex concept... that's universal. Plus, the other expat teachers become like family.",
+    quote: "The cultural immersion has been the unexpected highlight. Learning Mandarin, celebrating Chinese New Year with my students' families, exploring ancient temples on weekends. The work-life balance is better than I ever had at home - shorter commutes, affordable massages after work, and the 13th month bonus was a nice surprise. It's not just a job, it's a whole new life.",
     image: "/images/Teacher Testimonials/teacher_nerdy_guy.png"
   },
   {
     name: "Ben Clarke",
     role: "Mathematics Teacher, Chengdu",
-    quote: "Outstanding opportunity. Professional development beyond expectations. Highly organized placement process. Would recommend to any serious educator seeking international experience.",
+    quote: "I was burnt out teaching in Manchester - underpaid, overworked, drowning in paperwork. Here in Chengdu, I earn more, work reasonable hours, and the students genuinely respect teachers. The cost of living is so low that my 32K RMB salary feels like a six-figure income. Three years in and I've paid off my student loans entirely.",
     image: "/images/Teacher Testimonials/teacher-hispanic_man.png"
   }
 ];
