@@ -158,14 +158,15 @@ export default function HomePage() {
             </div>
 
             {/* Hero Image Carousel */}
-            <div className="relative h-[350px] lg:h-[400px] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative aspect-[4/3] max-h-[400px] rounded-2xl overflow-hidden shadow-2xl">
               {heroImages.map((image, index) => (
                 <Image
                   key={image.src}
                   src={image.src}
                   alt={image.alt}
                   fill
-                  className={`object-cover transition-opacity duration-1000 ${
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className={`object-cover object-center transition-opacity duration-1000 ${
                     index === currentImageIndex ? 'opacity-100' : 'opacity-0'
                   }`}
                   priority={index === 0}
