@@ -2,8 +2,16 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useModal } from '@/contexts/ModalContext';
+
+const heroImages = [
+  { src: '/images/china-classroom.jpeg', alt: 'Modern classroom at international school in China' },
+  { src: '/images/shanghai_skyline.jpg', alt: 'Shanghai skyline at sunset' },
+  { src: '/images/classroom_science_lab.jpg', alt: 'Science lab at international school' },
+  { src: '/images/china_architecture.jpg', alt: 'Traditional Chinese architecture' },
+  { src: '/images/elementary_classroom.jpg', alt: 'Elementary classroom in China' },
+];
 
 const faqs = [
   {
@@ -88,6 +96,14 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 
 export default function HomePage() {
   const { openSignup } = useModal();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -141,29 +157,37 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Hero Image */}
-            <div className="relative h-[500px] lg:h-[600px] rounded-2xl overflow-hidden shadow-2xl">
-              <Image
-                src="/images/china-classroom.jpeg"
-                alt="Modern classroom at international school in China"
-                fill
-                className="object-cover"
-                priority
-              />
+            {/* Hero Image Carousel */}
+            <div className="relative h-[350px] lg:h-[400px] rounded-2xl overflow-hidden shadow-2xl">
+              {heroImages.map((image, index) => (
+                <Image
+                  key={image.src}
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  className={`object-cover transition-opacity duration-1000 ${
+                    index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  priority={index === 0}
+                />
+              ))}
+              {/* Carousel indicators */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                {heroImages.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentImageIndex(index)}
+                    className={`w-2 h-2 rounded-full transition-all ${
+                      index === currentImageIndex
+                        ? 'bg-white w-6'
+                        : 'bg-white/50 hover:bg-white/75'
+                    }`}
+                    aria-label={`Go to image ${index + 1}`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Database Banner */}
-      <section className="py-10 bg-brand-red">
-        <div className="container mx-auto px-6 max-w-7xl text-center">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3">
-            Every School. Every City. Every Opportunity.
-          </h2>
-          <p className="text-lg md:text-xl text-white/90">
-            The most comprehensive database of international teachers and teaching positions in China.
-          </p>
         </div>
       </section>
 
