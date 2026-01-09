@@ -158,7 +158,7 @@ export default function HomePage() {
             </div>
 
             {/* Hero Image Carousel */}
-            <div className="relative aspect-[4/3] max-h-[400px] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative w-full h-[350px] lg:h-[400px] rounded-2xl overflow-hidden shadow-2xl">
               {heroImages.map((image, index) => (
                 <Image
                   key={image.src}
@@ -189,6 +189,15 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Database Banner */}
+      <section className="py-10 bg-brand-red">
+        <div className="container mx-auto px-6 max-w-7xl text-center">
+          <p className="text-lg md:text-xl text-white">
+            Access the most comprehensive database of international teachers and teaching opportunities across the world.
+          </p>
         </div>
       </section>
 
