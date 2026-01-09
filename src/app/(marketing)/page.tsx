@@ -6,11 +6,15 @@ import { useState, useEffect } from 'react';
 import { useModal } from '@/contexts/ModalContext';
 
 const heroImages = [
-  { src: '/images/china-classroom.jpeg', alt: 'Modern classroom at international school in China' },
+  { src: '/images/china-classroom.jpeg', alt: 'Modern classroom in China' },
   { src: '/images/shanghai_skyline.jpg', alt: 'Shanghai skyline at sunset' },
-  { src: '/images/classroom_science_lab.jpg', alt: 'Science lab at international school' },
-  { src: '/images/china_architecture.jpg', alt: 'Traditional Chinese architecture' },
-  { src: '/images/elementary_classroom.jpg', alt: 'Elementary classroom in China' },
+  { src: '/images/china_classroom_big_teacher.jpg', alt: 'Teacher in classroom' },
+  { src: '/images/shanghai_french_concession.jpg', alt: 'Shanghai French Concession' },
+  { src: '/images/international_school_campus.jpg', alt: 'International school campus' },
+  { src: '/images/china_rooftops_closeup.jpg', alt: 'Traditional Chinese rooftops' },
+  { src: '/images/guilin_river.png', alt: 'Guilin river landscape' },
+  { src: '/images/shanghai.jpg', alt: 'Shanghai cityscape' },
+  { src: '/images/china_classroom_busy.jpg', alt: 'Busy classroom in China' },
 ];
 
 const faqs = [
@@ -115,7 +119,7 @@ export default function HomePage() {
             <div className="space-y-8">
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
                 <span className="block text-gray-900">Teach.</span>
-                <span className="block text-gray-900">Explore.</span>
+                <span className="block text-gray-900 italic">Explore.</span>
                 <span className="block text-brand-red">Thrive.</span>
               </h1>
 
