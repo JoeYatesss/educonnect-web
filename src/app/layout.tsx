@@ -10,7 +10,7 @@ const montserrat = Montserrat({ subsets: ['latin'], weight: ['600', '700', '800'
 
 export const metadata: Metadata = {
   title: 'Teach, Explore, Thrive | Teaching Jobs in China | EduConnect',
-  description: 'Teach at top international schools in China. Explore vibrant cities like Shanghai and Beijing. Thrive with competitive salaries, visa support, and guaranteed interviews. EduConnect connects qualified teachers with premier schools.',
+  description: 'Find teaching jobs at top international schools in China. Competitive salaries, visa support & guaranteed interviews. Start your adventure with EduConnect.',
   icons: {
     icon: '/images/favicon.png',
     apple: '/images/favicon.png',
