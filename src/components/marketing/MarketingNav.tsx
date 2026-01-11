@@ -32,7 +32,7 @@ export default function MarketingNav({ onOpenLogin, onOpenSignup }: MarketingNav
               EduConnect
             </span>
             <span
-              className="text-brand-red font-chinese text-[1.75rem] font-bold italic group-hover:scale-105 transition-transform duration-200"
+              className="text-brand-red font-chinese text-[1.75rem] font-bold group-hover:scale-105 transition-transform duration-200 italic"
               style={{textShadow: '1px 1px 3px rgba(230, 74, 74, 0.3)'}}
             >
               中国
