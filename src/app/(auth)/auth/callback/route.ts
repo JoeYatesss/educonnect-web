@@ -28,6 +28,6 @@ export async function GET(request: NextRequest) {
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  // Redirect to dashboard after successful email verification
-  return NextResponse.redirect(new URL('/dashboard', request.url));
+  // Redirect to landing page after successful email verification
+  return NextResponse.redirect(new URL('/', request.url));
 }
