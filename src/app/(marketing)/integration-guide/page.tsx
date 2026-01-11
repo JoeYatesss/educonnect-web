@@ -112,7 +112,7 @@ export default function IntegrationGuidePage() {
                   href="/signup"
                   className="inline-block bg-white text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors"
                 >
-                  Apply Now
+                  Start Your Application
                 </a>
               </div>
             </div>

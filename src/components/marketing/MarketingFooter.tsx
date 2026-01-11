@@ -38,7 +38,7 @@ export default function MarketingFooter() {
             <ul className="space-y-2">
               <li>
                 <Link href="/requirements" className="hover:text-brand-red transition-colors duration-200">
-                  Requirements
+                  Teacher Qualifications
                 </Link>
               </li>
               <li>

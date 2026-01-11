@@ -87,7 +87,7 @@ const resources: ResourceCategory[] = [
         name: 'Meituan',
         description: 'Food delivery, restaurant bookings, and local services. A lifesaver for busy teachers.',
         link: 'https://about.meituan.com/',
-        linkText: 'Learn More',
+        linkText: 'Explore Meituan',
         icon: '🍜',
       },
     ],
@@ -127,7 +127,7 @@ const resources: ResourceCategory[] = [
         name: 'International SOS',
         description: 'Medical and security assistance for expats. Many international schools provide coverage.',
         link: 'https://www.internationalsos.com/',
-        linkText: 'Learn More',
+        linkText: 'Visit International SOS',
         icon: '🏥',
       },
       {
@@ -303,7 +303,7 @@ export default function TeacherResourcesPage() {
               href="/login"
               className="px-8 py-4 bg-brand-red text-white font-semibold rounded hover:bg-red-600 transition-colors"
             >
-              Get Started
+              Apply Today
             </Link>
           </div>
         </div>

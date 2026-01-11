@@ -76,7 +76,7 @@ export default function LanguageCoursePage() {
                 href="/signup"
                 className="inline-block bg-brand-red text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-red-600 transition-colors"
               >
-                Apply Now
+                Join EduConnect
               </a>
             </div>
           </div>

@@ -215,7 +215,7 @@ export default function AboutPage() {
                 href="/signup"
                 className="px-8 py-4 bg-brand-red text-white font-semibold rounded hover:bg-red-600 transition-colors"
               >
-                Get Started
+                Begin Your Application
               </Link>
             </div>
           </div>

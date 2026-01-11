@@ -150,7 +150,7 @@ export default function RequirementsPage() {
                 href="/contact"
                 className="px-8 py-4 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
               >
-                Contact Us
+                Get in Touch
               </Link>
               <Link
                 href="/signup"
