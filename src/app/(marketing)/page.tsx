@@ -17,6 +17,19 @@ const heroImages = [
   { src: '/images/china_classroom_busy.jpg', alt: 'Busy classroom in China' },
 ];
 
+const partnerSchools = [
+  { src: '/images/Schools/dulwich.png', alt: 'Dulwich College International' },
+  { src: '/images/Schools/NAS.png', alt: 'Nord Anglia Education' },
+  { src: '/images/Schools/SAS.png', alt: 'Shanghai American School' },
+  { src: '/images/Schools/WISS.png', alt: 'Western International School of Shanghai' },
+  { src: '/images/Schools/SUIS.png', alt: 'Shanghai United International School' },
+  { src: '/images/Schools/dulwich.png', alt: 'Dulwich College Beijing' },
+  { src: '/images/Schools/NAS.png', alt: 'British International School Shanghai' },
+  { src: '/images/Schools/SAS.png', alt: 'Concordia International School' },
+  { src: '/images/Schools/WISS.png', alt: 'Yew Chung International School' },
+  { src: '/images/Schools/SUIS.png', alt: 'Wellington College China' },
+];
+
 const faqs = [
   {
     question: "How much can I earn teaching in China?",
@@ -124,7 +137,7 @@ export default function HomePage() {
               </h1>
 
               <p className="text-xl md:text-2xl text-gray-600">
-                Globalise your career with a teaching job in China.
+                Teach at top international schools. Explore vibrant cities like Shanghai and Beijing. Thrive with competitive salaries and full support.
               </p>
 
               {/* Stats */}
@@ -199,8 +212,8 @@ export default function HomePage() {
       {/* Database Banner */}
       <section className="py-10 bg-brand-red">
         <div className="container mx-auto px-6 max-w-7xl text-center">
-          <p className="text-lg md:text-xl text-white">
-            Access the most comprehensive database of international teachers and teaching opportunities across the world.
+          <p className="text-lg md:text-xl text-white italic">
+            Access the most comprehensive database of teaching opportunities in China.
           </p>
         </div>
       </section>
@@ -245,12 +258,6 @@ export default function HomePage() {
                   <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
                     &#10003;
                   </span>
-                  <span className="text-gray-700">UK registered company (EduConnect Asia Ltd)</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
-                    &#10003;
-                  </span>
                   <span className="text-gray-700">Partnerships with leading schools across China</span>
                 </li>
               </ul>
@@ -280,98 +287,38 @@ export default function HomePage() {
           </div>
         </div>
         {/* Marquee Container */}
-        <div className="relative">
+        <div className="relative overflow-hidden">
           {/* Gradient overlays for smooth fade effect */}
           <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10" />
           <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10" />
 
-          {/* Scrolling track */}
-          <div className="flex animate-marquee">
+          {/* Scrolling track - needs inline-flex and min-w-max for seamless loop */}
+          <div className="inline-flex animate-marquee" style={{ minWidth: 'max-content' }}>
             {/* First set of logos */}
-            <div className="flex items-center gap-16 px-8">
-              <div className="relative w-40 h-24 flex-shrink-0">
-                <Image
-                  src="/images/Schools/dulwich.png"
-                  alt="Dulwich College China"
-                  fill
-                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
-                />
-              </div>
-              <div className="relative w-40 h-24 flex-shrink-0">
-                <Image
-                  src="/images/Schools/NAS.png"
-                  alt="Nord Anglia School China"
-                  fill
-                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
-                />
-              </div>
-              <div className="relative w-40 h-24 flex-shrink-0">
-                <Image
-                  src="/images/Schools/SAS.png"
-                  alt="Shanghai American School"
-                  fill
-                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
-                />
-              </div>
-              <div className="relative w-40 h-24 flex-shrink-0">
-                <Image
-                  src="/images/Schools/WISS.png"
-                  alt="Western International School Shanghai"
-                  fill
-                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
-                />
-              </div>
-              <div className="relative w-40 h-24 flex-shrink-0">
-                <Image
-                  src="/images/Schools/SUIS.png"
-                  alt="Shanghai United International School"
-                  fill
-                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
-                />
-              </div>
+            <div className="flex items-center gap-12 px-6">
+              {partnerSchools.map((school, index) => (
+                <div key={`first-${index}`} className="relative w-36 h-20 flex-shrink-0">
+                  <Image
+                    src={school.src}
+                    alt={school.alt}
+                    fill
+                    className="object-contain opacity-70 hover:opacity-100 transition-opacity"
+                  />
+                </div>
+              ))}
             </div>
             {/* Duplicate set for seamless loop */}
-            <div className="flex items-center gap-16 px-8">
-              <div className="relative w-40 h-24 flex-shrink-0">
-                <Image
-                  src="/images/Schools/dulwich.png"
-                  alt="Dulwich College China"
-                  fill
-                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
-                />
-              </div>
-              <div className="relative w-40 h-24 flex-shrink-0">
-                <Image
-                  src="/images/Schools/NAS.png"
-                  alt="Nord Anglia School China"
-                  fill
-                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
-                />
-              </div>
-              <div className="relative w-40 h-24 flex-shrink-0">
-                <Image
-                  src="/images/Schools/SAS.png"
-                  alt="Shanghai American School"
-                  fill
-                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
-                />
-              </div>
-              <div className="relative w-40 h-24 flex-shrink-0">
-                <Image
-                  src="/images/Schools/WISS.png"
-                  alt="Western International School Shanghai"
-                  fill
-                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
-                />
-              </div>
-              <div className="relative w-40 h-24 flex-shrink-0">
-                <Image
-                  src="/images/Schools/SUIS.png"
-                  alt="Shanghai United International School"
-                  fill
-                  className="object-contain opacity-80 hover:opacity-100 transition-opacity"
-                />
-              </div>
+            <div className="flex items-center gap-12 px-6">
+              {partnerSchools.map((school, index) => (
+                <div key={`second-${index}`} className="relative w-36 h-20 flex-shrink-0">
+                  <Image
+                    src={school.src}
+                    alt={school.alt}
+                    fill
+                    className="object-contain opacity-70 hover:opacity-100 transition-opacity"
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>

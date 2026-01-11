@@ -129,7 +129,7 @@ export const guideSections: GuideSection[] = [
             <p>Opening a Chinese bank account is essential for receiving your salary and accessing mobile payment apps.</p>
             <h4 className="text-xl font-semibold mt-6 mb-3">Best Banks for Expats</h4>
             <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Bank of China (中国银行)</strong> - Most expat-friendly, English-speaking staff in major cities</li>
+              <li><strong>Bank of China (<em>中国</em>银行)</strong> - Most expat-friendly, English-speaking staff in major cities</li>
               <li><strong>ICBC (工商银行)</strong> - Largest bank, branches everywhere</li>
               <li><strong>China Construction Bank (建设银行)</strong> - Good for salary accounts</li>
             </ul>

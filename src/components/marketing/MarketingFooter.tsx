@@ -56,6 +56,11 @@ export default function MarketingFooter() {
                   Teacher Resources
                 </Link>
               </li>
+              <li>
+                <a href="https://www.britishcouncil.org/education/he-science/opportunities-for-individuals/teach-abroad" target="_blank" rel="noopener noreferrer" className="hover:text-brand-red transition-colors duration-200">
+                  British Council - Teach Abroad
+                </a>
+              </li>
             </ul>
           </div>
 

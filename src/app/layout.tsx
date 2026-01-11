@@ -8,8 +8,12 @@ const playfair = Playfair_Display({ subsets: ['latin'], weight: ['700', '900'], 
 const montserrat = Montserrat({ subsets: ['latin'], weight: ['600', '700', '800'], variable: '--font-montserrat' });
 
 export const metadata: Metadata = {
-  title: 'EduConnect - Teacher Recruitment Platform',
-  description: 'Connect international teachers with schools in China',
+  title: 'Teach, Explore, Thrive | Teaching Jobs in China | EduConnect',
+  description: 'Teach at top international schools in China. Explore vibrant cities like Shanghai and Beijing. Thrive with competitive salaries, visa support, and guaranteed interviews. EduConnect connects qualified teachers with premier schools.',
+  icons: {
+    icon: '/images/favicon.png',
+    apple: '/images/favicon.png',
+  },
 };
 
 export default function RootLayout({
