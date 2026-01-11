@@ -1,11 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import MarketingNav from '@/components/marketing/MarketingNav';
 import MarketingFooter from '@/components/marketing/MarketingFooter';
-import LoginModal from '@/components/modals/LoginModal';
-import SignupModal from '@/components/modals/SignupModal';
 import ModalContext from '@/contexts/ModalContext';
+
+// Lazy load modals - only loaded when user clicks login/signup
+const LoginModal = dynamic(() => import('@/components/modals/LoginModal'), {
+  ssr: false,
+});
+const SignupModal = dynamic(() => import('@/components/modals/SignupModal'), {
+  ssr: false,
+});
 
 export default function MarketingLayout({
   children,

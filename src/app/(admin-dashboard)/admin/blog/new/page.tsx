@@ -6,7 +6,20 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { RichTextEditor } from '@/components/admin/RichTextEditor';
+import dynamic from 'next/dynamic';
+
+// Lazy load RichTextEditor to reduce initial bundle size (~200KB Tiptap library)
+const RichTextEditor = dynamic(
+  () => import('@/components/admin/RichTextEditor').then(mod => mod.RichTextEditor),
+  {
+    loading: () => (
+      <div className="min-h-[300px] border border-gray-300 rounded-md bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+      </div>
+    ),
+    ssr: false,
+  }
+);
 
 const blogSchema = z.object({
   title: z.string().min(1, 'Title is required').max(500),
