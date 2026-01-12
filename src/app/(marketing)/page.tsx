@@ -274,6 +274,64 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* What You'll Need Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+              What You&apos;ll Need to Get Started
+            </h2>
+            <p className="text-lg text-gray-600">
+              Have these ready to complete your profile and start matching with schools
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            {/* CV */}
+            <div className="bg-slate-50 p-6 rounded-xl text-center">
+              <div className="w-14 h-14 bg-brand-red/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-7 h-7 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">CV / Resume</h3>
+              <p className="text-sm text-gray-600 mb-2">Your up-to-date CV highlighting teaching experience</p>
+              <span className="inline-block px-3 py-1 bg-brand-red/10 text-brand-red text-xs font-medium rounded-full">
+                Required
+              </span>
+            </div>
+            {/* Headshot */}
+            <div className="bg-slate-50 p-6 rounded-xl text-center">
+              <div className="w-14 h-14 bg-brand-red/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-7 h-7 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Professional Headshot</h3>
+              <p className="text-sm text-gray-600 mb-2">A clear, professional photo for your profile</p>
+              <span className="inline-block px-3 py-1 bg-brand-red/10 text-brand-red text-xs font-medium rounded-full">
+                Required
+              </span>
+            </div>
+            {/* Intro Video */}
+            <div className="bg-slate-50 p-6 rounded-xl text-center">
+              <div className="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-7 h-7 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Introduction Video</h3>
+              <p className="text-sm text-gray-600 mb-2">A 1-2 minute video introducing yourself to schools</p>
+              <span className="inline-block px-3 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded-full">
+                Optional - Add Later
+              </span>
+            </div>
+          </div>
+          <p className="text-center text-sm text-gray-500 mt-6">
+            Don&apos;t worry if you don&apos;t have everything ready - you can complete your profile step by step
+          </p>
+        </div>
+      </section>
+
       {/* Partner Schools Section */}
       <section className="py-20 bg-white overflow-hidden">
         <div className="container mx-auto px-6 max-w-7xl">

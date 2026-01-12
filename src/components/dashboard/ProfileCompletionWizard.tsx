@@ -15,8 +15,7 @@ export default function ProfileCompletionWizard({ onComplete }: ProfileCompletio
   const [currentStep, setCurrentStep] = useState<WizardStep>(
     !teacher?.cv_path ? 'cv' :
     !teacher?.headshot_photo_path ? 'headshot' :
-    !teacher?.intro_video_path ? 'video' :
-    'preferences'
+    'video' // Video is optional, but we still show the step so users can upload if they want
   );
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -62,7 +61,7 @@ export default function ProfileCompletionWizard({ onComplete }: ProfileCompletio
   const steps = [
     { id: 'cv', label: 'CV Upload', required: true },
     { id: 'headshot', label: 'Headshot', required: true },
-    { id: 'video', label: 'Intro Video', required: true },
+    { id: 'video', label: 'Intro Video (Optional)', required: false },
     { id: 'preferences', label: 'Preferences', required: false },
   ];
 
@@ -417,7 +416,10 @@ export default function ProfileCompletionWizard({ onComplete }: ProfileCompletio
                   </svg>
                 </div>
                 <h3 className="text-xl font-playfair font-semibold text-gray-900 mb-2">Upload Introduction Video</h3>
-                <p className="text-gray-600 mb-6">MP4 or MOV • Max 100MB • 1-2 minutes recommended</p>
+                <p className="text-gray-600 mb-2">MP4 or MOV • Max 100MB • 1-2 minutes recommended</p>
+                <p className="text-sm text-amber-600 bg-amber-50 px-4 py-2 rounded-lg inline-block">
+                  This step is optional - you can add your video later from your profile
+                </p>
               </div>
 
               {teacher?.intro_video_path ? (
@@ -453,31 +455,41 @@ export default function ProfileCompletionWizard({ onComplete }: ProfileCompletio
                   </div>
                 </div>
               ) : (
-                <label className="block cursor-pointer">
-                  <input
-                    type="file"
-                    accept="video/mp4,video/quicktime"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) validateAndUploadFile(file, 'video');
-                    }}
-                    disabled={uploading}
-                  />
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-brand-red hover:bg-red-50 transition-all">
-                    <svg className="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                    </svg>
-                    {uploading ? (
-                      <p className="text-gray-700 font-medium">Uploading... This may take a moment</p>
-                    ) : (
-                      <>
-                        <p className="text-gray-700 font-medium mb-1">Click to upload your intro video</p>
-                        <p className="text-sm text-gray-500">or drag and drop</p>
-                      </>
-                    )}
+                <div className="space-y-4">
+                  <label className="block cursor-pointer">
+                    <input
+                      type="file"
+                      accept="video/mp4,video/quicktime"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) validateAndUploadFile(file, 'video');
+                      }}
+                      disabled={uploading}
+                    />
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-brand-red hover:bg-red-50 transition-all">
+                      <svg className="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+                      {uploading ? (
+                        <p className="text-gray-700 font-medium">Uploading... This may take a moment</p>
+                      ) : (
+                        <>
+                          <p className="text-gray-700 font-medium mb-1">Click to upload your intro video</p>
+                          <p className="text-sm text-gray-500">or drag and drop</p>
+                        </>
+                      )}
+                    </div>
+                  </label>
+                  <div className="text-center">
+                    <button
+                      onClick={() => setCurrentStep('preferences')}
+                      className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      Skip for Now - I&apos;ll Add This Later
+                    </button>
                   </div>
-                </label>
+                </div>
               )}
             </div>
           )}
