@@ -6,6 +6,8 @@ import type { NextRequest } from 'next/server';
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
+  const next = requestUrl.searchParams.get('next') || '/';
+  const type = requestUrl.searchParams.get('type');
 
   if (code) {
     const cookieStore = await cookies();
@@ -25,9 +27,19 @@ export async function GET(request: NextRequest) {
         },
       }
     );
-    await supabase.auth.exchangeCodeForSession(code);
+
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (!error) {
+      // For password recovery, redirect to reset-password page
+      if (type === 'recovery') {
+        return NextResponse.redirect(new URL('/reset-password', request.url));
+      }
+      // Use the next parameter if provided, otherwise go to home
+      return NextResponse.redirect(new URL(next, request.url));
+    }
   }
 
-  // Redirect to landing page after successful email verification
+  // Redirect to landing page after successful email verification or on error
   return NextResponse.redirect(new URL('/', request.url));
 }
