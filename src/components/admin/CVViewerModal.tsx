@@ -37,9 +37,9 @@ export default function CVViewerModal({
         .auth.getSession();
       const token = session?.access_token || '';
 
-      // Get signed URL for CV
+      // Get signed URL for CV (admin endpoint)
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/teachers/${teacherId}/cv-url`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/teachers/${teacherId}/cv-url`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -50,7 +50,7 @@ export default function CVViewerModal({
       if (!response.ok) throw new Error('Failed to fetch CV URL');
 
       const data = await response.json();
-      setCvUrl(data.url);
+      setCvUrl(data.cv_url);
       setLoading(false);
     } catch (err) {
       console.error('Failed to fetch CV URL:', err);
@@ -67,7 +67,7 @@ export default function CVViewerModal({
       const token = session?.access_token || '';
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/teachers/${teacherId}/cv-download`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/teachers/${teacherId}/cv-download`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

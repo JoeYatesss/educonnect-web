@@ -16,6 +16,7 @@ interface Stats {
 
 interface RecentApplication {
   id: number;
+  teacher_id: number;
   status: string;
   submitted_at: string;
   is_job_application?: boolean;
@@ -513,6 +514,12 @@ export default function AdminDashboard() {
                     >
                       Update
                     </button>
+                    <Link
+                      href={`/admin/teachers/${app.teacher_id}`}
+                      className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      View Profile
+                    </Link>
                   </div>
                 </div>
               ))}

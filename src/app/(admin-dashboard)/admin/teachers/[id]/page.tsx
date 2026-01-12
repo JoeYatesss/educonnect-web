@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import ApplicationStatusModal from '@/components/admin/ApplicationStatusModal';
 import CVViewerModal from '@/components/admin/CVViewerModal';
+import VideoViewerModal from '@/components/admin/VideoViewerModal';
 
 interface Teacher {
   id: number;
@@ -24,6 +25,9 @@ interface Teacher {
   headshot_photo_path: string | null;
   status: string;
   has_paid: boolean;
+  cv_url?: string | null;
+  headshot_url?: string | null;
+  video_url?: string | null;
 }
 
 interface Match {
@@ -66,6 +70,7 @@ export default function TeacherDetailPage() {
   const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
   const [cvViewerOpen, setCvViewerOpen] = useState(false);
+  const [videoViewerOpen, setVideoViewerOpen] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !adminUser) {
@@ -263,11 +268,11 @@ export default function TeacherDetailPage() {
               <h2 className="text-lg font-medium text-gray-900 mb-4">Profile Information</h2>
 
               {/* Headshot */}
-              {teacher.headshot_photo_path ? (
+              {teacher.headshot_url ? (
                 <div className="mb-4">
                   <img
-                    src="/api/placeholder/150/150"
-                    alt="Headshot"
+                    src={teacher.headshot_url}
+                    alt={`${teacher.first_name}'s headshot`}
                     className="w-32 h-32 rounded-full mx-auto object-cover"
                   />
                 </div>
@@ -348,9 +353,12 @@ export default function TeacherDetailPage() {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-500">Intro Video</label>
-                  {teacher.intro_video_path ? (
+                  {teacher.video_url ? (
                     <div className="mt-1">
-                      <button className="text-sm text-blue-600 hover:text-blue-700">
+                      <button
+                        onClick={() => setVideoViewerOpen(true)}
+                        className="text-sm text-blue-600 hover:text-blue-700"
+                      >
                         Watch Video →
                       </button>
                     </div>
@@ -541,6 +549,16 @@ export default function TeacherDetailPage() {
           teacherId={teacher.id}
           teacherName={`${teacher.first_name} ${teacher.last_name}`}
           cvPath={teacher.cv_path}
+        />
+      )}
+
+      {/* Video Viewer Modal */}
+      {teacher && (
+        <VideoViewerModal
+          isOpen={videoViewerOpen}
+          onClose={() => setVideoViewerOpen(false)}
+          teacherName={`${teacher.first_name} ${teacher.last_name}`}
+          videoUrl={teacher.video_url}
         />
       )}
     </div>
