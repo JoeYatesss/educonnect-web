@@ -455,7 +455,7 @@ export default function ProfileCompletionWizard({ onComplete }: ProfileCompletio
                   </div>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-6">
                   <label className="block cursor-pointer">
                     <input
                       type="file"
@@ -467,7 +467,7 @@ export default function ProfileCompletionWizard({ onComplete }: ProfileCompletio
                       }}
                       disabled={uploading}
                     />
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-brand-red hover:bg-red-50 transition-all">
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-10 text-center hover:border-brand-red hover:bg-red-50 transition-all">
                       <svg className="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                       </svg>
@@ -481,13 +481,26 @@ export default function ProfileCompletionWizard({ onComplete }: ProfileCompletio
                       )}
                     </div>
                   </label>
+
+                  {/* Divider */}
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                      <span className="px-4 bg-white text-gray-500">or</span>
+                    </div>
+                  </div>
+
+                  {/* Skip Button - Made more prominent */}
                   <div className="text-center">
                     <button
                       onClick={() => setCurrentStep('preferences')}
-                      className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="w-full px-6 py-4 bg-gray-100 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-200 hover:border-gray-400 transition-colors font-medium"
                     >
-                      Skip for Now - I&apos;ll Add This Later
+                      Skip for Now
                     </button>
+                    <p className="text-sm text-gray-500 mt-2">You can add your intro video later from your profile</p>
                   </div>
                 </div>
               )}

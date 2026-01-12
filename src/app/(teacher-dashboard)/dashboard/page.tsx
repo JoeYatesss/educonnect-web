@@ -122,7 +122,8 @@ function DashboardContent() {
 
   // Check if profile is complete and show wizard if needed
   // This must be before any conditional returns to maintain hook order
-  const isProfileComplete = teacher?.cv_path && teacher?.headshot_photo_path && teacher?.intro_video_path;
+  // Note: intro_video_path is optional, so it's not required for profile completion
+  const isProfileComplete = teacher?.cv_path && teacher?.headshot_photo_path;
 
   useEffect(() => {
     if (teacher && !isProfileComplete) {
