@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { API_URL } from '@/lib/constants';
 
 interface CVViewerModalProps {
   isOpen: boolean;
@@ -39,7 +40,7 @@ export default function CVViewerModal({
 
       // Get signed URL for CV (admin endpoint)
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/teachers/${teacherId}/cv-url`,
+        `${API_URL}/api/v1/admin/teachers/${teacherId}/cv-url`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -67,7 +68,7 @@ export default function CVViewerModal({
       const token = session?.access_token || '';
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/teachers/${teacherId}/cv-download`,
+        `${API_URL}/api/v1/admin/teachers/${teacherId}/cv-download`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

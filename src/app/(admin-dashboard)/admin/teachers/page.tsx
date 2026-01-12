@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { API_URL } from '@/lib/constants';
 
 interface Teacher {
   id: number;
@@ -38,7 +39,7 @@ export default function TeachersListPage() {
       const token = session?.access_token || '';
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/teachers`,
+        `${API_URL}/api/v1/teachers`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

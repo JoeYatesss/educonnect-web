@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { API_URL } from '@/lib/constants';
 
 interface ApplicationStatusModalProps {
   isOpen: boolean;
@@ -46,7 +47,7 @@ export default function ApplicationStatusModal({
       const token = session?.access_token || '';
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/applications/${application.id}`,
+        `${API_URL}/api/v1/applications/${application.id}`,
         {
           method: 'PATCH',
           headers: {

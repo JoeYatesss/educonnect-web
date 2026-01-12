@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import ApplicationStatusModal from '@/components/admin/ApplicationStatusModal';
+import { API_URL } from '@/lib/constants';
 
 interface Application {
   id: number;
@@ -73,7 +74,7 @@ export default function ApplicationsOverviewPage() {
       const token = session?.access_token || '';
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/applications`,
+        `${API_URL}/api/v1/applications`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

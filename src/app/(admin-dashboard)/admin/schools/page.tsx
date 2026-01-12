@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { API_URL } from '@/lib/constants';
 
 interface Job {
   id: number;
@@ -47,7 +48,7 @@ export default function SchoolsManagementPage() {
       const token = session?.access_token || '';
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/jobs`,
+        `${API_URL}/api/v1/jobs`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

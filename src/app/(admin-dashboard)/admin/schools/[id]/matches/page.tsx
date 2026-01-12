@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { API_URL } from '@/lib/constants';
 
 interface TeacherMatch {
   match_id: number;
@@ -60,10 +61,10 @@ export default function SchoolMatchesPage() {
 
       // Fetch school info and matches in parallel
       const [schoolRes, matchesRes] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/schools/${schoolId}`, {
+        fetch(`${API_URL}/api/v1/schools/${schoolId}`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/matching/school/${schoolId}`, {
+        fetch(`${API_URL}/api/v1/matching/school/${schoolId}`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);

@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import dynamic from 'next/dynamic';
+import { API_URL } from '@/lib/constants';
 
 // Lazy load RichTextEditor to reduce initial bundle size (~200KB Tiptap library)
 const RichTextEditor = dynamic(
@@ -90,7 +91,7 @@ export default function NewBlogPostPage() {
         content_json: contentJson,
       };
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/blog`, {
+      const response = await fetch(`${API_URL}/api/v1/blog`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

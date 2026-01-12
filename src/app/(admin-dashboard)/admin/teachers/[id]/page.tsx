@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import ApplicationStatusModal from '@/components/admin/ApplicationStatusModal';
 import CVViewerModal from '@/components/admin/CVViewerModal';
 import VideoViewerModal from '@/components/admin/VideoViewerModal';
+import { API_URL } from '@/lib/constants';
 
 interface Teacher {
   id: number;
@@ -87,7 +88,7 @@ export default function TeacherDetailPage() {
 
       // Fetch teacher details
       const teacherResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/teachers/${teacherId}`,
+        `${API_URL}/api/v1/admin/teachers/${teacherId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -101,7 +102,7 @@ export default function TeacherDetailPage() {
 
       // Fetch matches
       const matchesResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/matching/teacher/${teacherId}`,
+        `${API_URL}/api/v1/matching/teacher/${teacherId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -116,7 +117,7 @@ export default function TeacherDetailPage() {
 
       // Fetch applications
       const applicationsResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/applications/teacher/${teacherId}`,
+        `${API_URL}/api/v1/applications/teacher/${teacherId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -143,7 +144,7 @@ export default function TeacherDetailPage() {
       const token = session?.access_token || '';
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/matching/run?teacher_id=${teacherId}`,
+        `${API_URL}/api/v1/matching/run?teacher_id=${teacherId}`,
         {
           method: 'POST',
           headers: {
@@ -171,7 +172,7 @@ export default function TeacherDetailPage() {
       const token = session?.access_token || '';
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/applications`,
+        `${API_URL}/api/v1/applications`,
         {
           method: 'POST',
           headers: {

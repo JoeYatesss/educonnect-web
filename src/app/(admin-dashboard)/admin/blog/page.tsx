@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Eye, Edit, Trash2, Plus } from 'lucide-react';
+import { API_URL } from '@/lib/constants';
 
 interface BlogPost {
   id: number;
@@ -39,7 +40,7 @@ export default function BlogManagementPage() {
       const token = session?.access_token || '';
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/blog`,
+        `${API_URL}/api/v1/blog`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -65,7 +66,7 @@ export default function BlogManagementPage() {
       const token = session?.access_token || '';
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/blog/${postId}`,
+        `${API_URL}/api/v1/blog/${postId}`,
         {
           method: 'DELETE',
           headers: {
