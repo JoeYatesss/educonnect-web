@@ -3,7 +3,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useModal } from '@/contexts/ModalContext';
+import { createClient } from '@/lib/supabase/client';
 
 const heroImages = [
   { src: '/images/china-classroom.jpeg', alt: 'Modern classroom in China' },
@@ -114,6 +116,23 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 export default function HomePage() {
   const { openSignup } = useModal();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const router = useRouter();
+
+  // Handle magic link auth code if it lands on the home page
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    if (code) {
+      const supabase = createClient();
+      supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
+        if (!error) {
+          // Clear the code from URL and redirect to dashboard
+          window.history.replaceState({}, '', '/');
+          router.push('/dashboard');
+        }
+      });
+    }
+  }, [router]);
 
   useEffect(() => {
     const interval = setInterval(() => {
