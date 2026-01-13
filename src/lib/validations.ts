@@ -48,7 +48,12 @@ export const resetPasswordSchema = z.object({
   path: ['confirmPassword'],
 });
 
+export const magicLinkSchema = z.object({
+  email: z.string().email('Invalid email address'),
+});
+
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type SignupFormData = z.infer<typeof signupSchema>;
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
+export type MagicLinkFormData = z.infer<typeof magicLinkSchema>;

@@ -161,6 +161,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await fetchUserProfile(data.user.id);
   };
 
+  const signInWithMagicLink = async (email: string) => {
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+      },
+    });
+
+    if (error) {
+      if (error.message.includes('rate limit')) {
+        throw new Error('Too many requests. Please wait a few minutes before trying again.');
+      }
+      throw error;
+    }
+  };
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
@@ -197,6 +213,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     profileError,
     signUp,
     signIn,
+    signInWithMagicLink,
     signOut,
     resetPassword,
     updatePassword,
