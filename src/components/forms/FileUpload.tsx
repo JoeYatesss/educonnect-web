@@ -90,17 +90,40 @@ export default function FileUpload({
     const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/teachers/download/${endpoint}`;
 
     try {
-      // Fetch with auth
+      // Fetch with auth - use redirect: 'follow' to get the final URL
       const { data: { session } } = await (await import('@/lib/supabase/client')).createClient().auth.getSession();
       const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${session?.access_token}`,
         },
+        redirect: 'follow',
       });
 
-      if (response.redirected) {
+      // Check if we got redirected or if the response URL is different
+      if (response.redirected || response.url !== url) {
         setFileUrl(response.url);
         setShowPreview(true);
+      } else if (response.ok) {
+        // If not redirected but OK, the URL might be in the response body
+        // or the server returned the file directly
+        const contentType = response.headers.get('content-type');
+        if (contentType?.includes('application/json')) {
+          const data = await response.json();
+          if (data.url) {
+            setFileUrl(data.url);
+            setShowPreview(true);
+          }
+        } else {
+          // Fallback: create blob URL from response
+          const blob = await response.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          setFileUrl(blobUrl);
+          setShowPreview(true);
+        }
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Failed to get file URL:', response.status, errorData);
+        setError(errorData.detail || 'Failed to load file preview');
       }
     } catch (err) {
       console.error('Failed to get file URL:', err);
