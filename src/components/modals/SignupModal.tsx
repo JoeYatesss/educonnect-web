@@ -126,6 +126,11 @@ export default function SignupModal({ isOpen, onClose, onSwitchToLogin }: Signup
       if (signUpError) throw signUpError;
       if (!authData.user) throw new Error('Failed to create user account');
 
+      // Check if user already exists (Supabase returns empty identities array for existing users)
+      if (authData.user.identities && authData.user.identities.length === 0) {
+        throw new Error('User already registered');
+      }
+
       // Step 3: Create teacher profile + get presigned URLs
       setUploadProgress('Setting up your profile...');
       console.log('[Signup] Creating teacher profile...');
