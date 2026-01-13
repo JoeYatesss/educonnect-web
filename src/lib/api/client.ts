@@ -89,6 +89,38 @@ class ApiClient {
     });
   }
 
+  // Check if an email exists and its confirmation status (no auth required)
+  async checkEmailStatus(email: string): Promise<{ exists: boolean; confirmed: boolean | null }> {
+    const response = await fetch(`${this.baseUrl}/api/v1/auth/check-email-status`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ detail: 'Request failed' }));
+      throw new Error(error.detail || 'Failed to check email status');
+    }
+
+    return response.json();
+  }
+
+  // Resend confirmation email for unconfirmed users (no auth required)
+  async resendConfirmationEmail(email: string): Promise<{ message: string }> {
+    const response = await fetch(`${this.baseUrl}/api/v1/auth/resend-confirmation`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ detail: 'Request failed' }));
+      throw new Error(error.detail || 'Failed to resend confirmation email');
+    }
+
+    return response.json();
+  }
+
   // Signup endpoint (no auth required) - Legacy v1
   async createTeacherSignup(data: {
     user_id: string;

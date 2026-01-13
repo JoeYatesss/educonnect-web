@@ -41,6 +41,7 @@ export default function SignupModal({ isOpen, onClose, onSwitchToLogin }: Signup
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<string | null>(null);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
   // File states
   const [cvFile, setCvFile] = useState<File | null>(null);
@@ -190,7 +191,20 @@ export default function SignupModal({ isOpen, onClose, onSwitchToLogin }: Signup
       setSuccess(true);
     } catch (err: any) {
       console.error('Signup error:', err);
-      setError(err.message || 'Failed to sign up. Please try again.');
+      const errorMessage = (err.message || '').toLowerCase();
+
+      // Detect Supabase duplicate email errors
+      if (
+        errorMessage.includes('user already registered') ||
+        errorMessage.includes('already been registered') ||
+        errorMessage.includes('already exists') ||
+        errorMessage.includes('duplicate key')
+      ) {
+        setError('An account already exists with this email address. Please log in or reset your password.');
+        setShowLoginPrompt(true);
+      } else {
+        setError(err.message || 'Failed to sign up. Please try again.');
+      }
     } finally {
       setLoading(false);
       setUploadProgress(null);
@@ -205,6 +219,7 @@ export default function SignupModal({ isOpen, onClose, onSwitchToLogin }: Signup
     setHeadshotFile(null);
     setVideoFile(null);
     setFileErrors({});
+    setShowLoginPrompt(false);
     onClose();
   };
 
@@ -254,6 +269,28 @@ export default function SignupModal({ isOpen, onClose, onSwitchToLogin }: Signup
           {error && (
             <div className="rounded-md bg-red-50 p-3">
               <p className="text-sm text-red-800">{error}</p>
+            </div>
+          )}
+
+          {/* Login/Reset Prompt for existing accounts */}
+          {showLoginPrompt && (
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  handleClose();
+                  onSwitchToLogin?.();
+                }}
+                className="flex-1 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Log in instead
+              </button>
+              <a
+                href="/forgot-password"
+                className="flex-1 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 text-center transition-colors"
+              >
+                Reset password
+              </a>
             </div>
           )}
 
