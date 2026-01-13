@@ -1,18 +1,26 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { loginSchema, type LoginFormData } from '@/lib/validations';
+import type { AuthError } from '@/types';
 
 export default function LoginPage() {
-  const { signIn } = useAuth();
+  const { signIn, resendConfirmation } = useAuth();
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // States for improved error handling
+  const [showResendOption, setShowResendOption] = useState(false);
+  const [resendEmail, setResendEmail] = useState('');
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
+  const [showCreateAccountPrompt, setShowCreateAccountPrompt] = useState(false);
 
   const {
     register,
@@ -27,32 +35,42 @@ export default function LoginPage() {
   // Only log on submit now
 
   const onSubmit = async (data: LoginFormData) => {
-    console.log('=== LOGIN onSubmit FUNCTION CALLED ===');
-    console.log('Login data:', {
-      email: data.email,
-      password: '***REDACTED***',
-    });
-
     setError(null);
-    console.log('Setting loading to true...');
+    setShowResendOption(false);
+    setResendSuccess(false);
+    setShowCreateAccountPrompt(false);
     setLoading(true);
-    console.log('Loading state set to:', true);
 
     try {
-      console.log('Calling signIn...');
       await signIn(data.email, data.password);
-      console.log('signIn completed successfully!');
-
-      console.log('About to redirect to /dashboard...');
       router.push('/dashboard');
-      console.log('router.push called');
     } catch (err: any) {
       console.error('Login error:', err);
+      const authError = err as AuthError;
+      if (authError.code === 'EMAIL_NOT_CONFIRMED') {
+        setShowResendOption(true);
+        setResendEmail(authError.email || data.email);
+      } else if (authError.code === 'ACCOUNT_NOT_FOUND') {
+        setShowCreateAccountPrompt(true);
+      }
       setError(err.message || 'Failed to sign in. Please check your credentials.');
       setLoading(false);
     }
     // Note: We intentionally don't set loading to false on success
     // Let the redirect happen while still showing loading state
+  };
+
+  const handleResendConfirmation = async () => {
+    setResendLoading(true);
+    try {
+      await resendConfirmation(resendEmail);
+      setResendSuccess(true);
+      setShowResendOption(false);
+    } catch (err: any) {
+      setError(err.message || 'Failed to resend confirmation email.');
+    } finally {
+      setResendLoading(false);
+    }
   };
 
   return (
@@ -77,6 +95,41 @@ export default function LoginPage() {
           {error && (
             <div className="rounded-md bg-red-50 p-4">
               <p className="text-sm text-red-800">{error}</p>
+              {/* Resend Confirmation Option */}
+              {showResendOption && !resendSuccess && (
+                <button
+                  type="button"
+                  onClick={handleResendConfirmation}
+                  disabled={resendLoading}
+                  className="mt-2 text-sm text-blue-600 hover:text-blue-500 font-medium disabled:opacity-50"
+                >
+                  {resendLoading ? 'Sending...' : "Didn't receive it? Resend confirmation email"}
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Resend Success Message */}
+          {resendSuccess && (
+            <div className="rounded-md bg-green-50 p-4">
+              <p className="text-sm text-green-800">
+                Confirmation email sent! Please check your inbox.
+              </p>
+            </div>
+          )}
+
+          {/* Create Account Prompt */}
+          {showCreateAccountPrompt && (
+            <div className="rounded-lg bg-blue-50 border border-blue-200 p-4">
+              <p className="text-sm text-blue-800">
+                Would you like to create an account?{' '}
+                <Link
+                  href="/signup"
+                  className="font-medium text-blue-600 hover:text-blue-500 underline"
+                >
+                  Sign up here
+                </Link>
+              </p>
             </div>
           )}
 
@@ -150,7 +203,6 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              onClick={() => console.log('Login button clicked, loading:', loading, 'disabled:', loading, 'errors:', Object.keys(errors).length)}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Signing in...' : 'Sign in'}

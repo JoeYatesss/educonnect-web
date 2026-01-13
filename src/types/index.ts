@@ -66,6 +66,12 @@ export interface AdminUser {
   updated_at: string;
 }
 
+// Custom error type for auth errors with codes
+export interface AuthError extends Error {
+  code?: 'EMAIL_NOT_CONFIRMED' | 'ACCOUNT_NOT_FOUND';
+  email?: string;
+}
+
 export interface AuthContextType {
   user: User | null;
   teacher: Teacher | null;
@@ -79,4 +85,5 @@ export interface AuthContextType {
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   updatePassword: (password: string) => Promise<void>;
+  resendConfirmation: (email: string) => Promise<void>;
 }

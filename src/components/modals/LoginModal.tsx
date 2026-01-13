@@ -11,6 +11,7 @@ import {
   type LoginFormData,
   type MagicLinkFormData,
 } from '@/lib/validations';
+import type { AuthError } from '@/types';
 import Modal from './Modal';
 
 type AuthTab = 'magic-link' | 'email-password';
@@ -22,7 +23,7 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginModalProps) {
-  const { signIn, signInWithMagicLink } = useAuth();
+  const { signIn, signInWithMagicLink, resendConfirmation } = useAuth();
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState<AuthTab>('magic-link');
@@ -30,6 +31,13 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginM
   const [loading, setLoading] = useState(false);
   const [magicLinkSent, setMagicLinkSent] = useState(false);
   const [sentEmail, setSentEmail] = useState('');
+
+  // States for improved error handling
+  const [showResendOption, setShowResendOption] = useState(false);
+  const [resendEmail, setResendEmail] = useState('');
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
+  const [showCreateAccountPrompt, setShowCreateAccountPrompt] = useState(false);
 
   const passwordForm = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -41,6 +49,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginM
 
   const onMagicLinkSubmit = async (data: MagicLinkFormData) => {
     setError(null);
+    setShowCreateAccountPrompt(false);
     setLoading(true);
 
     try {
@@ -48,6 +57,10 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginM
       setSentEmail(data.email);
       setMagicLinkSent(true);
     } catch (err: any) {
+      const authError = err as AuthError;
+      if (authError.code === 'ACCOUNT_NOT_FOUND') {
+        setShowCreateAccountPrompt(true);
+      }
       setError(err.message || 'Failed to send magic link. Please try again.');
     } finally {
       setLoading(false);
@@ -56,6 +69,9 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginM
 
   const onPasswordSubmit = async (data: LoginFormData) => {
     setError(null);
+    setShowResendOption(false);
+    setResendSuccess(false);
+    setShowCreateAccountPrompt(false);
     setLoading(true);
 
     try {
@@ -64,9 +80,29 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginM
       onClose();
       router.push('/dashboard');
     } catch (err: any) {
+      const authError = err as AuthError;
+      if (authError.code === 'EMAIL_NOT_CONFIRMED') {
+        setShowResendOption(true);
+        setResendEmail(authError.email || data.email);
+      } else if (authError.code === 'ACCOUNT_NOT_FOUND') {
+        setShowCreateAccountPrompt(true);
+      }
       setError(err.message || 'Failed to sign in. Please check your credentials.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    setResendLoading(true);
+    try {
+      await resendConfirmation(resendEmail);
+      setResendSuccess(true);
+      setShowResendOption(false);
+    } catch (err: any) {
+      setError(err.message || 'Failed to resend confirmation email.');
+    } finally {
+      setResendLoading(false);
     }
   };
 
@@ -77,12 +113,19 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginM
     setMagicLinkSent(false);
     setSentEmail('');
     setActiveTab('magic-link');
+    setShowResendOption(false);
+    setResendEmail('');
+    setResendSuccess(false);
+    setShowCreateAccountPrompt(false);
     onClose();
   };
 
   const handleTabChange = (tab: AuthTab) => {
     setActiveTab(tab);
     setError(null);
+    setShowResendOption(false);
+    setResendSuccess(false);
+    setShowCreateAccountPrompt(false);
   };
 
   return (
@@ -135,6 +178,25 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginM
             {error && (
               <div className="rounded-md bg-red-50 p-4">
                 <p className="text-sm text-red-800">{error}</p>
+              </div>
+            )}
+
+            {/* Create Account Prompt */}
+            {showCreateAccountPrompt && (
+              <div className="rounded-lg bg-blue-50 border border-blue-200 p-4">
+                <p className="text-sm text-blue-800">
+                  Would you like to create an account?{' '}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleClose();
+                      onSwitchToSignup?.();
+                    }}
+                    className="font-medium text-brand-red hover:text-red-700 underline"
+                  >
+                    Sign up here
+                  </button>
+                </p>
               </div>
             )}
 
@@ -215,6 +277,45 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginM
             {error && (
               <div className="rounded-md bg-red-50 p-4">
                 <p className="text-sm text-red-800">{error}</p>
+                {/* Resend Confirmation Option */}
+                {showResendOption && !resendSuccess && (
+                  <button
+                    type="button"
+                    onClick={handleResendConfirmation}
+                    disabled={resendLoading}
+                    className="mt-2 text-sm text-brand-red hover:text-red-700 font-medium disabled:opacity-50"
+                  >
+                    {resendLoading ? 'Sending...' : "Didn't receive it? Resend confirmation email"}
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Resend Success Message */}
+            {resendSuccess && (
+              <div className="rounded-md bg-green-50 p-4">
+                <p className="text-sm text-green-800">
+                  Confirmation email sent! Please check your inbox.
+                </p>
+              </div>
+            )}
+
+            {/* Create Account Prompt */}
+            {showCreateAccountPrompt && (
+              <div className="rounded-lg bg-blue-50 border border-blue-200 p-4">
+                <p className="text-sm text-blue-800">
+                  Would you like to create an account?{' '}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleClose();
+                      onSwitchToSignup?.();
+                    }}
+                    className="font-medium text-brand-red hover:text-red-700 underline"
+                  >
+                    Sign up here
+                  </button>
+                </p>
               </div>
             )}
 

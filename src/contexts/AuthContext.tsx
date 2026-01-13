@@ -5,7 +5,7 @@ import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { apiClient } from '@/lib/api/client';
-import type { AuthContextType, Teacher, AdminUser } from '@/types';
+import type { AuthContextType, Teacher, AdminUser, AuthError } from '@/types';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -142,12 +142,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     if (error) {
-      // Provide helpful error messages
+      // Handle "Email not confirmed" error with code for UI to show resend option
       if (error.message.includes('Email not confirmed')) {
-        throw new Error('Please verify your email before signing in. Check your inbox for the verification link.');
+        const authError: AuthError = new Error('Please verify your email before signing in. Check your inbox for the verification link.');
+        authError.code = 'EMAIL_NOT_CONFIRMED';
+        authError.email = email;
+        throw authError;
       }
+
+      // Handle "Invalid login credentials" - check if account exists
       if (error.message.includes('Invalid login credentials')) {
-        throw new Error('Invalid email or password. Please check your credentials and try again.');
+        try {
+          const status = await apiClient.checkEmailStatus(email);
+          if (!status.exists) {
+            const authError: AuthError = new Error('No account found with this email address.');
+            authError.code = 'ACCOUNT_NOT_FOUND';
+            authError.email = email;
+            throw authError;
+          }
+          // Account exists but password is wrong
+          throw new Error('Invalid email or password. Please check your credentials and try again.');
+        } catch (checkError: any) {
+          // If it's our ACCOUNT_NOT_FOUND error, rethrow it
+          if (checkError.code === 'ACCOUNT_NOT_FOUND') throw checkError;
+          // If check fails, show generic error
+          throw new Error('Invalid email or password. Please check your credentials and try again.');
+        }
       }
       throw error;
     }
@@ -162,16 +182,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signInWithMagicLink = async (email: string) => {
+    // First check if the account exists
+    try {
+      const status = await apiClient.checkEmailStatus(email);
+      if (!status.exists) {
+        const authError: AuthError = new Error('No account found with this email address. Please sign up first.');
+        authError.code = 'ACCOUNT_NOT_FOUND';
+        authError.email = email;
+        throw authError;
+      }
+    } catch (checkError: any) {
+      // If it's our ACCOUNT_NOT_FOUND error, rethrow it
+      if (checkError.code === 'ACCOUNT_NOT_FOUND') throw checkError;
+      // If check fails, continue with magic link (let Supabase handle it)
+    }
+
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+        shouldCreateUser: false, // Don't auto-create accounts
       },
     });
 
     if (error) {
       if (error.message.includes('rate limit')) {
         throw new Error('Too many requests. Please wait a few minutes before trying again.');
+      }
+      // Handle case where Supabase says user doesn't exist (backup check)
+      if (error.message.includes('Signups not allowed for otp')) {
+        const authError: AuthError = new Error('No account found with this email address. Please sign up first.');
+        authError.code = 'ACCOUNT_NOT_FOUND';
+        authError.email = email;
+        throw authError;
       }
       throw error;
     }
@@ -204,6 +247,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (error) throw error;
   };
 
+  const resendConfirmation = async (email: string) => {
+    await apiClient.resendConfirmationEmail(email);
+  };
+
   const value = {
     user,
     teacher,
@@ -217,6 +264,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signOut,
     resetPassword,
     updatePassword,
+    resendConfirmation,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
