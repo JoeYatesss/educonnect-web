@@ -122,7 +122,9 @@ function DashboardContent() {
 
   // Check if profile is complete and show wizard if needed
   // This must be before any conditional returns to maintain hook order
-  // Note: intro_video_path is optional, so it's not required for profile completion
+  // Note: intro_video_path is optional for legacy users (grandfathered)
+  // New users (v2 signup) upload all files during registration, so wizard won't show for them
+  // Legacy users who are missing CV or headshot will see the wizard
   const isProfileComplete = teacher?.cv_path && teacher?.headshot_photo_path;
 
   useEffect(() => {

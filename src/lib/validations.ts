@@ -5,7 +5,8 @@ export const loginSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
-export const signupSchema = z.object({
+// Legacy signup schema (keeping for backwards compatibility)
+export const signupSchemaLegacy = z.object({
   firstName: z.string().min(1, 'First name is required').max(100),
   lastName: z.string().min(1, 'Last name is required').max(100),
   email: z.string().email('Invalid email address'),
@@ -14,6 +15,22 @@ export const signupSchema = z.object({
   city: z.string().min(1, 'City is required'),
   preferredAgeGroup: z.array(z.string()).min(1, 'Select at least one age group'),
   subjectSpecialty: z.string().min(1, 'Subject specialty is required'),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ['confirmPassword'],
+});
+
+// New consolidated signup schema with multi-select arrays
+export const signupSchema = z.object({
+  firstName: z.string().min(1, 'First name is required').max(100),
+  lastName: z.string().min(1, 'Last name is required').max(100),
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+  confirmPassword: z.string(),
+  // Multi-select fields (arrays)
+  cities: z.array(z.string()).min(1, 'Select at least one city'),
+  subjects: z.array(z.string()).min(1, 'Select at least one subject'),
+  preferredAgeGroup: z.array(z.string()).min(1, 'Select at least one age group'),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ['confirmPassword'],

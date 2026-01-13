@@ -89,7 +89,7 @@ class ApiClient {
     });
   }
 
-  // Signup endpoint (no auth required)
+  // Signup endpoint (no auth required) - Legacy v1
   async createTeacherSignup(data: {
     user_id: string;
     first_name: string;
@@ -102,6 +102,91 @@ class ApiClient {
   }) {
     // This endpoint doesn't require authentication
     const response = await fetch(`${this.baseUrl}/api/v1/signup/create-teacher-profile`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ detail: 'Request failed' }));
+      throw new Error(error.detail || `HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  // Signup endpoint v2 with presigned URLs (no auth required)
+  async createTeacherSignupWithFiles(data: {
+    user_id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    preferred_locations: string[];
+    subject_specialties: string[];
+    preferred_age_groups: string[];
+    cv_extension: string;
+    headshot_extension: string;
+    video_extension: string;
+    linkedin?: string;
+  }): Promise<{
+    message: string;
+    teacher_id: number;
+    cv_bucket: string;
+    cv_path: string;
+    cv_token: string;
+    headshot_bucket: string;
+    headshot_path: string;
+    headshot_token: string;
+    video_bucket: string;
+    video_path: string;
+    video_token: string;
+  }> {
+    const response = await fetch(`${this.baseUrl}/api/v1/signup/create-teacher-profile-v2`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ detail: 'Request failed' }));
+      throw new Error(error.detail || `HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  // Upload file directly to Supabase presigned URL (no auth required)
+  // Supabase signed upload URLs expect a PUT request with the file as body
+  async uploadToPresignedUrl(url: string, file: File): Promise<void> {
+    // Supabase signed URLs include the token in the URL itself
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': file.type,
+        'x-upsert': 'true', // Allow overwriting existing files
+      },
+      body: file,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => 'Unknown error');
+      console.error('Upload error:', response.status, errorText);
+      throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
+    }
+  }
+
+  // Confirm file uploads after successful presigned URL uploads (no auth required)
+  async confirmFileUploads(data: {
+    user_id: string;
+    cv_path: string;
+    headshot_path: string;
+    video_path: string;
+  }): Promise<{ message: string; teacher_id: number }> {
+    const response = await fetch(`${this.baseUrl}/api/v1/signup/confirm-file-uploads`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
