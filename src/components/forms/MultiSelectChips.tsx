@@ -2,7 +2,7 @@
 
 interface MultiSelectChipsProps {
   label: string;
-  options: string[];
+  options: readonly string[];
   selected: string[];
   onChange: (selected: string[]) => void;
   required?: boolean;
