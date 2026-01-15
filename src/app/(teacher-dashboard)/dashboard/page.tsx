@@ -14,7 +14,7 @@ import { createClient } from '@/lib/supabase/client';
 import { BookOpen, User, Settings, TrendingUp, Building2, CheckCircle2, ArrowRight, Mail } from 'lucide-react';
 
 function DashboardContent() {
-  const { teacher, adminUser, user, loading: authLoading, profileError, signOut } = useAuth();
+  const { teacher, adminUser, schoolAccount, user, loading: authLoading, profileError, signOut } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
@@ -119,6 +119,13 @@ function DashboardContent() {
       router.push('/admin');
     }
   }, [authLoading, adminUser, teacher, router]);
+
+  // Redirect school users to /school-dashboard
+  useEffect(() => {
+    if (!authLoading && schoolAccount && !teacher) {
+      router.push('/school-dashboard');
+    }
+  }, [authLoading, schoolAccount, teacher, router]);
 
   // Check if profile is complete and show wizard if needed
   // This must be before any conditional returns to maintain hook order

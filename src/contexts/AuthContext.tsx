@@ -5,7 +5,7 @@ import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { apiClient } from '@/lib/api/client';
-import type { AuthContextType, Teacher, AdminUser, AuthError } from '@/types';
+import type { AuthContextType, Teacher, AdminUser, SchoolAccount, AuthError } from '@/types';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -13,6 +13,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [teacher, setTeacher] = useState<Teacher | null>(null);
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
+  const [schoolAccount, setSchoolAccount] = useState<SchoolAccount | null>(null);
   const [loading, setLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(false);
   const [profileError, setProfileError] = useState<string | null>(null);
@@ -36,6 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(null);
           setTeacher(null);
           setAdminUser(null);
+          setSchoolAccount(null);
           setProfileError(null);
           setLoading(false);
           profileFetched = false;
@@ -93,13 +95,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (profileData.teacher) {
         setTeacher(profileData.teacher);
         setAdminUser(null);
+        setSchoolAccount(null);
       } else if (profileData.admin) {
         setAdminUser(profileData.admin);
         setTeacher(null);
-      } else {
-        // User exists in auth but not in teachers/admin tables
+        setSchoolAccount(null);
+      } else if (profileData.school) {
+        setSchoolAccount(profileData.school);
         setTeacher(null);
         setAdminUser(null);
+      } else {
+        // User exists in auth but not in any profile tables
+        setTeacher(null);
+        setAdminUser(null);
+        setSchoolAccount(null);
         setProfileError('Profile not found. Please complete your signup.');
         throw new Error('Profile not found');
       }
@@ -116,6 +125,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setTeacher(null);
       setAdminUser(null);
+      setSchoolAccount(null);
       throw error; // Re-throw so signIn can catch it
     } finally {
       setProfileLoading(false);
@@ -226,6 +236,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     setTeacher(null);
     setAdminUser(null);
+    setSchoolAccount(null);
 
     // Use window.location for a hard redirect to avoid middleware race condition
     window.location.href = '/';
@@ -255,6 +266,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     user,
     teacher,
     adminUser,
+    schoolAccount,
     loading,
     profileLoading,
     profileError,

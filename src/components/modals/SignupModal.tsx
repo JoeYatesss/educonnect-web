@@ -9,31 +9,13 @@ import { apiClient } from '@/lib/api/client';
 import { validateFile, getFileExtension, formatFileSize, FILE_CONSTRAINTS } from '@/lib/fileValidation';
 import Modal from './Modal';
 import MultiSelectChips from '../forms/MultiSelectChips';
+import { CHINA_CITIES, SUBJECTS, AGE_GROUPS } from '@/lib/constants/teacherOptions';
 
 interface SignupModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSwitchToLogin?: () => void;
 }
-
-const CHINA_CITIES = [
-  'Beijing', 'Shanghai', 'Guangzhou', 'Shenzhen', 'Chengdu',
-  'Hangzhou', 'Chongqing', 'Tianjin', 'Nanjing', 'Wuhan',
-  'Xi\'an', 'Suzhou', 'Qingdao', 'Dalian', 'Ningbo'
-];
-
-const AGE_GROUPS = [
-  { value: 'kindergarten', label: 'Kindergarten (3-6)' },
-  { value: 'primary', label: 'Primary School (6-12)' },
-  { value: 'middle_school', label: 'Middle School (12-15)' },
-  { value: 'high_school', label: 'High School (15-18)' },
-  { value: 'university', label: 'University (18+)' }
-];
-
-const SUBJECTS = [
-  'English', 'Math', 'Science', 'Physics', 'Chemistry', 'Biology',
-  'History', 'Geography', 'Art', 'Music', 'PE', 'Computer Science'
-];
 
 export default function SignupModal({ isOpen, onClose, onSwitchToLogin }: SignupModalProps) {
   const supabase = createClient();
