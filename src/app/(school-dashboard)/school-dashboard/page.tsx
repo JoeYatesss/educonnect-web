@@ -80,7 +80,7 @@ function SchoolDashboardContent() {
         } catch (err) {
           console.error('Failed to fetch job stats:', err);
           // Set defaults on error
-          setJobStats({ active_jobs: 0, max_jobs: 5, total_jobs: 0, total_matches: 0, total_selections: 0 });
+          setJobStats({ active_jobs: 0, max_jobs: 5, total_jobs: 0, total_matches: 0, total_selections: 0, selections_by_status: {} });
         }
       }
 
