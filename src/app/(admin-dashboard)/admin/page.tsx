@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import ApplicationStatusModal from '@/components/admin/ApplicationStatusModal';
+import InterviewSelectionsPanel from '@/components/admin/InterviewSelectionsPanel';
 import { API_URL } from '@/lib/constants';
 
 interface Stats {
@@ -455,77 +456,74 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Recent Activity - Incoming Applications */}
-        <div className="bg-white shadow rounded-lg p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-medium text-gray-900">Incoming Applications</h2>
-            <Link
-              href="/admin/applications"
-              className="text-sm text-blue-600 hover:text-blue-800"
-            >
-              View all
-            </Link>
-          </div>
-          {recentApplications.length === 0 ? (
-            <p className="text-sm text-gray-500">No recent applications</p>
-          ) : (
-            <div className="space-y-4">
-              {recentApplications.map((app) => (
-                <div
-                  key={app.id}
-                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
-                >
-                  <div className="flex items-center space-x-4">
-                    <div className="flex-shrink-0">
-                      <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                        <span className="text-blue-600 font-medium text-sm">
-                          {app.teacher.first_name?.[0]}{app.teacher.last_name?.[0]}
-                        </span>
+        {/* Recent Activity Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Incoming Applications */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-medium text-gray-900">Incoming Applications</h2>
+              <Link
+                href="/admin/applications"
+                className="text-sm text-blue-600 hover:text-blue-800"
+              >
+                View all
+              </Link>
+            </div>
+            {recentApplications.length === 0 ? (
+              <p className="text-sm text-gray-500">No recent applications</p>
+            ) : (
+              <div className="space-y-3">
+                {recentApplications.slice(0, 5).map((app) => (
+                  <div
+                    key={app.id}
+                    className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
+                  >
+                    <div className="flex items-center space-x-3 flex-1 min-w-0">
+                      <div className="flex-shrink-0">
+                        <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                          <span className="text-blue-600 font-medium text-sm">
+                            {app.teacher.first_name?.[0]}{app.teacher.last_name?.[0]}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {app.teacher.first_name} {app.teacher.last_name}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">
+                          {app.is_job_application && app.job ? (
+                            <>{app.job.company}</>
+                          ) : app.school ? (
+                            <>{app.school.name}</>
+                          ) : (
+                            <>Pending</>
+                          )}
+                        </p>
                       </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">
-                        {app.teacher.first_name} {app.teacher.last_name}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        {app.is_job_application && app.job ? (
-                          <>Applied to {app.job.company} ({app.job.city})</>
-                        ) : app.school ? (
-                          <>Applied to {app.school.name} ({app.school.city})</>
-                        ) : (
-                          <>Application pending</>
-                        )}
-                      </p>
+                    <div className="flex items-center space-x-2 flex-shrink-0 ml-2">
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeColor(
+                          app.status
+                        )}`}
+                      >
+                        {app.status}
+                      </span>
+                      <button
+                        onClick={() => handleOpenStatusModal(app)}
+                        className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                      >
+                        Update
+                      </button>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-4">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeColor(
-                        app.status
-                      )}`}
-                    >
-                      {app.status}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {formatDate(app.submitted_at)}
-                    </span>
-                    <button
-                      onClick={() => handleOpenStatusModal(app)}
-                      className="text-xs text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      Update
-                    </button>
-                    <Link
-                      href={`/admin/teachers/${app.teacher_id}`}
-                      className="text-xs text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      View Profile
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Interview Selections Panel */}
+          <InterviewSelectionsPanel />
         </div>
       </div>
 

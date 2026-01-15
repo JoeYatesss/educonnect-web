@@ -14,7 +14,8 @@ export async function middleware(req: NextRequest) {
     '/language-course',
     '/blog',
     '/contact',
-    '/legal'
+    '/legal',
+    '/for-schools'
   ];
   const isMarketingRoute = marketingRoutes.some(route => pathname.startsWith(route));
 
@@ -45,27 +46,28 @@ export async function middleware(req: NextRequest) {
   } = await supabase.auth.getSession();
 
   // Public routes (accessible without auth)
-  const publicRoutes = ['/', '/login', '/signup', '/forgot-password', '/reset-password', '/auth/callback'];
+  const publicRoutes = ['/', '/login', '/signup', '/school-signup', '/forgot-password', '/reset-password', '/auth/callback'];
   const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
 
   // Protected routes that require authentication
   const isTeacherRoute = pathname.startsWith('/dashboard') || pathname.startsWith('/profile') || pathname.startsWith('/matches') || pathname.startsWith('/payment');
   const isAdminRoute = pathname.startsWith('/admin');
+  const isSchoolRoute = pathname.startsWith('/school-dashboard') || pathname.startsWith('/find-talent') || pathname.startsWith('/saved-teachers') || pathname.startsWith('/school-account') || pathname.startsWith('/school-payment');
 
   // If not logged in and trying to access protected route
-  if (!session?.user && (isTeacherRoute || isAdminRoute)) {
+  if (!session?.user && (isTeacherRoute || isAdminRoute || isSchoolRoute)) {
     const redirectUrl = new URL('/login', req.url);
     redirectUrl.searchParams.set('redirectTo', pathname);
     return NextResponse.redirect(redirectUrl);
   }
 
   // If logged in and on login/signup page, check redirectTo param or use default
-  if (session?.user && (pathname === '/login' || pathname === '/signup')) {
+  if (session?.user && (pathname === '/login' || pathname === '/signup' || pathname === '/school-signup')) {
     const redirectTo = req.nextUrl.searchParams.get('redirectTo');
     if (redirectTo) {
       return NextResponse.redirect(new URL(redirectTo, req.url));
     }
-    // Default: redirect to dashboard (teacher dashboard will redirect admins to /admin)
+    // Default: redirect to dashboard (teacher dashboard will redirect admins to /admin, schools to /school-dashboard)
     return NextResponse.redirect(new URL('/dashboard', req.url));
   }
 

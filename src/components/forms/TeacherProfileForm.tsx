@@ -8,6 +8,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import { apiClient } from '@/lib/api/client';
 import { useRouter } from 'next/navigation';
 import { User, Briefcase, MapPin, Heart, MessageCircle, Save } from 'lucide-react';
+import {
+  CHINA_CITIES,
+  SUBJECTS,
+  AGE_GROUPS,
+  AGE_GROUP_VALUES,
+  COUNTRY_CODES,
+  COUNTRIES,
+} from '@/lib/constants/teacherOptions';
 
 const profileSchema = z.object({
   phone: z.string().optional(),
@@ -27,91 +35,6 @@ const profileSchema = z.object({
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
-
-const SUBJECT_OPTIONS = [
-  'English',
-  'Math',
-  'Science',
-  'History',
-  'Geography',
-  'Art',
-  'Music',
-  'Physical Education',
-  'Computer Science',
-];
-
-const LOCATION_OPTIONS = [
-  'Beijing',
-  'Shanghai',
-  'Guangzhou',
-  'Shenzhen',
-  'Chengdu',
-  'Hangzhou',
-  'Nanjing',
-  'Suzhou',
-];
-
-const AGE_GROUP_OPTIONS = ['Kindergarten', 'Primary', 'Middle School', 'High School'];
-
-const COUNTRY_CODES = [
-  { code: '+1', country: 'US/Canada', flag: '🇺🇸' },
-  { code: '+44', country: 'UK', flag: '🇬🇧' },
-  { code: '+86', country: 'China', flag: '🇨🇳' },
-  { code: '+61', country: 'Australia', flag: '🇦🇺' },
-  { code: '+33', country: 'France', flag: '🇫🇷' },
-  { code: '+49', country: 'Germany', flag: '🇩🇪' },
-  { code: '+91', country: 'India', flag: '🇮🇳' },
-  { code: '+81', country: 'Japan', flag: '🇯🇵' },
-  { code: '+82', country: 'South Korea', flag: '🇰🇷' },
-  { code: '+65', country: 'Singapore', flag: '🇸🇬' },
-  { code: '+852', country: 'Hong Kong', flag: '🇭🇰' },
-  { code: '+971', country: 'UAE', flag: '🇦🇪' },
-];
-
-const COUNTRIES = [
-  'United States',
-  'United Kingdom',
-  'Canada',
-  'Australia',
-  'New Zealand',
-  'Ireland',
-  'South Africa',
-  'China',
-  'Japan',
-  'South Korea',
-  'Singapore',
-  'India',
-  'Philippines',
-  'Thailand',
-  'Vietnam',
-  'Malaysia',
-  'Indonesia',
-  'France',
-  'Germany',
-  'Spain',
-  'Italy',
-  'Netherlands',
-  'Belgium',
-  'Switzerland',
-  'Austria',
-  'Sweden',
-  'Norway',
-  'Denmark',
-  'Finland',
-  'Poland',
-  'Russia',
-  'Brazil',
-  'Mexico',
-  'Argentina',
-  'Chile',
-  'Colombia',
-  'UAE',
-  'Saudi Arabia',
-  'Egypt',
-  'Nigeria',
-  'Kenya',
-  'Other',
-];
 
 export default function TeacherProfileForm() {
   const { teacher } = useAuth();
@@ -334,7 +257,7 @@ export default function TeacherProfileForm() {
               Subject Specialties
             </label>
             <div className="flex flex-wrap gap-2">
-              {SUBJECT_OPTIONS.map((subject) => (
+              {SUBJECTS.map((subject) => (
                 <button
                   key={subject}
                   type="button"
@@ -394,7 +317,7 @@ export default function TeacherProfileForm() {
               Preferred Locations
             </label>
             <div className="flex flex-wrap gap-2">
-              {LOCATION_OPTIONS.map((location) => (
+              {CHINA_CITIES.map((location) => (
                 <button
                   key={location}
                   type="button"
@@ -416,7 +339,7 @@ export default function TeacherProfileForm() {
               Preferred Age Groups
             </label>
             <div className="flex flex-wrap gap-2">
-              {AGE_GROUP_OPTIONS.map((ageGroup) => (
+              {AGE_GROUP_VALUES.map((ageGroup) => (
                 <button
                   key={ageGroup}
                   type="button"
