@@ -532,20 +532,20 @@ export default function HomePage() {
                 Hiring Teachers for Your School?
               </h2>
               <p className="text-xl text-gray-600 leading-relaxed">
-                Access our database of vetted, qualified teachers ready to join international schools in China. Browse profiles, download CVs, watch introduction videos, and connect directly with candidates.
+                Access our database of rigorously vetted teachers ready to join international schools in China. We manage the entire hiring process from matching to placement.
               </p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-3">
                   <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm">
                     &#10003;
                   </span>
-                  <span className="text-gray-700">500+ vetted teacher profiles</span>
+                  <span className="text-gray-700">Rigorously vetted teacher profiles</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm">
                     &#10003;
                   </span>
-                  <span className="text-gray-700">Direct contact with candidates</span>
+                  <span className="text-gray-700">End-to-end hiring process management</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm">

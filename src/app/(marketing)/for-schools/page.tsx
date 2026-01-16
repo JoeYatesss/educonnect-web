@@ -6,28 +6,28 @@ import { useState } from 'react';
 
 const BENEFITS = [
   {
-    title: 'Vetted Teacher Profiles',
-    description: 'Every teacher in our database has been screened for qualifications, experience, and teaching ability.',
+    title: 'Rigorously Vetted Teachers',
+    description: 'Every teacher undergoes thorough screening including qualification verification, background checks, and teaching demonstrations.',
   },
   {
-    title: 'Complete Information',
-    description: 'Access full profiles including CVs, introduction videos, teaching experience, and contact details.',
+    title: 'End-to-End Management',
+    description: 'We handle the entire hiring process from initial matching to final placement, saving you time and resources.',
   },
   {
     title: 'Smart Matching',
-    description: 'Our algorithm helps match teachers to your school based on subjects, age groups, and location preferences.',
+    description: 'Our algorithm matches teachers to your school based on subjects, age groups, and location preferences.',
   },
   {
-    title: 'Save & Compare',
-    description: 'Bookmark interesting candidates and compare profiles to find the best fit for your school.',
+    title: 'Quality Guaranteed',
+    description: 'We only present candidates who meet our strict standards for international school teaching.',
   },
   {
-    title: 'Direct Contact',
-    description: 'Reach out directly to teachers via email, phone, or WeChat without intermediaries.',
+    title: 'Complete Profiles',
+    description: 'Access full profiles including CVs, introduction videos, teaching experience, and qualifications.',
   },
   {
-    title: 'Downloadable CVs',
-    description: 'Download teacher CVs and share them with your hiring committee instantly.',
+    title: 'Ongoing Support',
+    description: 'We support both schools and teachers throughout the placement process and beyond.',
   },
 ];
 
@@ -45,19 +45,19 @@ const STEPS = [
   {
     number: 3,
     title: 'Unlock Full Access',
-    description: 'Pay once to unlock complete profiles, contact details, CVs, and introduction videos.',
+    description: 'Subscribe to access complete profiles, CVs, and introduction videos.',
   },
   {
     number: 4,
-    title: 'Connect & Hire',
-    description: 'Contact teachers directly and start your hiring process immediately.',
+    title: 'We Manage the Process',
+    description: 'Select candidates and we handle outreach, coordination, and placement.',
   },
 ];
 
 const FAQ = [
   {
     question: 'How much does it cost?',
-    answer: 'Full access costs ¥7,500 (approximately $1,000 USD) as a one-time payment. This gives you unlimited access to all teacher profiles, contact information, and downloadable CVs.',
+    answer: 'Full access costs ¥7,500 (approximately $1,000 USD) per year. This gives you unlimited access to all teacher profiles, contact information, and downloadable CVs.',
   },
   {
     question: 'What payment methods do you accept?',
@@ -121,22 +121,18 @@ export default function ForSchoolsPage() {
               </h1>
 
               <p className="text-xl md:text-2xl text-gray-600">
-                Access our database of vetted, qualified teachers ready to join international schools in China. Browse profiles, download CVs, and connect directly.
+                Access our database of rigorously vetted teachers ready to join international schools in China. We manage the entire hiring process for you.
               </p>
 
               {/* Stats */}
               <div className="flex flex-wrap gap-8">
                 <div>
-                  <div className="text-3xl font-bold text-gray-900">500+</div>
-                  <div className="text-sm text-gray-600">Qualified Teachers</div>
-                </div>
-                <div>
                   <div className="text-3xl font-bold text-gray-900">100%</div>
-                  <div className="text-sm text-gray-600">Vetted Profiles</div>
+                  <div className="text-sm text-gray-600">Vetted Teachers</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-gray-900">Direct</div>
-                  <div className="text-sm text-gray-600">Contact Access</div>
+                  <div className="text-3xl font-bold text-gray-900">Full</div>
+                  <div className="text-sm text-gray-600">Process Management</div>
                 </div>
               </div>
 
@@ -155,37 +151,37 @@ export default function ForSchoolsPage() {
             <div className="bg-slate-50 rounded-2xl p-8 border border-gray-200">
               <div className="text-center">
                 <div className="text-5xl font-bold text-brand-red mb-2">¥7,500</div>
-                <div className="text-gray-600 mb-6">One-time payment</div>
+                <div className="text-gray-600 mb-6">Per year</div>
                 <ul className="text-left space-y-3 mb-8">
                   <li className="flex items-center gap-3">
                     <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm">
                       &#10003;
                     </span>
-                    <span className="text-gray-700">Unlimited teacher profiles</span>
+                    <span className="text-gray-700">Rigorously vetted teachers</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm">
                       &#10003;
                     </span>
-                    <span className="text-gray-700">Full contact information</span>
+                    <span className="text-gray-700">Full hiring process management</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm">
                       &#10003;
                     </span>
-                    <span className="text-gray-700">Downloadable CVs</span>
+                    <span className="text-gray-700">Downloadable CVs & videos</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm">
                       &#10003;
                     </span>
-                    <span className="text-gray-700">Introduction videos</span>
+                    <span className="text-gray-700">Smart candidate matching</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm">
                       &#10003;
                     </span>
-                    <span className="text-gray-700">Save & bookmark teachers</span>
+                    <span className="text-gray-700">Ongoing placement support</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm">

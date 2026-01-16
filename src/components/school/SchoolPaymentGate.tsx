@@ -6,10 +6,10 @@ import { apiClient } from '@/lib/api/client';
 import { Lock, Check, CreditCard, FileText, Users, Download, Sparkles } from 'lucide-react';
 
 const BENEFITS = [
-  { icon: Users, text: 'Access to all screened teacher profiles' },
-  { icon: Download, text: 'Downloadable CVs and resumes' },
+  { icon: Users, text: 'Access to rigorously vetted teacher profiles' },
+  { icon: Download, text: 'Downloadable CVs and intro videos' },
   { icon: Sparkles, text: 'Smart matching algorithm' },
-  { icon: Check, text: 'Direct contact information' },
+  { icon: Check, text: 'Full hiring process management' },
 ];
 
 export default function SchoolPaymentGate() {
@@ -102,7 +102,7 @@ export default function SchoolPaymentGate() {
             </div>
             <div>
               <h3 className="text-2xl font-bold text-gray-900">Unlock Full Access</h3>
-              <p className="text-gray-600">One-time payment for unlimited access</p>
+              <p className="text-gray-600">Annual payment for unlimited access</p>
             </div>
           </div>
 
@@ -132,7 +132,7 @@ export default function SchoolPaymentGate() {
           <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
             <div className="text-center mb-6">
               <div className="text-4xl font-bold text-gray-900 mb-1">¥7,500</div>
-              <p className="text-sm text-gray-500">One-time payment</p>
+              <p className="text-sm text-gray-500">Per year</p>
             </div>
 
             {!showInvoiceForm ? (
