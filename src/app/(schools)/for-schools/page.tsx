@@ -40,7 +40,7 @@ const STEPS = [
   {
     number: 2,
     title: 'Browse Teachers',
-    description: 'Search our database by subject, location preference, age group, and experience level.',
+    description: 'Browse candidates by subject, location preference, age group, and experience level.',
   },
   {
     number: 3,
@@ -72,8 +72,8 @@ const FAQ = [
     answer: 'You can browse teacher previews including their preferred locations, subjects, age groups, and experience levels. Full profiles including contact details and CVs require payment.',
   },
   {
-    question: 'How many teachers are in your database?',
-    answer: 'We have a growing database of qualified teachers from around the world, all interested in teaching positions in China. New teachers are added regularly.',
+    question: 'How many teachers can I hire?',
+    answer: 'We continuously recruit and vet qualified teachers from around the world. With your subscription, you can hire as many as you need—no limits, no extra fees.',
   },
   {
     question: 'Can I get an invoice for my school?',
@@ -121,7 +121,7 @@ export default function ForSchoolsPage() {
               </h1>
 
               <p className="text-xl md:text-2xl text-gray-600">
-                Access our database of rigorously vetted teachers ready to join international schools in China. We manage the entire hiring process for you.
+                The smartest way to hire teachers.
               </p>
 
               {/* Stats */}
@@ -209,7 +209,7 @@ export default function ForSchoolsPage() {
       <section className="py-10 bg-brand-red">
         <div className="container mx-auto px-6 max-w-7xl text-center">
           <p className="text-lg md:text-xl text-white italic">
-            Access the most comprehensive database of qualified teachers looking for positions in China.
+            Unlimited hires. One flat annual fee. No per-placement charges.
           </p>
         </div>
       </section>

@@ -47,7 +47,7 @@ const faqs = [
   },
   {
     question: "Do you help with visa applications for China?",
-    answer: "Yes, we provide complete visa support including Z-visa applications, work permit assistance, and guidance through all required documentation and legalization processes."
+    answer: "Your school handles the visa process directly, but we guide you through everything else—from apartment hunting to opening a bank account, getting fapiaos, and connecting with expat communities."
   },
   {
     question: "What subjects are most in demand in Chinese international schools?",
@@ -148,7 +148,7 @@ export default function HomePage() {
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Hero Content */}
-            <div className="space-y-8">
+            <div className="space-y-10">
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
                 <span className="block text-gray-900">Teach.</span>
                 <span className="block text-gray-900 italic">Explore.</span>
@@ -156,7 +156,7 @@ export default function HomePage() {
               </h1>
 
               <p className="text-xl md:text-2xl text-gray-600">
-                Teach at top international schools. Explore vibrant cities like Shanghai and Beijing. Thrive with competitive salaries and full support.
+                The smartest move in your teaching career.
               </p>
 
               {/* Stats */}
@@ -194,7 +194,7 @@ export default function HomePage() {
             </div>
 
             {/* Hero Image Carousel */}
-            <div className="relative w-full h-[350px] lg:h-[400px] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative w-full h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
               {heroImages.map((image, index) => (
                 <Image
                   key={image.src}
@@ -232,13 +232,13 @@ export default function HomePage() {
       <section className="py-10 bg-brand-red">
         <div className="container mx-auto px-6 max-w-7xl text-center">
           <p className="text-lg md:text-xl text-white italic">
-            Access the most comprehensive database of teaching opportunities in China.
+            Discover premium teaching positions at top international schools across China.
           </p>
         </div>
       </section>
 
       {/* Connect with Excellence Section */}
-      <section className="py-20 bg-slate-50">
+      <section className="min-h-screen flex items-center py-20 bg-slate-50">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
@@ -294,7 +294,7 @@ export default function HomePage() {
       </section>
 
       {/* What You'll Need Section */}
-      <section className="py-16 bg-white">
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
@@ -333,15 +333,15 @@ export default function HomePage() {
             </div>
             {/* Intro Video */}
             <div className="bg-slate-50 p-6 rounded-xl text-center">
-              <div className="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-7 h-7 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-14 h-14 bg-brand-red/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-7 h-7 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Introduction Video</h3>
               <p className="text-sm text-gray-600 mb-2">A 1-2 minute video introducing yourself to schools</p>
-              <span className="inline-block px-3 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded-full">
-                Optional - Add Later
+              <span className="inline-block px-3 py-1 bg-brand-red/10 text-brand-red text-xs font-medium rounded-full">
+                Required
               </span>
             </div>
           </div>
@@ -402,8 +402,8 @@ export default function HomePage() {
       </section>
 
       {/* Opportunities Section */}
-      <section id="opportunities" className="py-20 bg-slate-50">
-        <div className="container mx-auto px-6 max-w-7xl">
+      <section id="opportunities" className="min-h-screen flex items-center py-20 bg-slate-50">
+        <div className="container mx-auto px-6 max-w-7xl w-full">
           {/* Section Header */}
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -415,7 +415,7 @@ export default function HomePage() {
           </div>
 
           {/* Benefits Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
             <div className="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
               <div className="w-24 h-24 mx-auto mb-6 relative">
                 <Image
@@ -466,13 +466,115 @@ export default function HomePage() {
                 Earn 25-40K RMB monthly with comprehensive benefits including housing, flights, and medical insurance.
               </p>
             </div>
+
+            <div className="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
+              <div className="w-16 h-16 mx-auto mb-6 bg-brand-red/10 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="font-montserrat text-xl font-semibold text-gray-900 mb-3 text-center">
+                Fast placement.
+              </h3>
+              <p className="text-gray-600 leading-relaxed text-center">
+                Our streamlined process gets you from application to job offer in weeks, not months. Start your new adventure sooner.
+              </p>
+            </div>
+
+            <div className="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
+              <div className="w-16 h-16 mx-auto mb-6 bg-brand-red/10 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <h3 className="font-montserrat text-xl font-semibold text-gray-900 mb-3 text-center">
+                Expat community.
+              </h3>
+              <p className="text-gray-600 leading-relaxed text-center">
+                Connect with fellow teachers before you arrive. Join our community of educators sharing tips, experiences, and friendships.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Support Section */}
+      <section className="min-h-screen flex items-center py-20 bg-white">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+                Support That Goes Beyond the Job
+              </h2>
+              <p className="text-xl text-gray-600 leading-relaxed">
+                Moving to China is a big step. We help you navigate everything outside of work so you can focus on what you do best—teaching.
+              </p>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
+                    &#10003;
+                  </span>
+                  <span className="text-gray-700">Apartment hunting assistance</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
+                    &#10003;
+                  </span>
+                  <span className="text-gray-700">Expat community connections</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
+                    &#10003;
+                  </span>
+                  <span className="text-gray-700">Bank account setup guidance</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
+                    &#10003;
+                  </span>
+                  <span className="text-gray-700">Fapiao &amp; tax record help</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
+                    &#10003;
+                  </span>
+                  <span className="text-gray-700">EdTech tools &amp; resources</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
+                    &#10003;
+                  </span>
+                  <span className="text-gray-700">Teacher training materials</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
+                    &#10003;
+                  </span>
+                  <span className="text-gray-700">Culture shock support</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm mt-0.5">
+                    &#10003;
+                  </span>
+                  <span className="text-gray-700">Social integration advice</span>
+                </div>
+              </div>
+            </div>
+            <div className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-xl">
+              <Image
+                src="/images/shanghai_french_concession.jpg"
+                alt="French Concession neighborhood in Shanghai - expat life in China"
+                fill
+                className="object-cover"
+              />
+            </div>
           </div>
         </div>
       </section>
 
       {/* Success Stories Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-6 max-w-7xl">
+      <section className="min-h-screen flex items-center py-20 bg-slate-50">
+        <div className="container mx-auto px-6 max-w-7xl w-full">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               Success Stories
@@ -481,15 +583,26 @@ export default function HomePage() {
               Hear from teachers who&apos;ve transformed their careers
             </p>
           </div>
-          <div className="flex flex-wrap justify-center gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
             {testimonials.map((testimonial, index) => (
               <div
                 key={index}
-                className="bg-slate-50 p-6 rounded-xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1 w-full max-w-[340px]"
+                className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden"
               >
-                <div className="flex flex-col h-full text-center">
-                  <div className="flex flex-col items-center mb-4">
-                    <div className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-brand-red/20 mb-3">
+                {/* Quote icon header */}
+                <div className="bg-brand-red px-6 py-4">
+                  <svg className="w-8 h-8 text-white/80" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                  </svg>
+                </div>
+                <div className="p-6">
+                  {/* Quote */}
+                  <p className="text-gray-600 leading-relaxed mb-6 text-[15px]">
+                    &ldquo;{testimonial.quote}&rdquo;
+                  </p>
+                  {/* Author */}
+                  <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
+                    <div className="relative w-14 h-14 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-brand-red/20">
                       <Image
                         src={testimonial.image}
                         alt={testimonial.name}
@@ -502,9 +615,6 @@ export default function HomePage() {
                       <p className="text-sm text-brand-red">{testimonial.role}</p>
                     </div>
                   </div>
-                  <p className="text-gray-600 leading-relaxed flex-grow text-[15px]">
-                    &ldquo;{testimonial.quote}&rdquo;
-                  </p>
                 </div>
               </div>
             ))}
@@ -513,7 +623,7 @@ export default function HomePage() {
       </section>
 
       {/* For Schools Section */}
-      <section className="py-20 bg-white">
+      <section className="min-h-screen flex items-center py-20 bg-white">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="relative h-[350px] lg:h-[450px] rounded-2xl overflow-hidden shadow-xl">
@@ -532,7 +642,7 @@ export default function HomePage() {
                 Hiring Teachers for Your School?
               </h2>
               <p className="text-xl text-gray-600 leading-relaxed">
-                Access our database of rigorously vetted teachers ready to join international schools in China. We manage the entire hiring process from matching to placement.
+                Hire unlimited teachers per year with full hiring support. We rigorously vet every candidate and manage the entire process for you.
               </p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-3">
@@ -572,8 +682,8 @@ export default function HomePage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-slate-50">
-        <div className="container mx-auto px-6 max-w-7xl">
+      <section className="min-h-screen flex items-center py-20 bg-slate-50">
+        <div className="container mx-auto px-6 max-w-7xl w-full">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               Frequently Asked Questions
@@ -591,8 +701,8 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gray-900 text-white">
-        <div className="container mx-auto px-6 max-w-7xl text-center">
+      <section className="min-h-screen flex items-center py-20 bg-gray-900 text-white">
+        <div className="container mx-auto px-6 max-w-7xl text-center w-full">
           <h2 className="font-montserrat text-4xl md:text-5xl font-bold mb-6">
             Ready to start your adventure?
           </h2>

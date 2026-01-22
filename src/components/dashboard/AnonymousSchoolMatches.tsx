@@ -52,9 +52,9 @@ export default function AnonymousSchoolMatches() {
 
   // Get score color based on match percentage
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'bg-green-100 text-green-800';
-    if (score >= 65) return 'bg-yellow-100 text-yellow-800';
-    return 'bg-orange-100 text-orange-800';
+    if (score >= 80) return 'bg-brand-red/10 text-brand-red font-semibold';
+    if (score >= 65) return 'bg-brand-red/10 text-brand-red';
+    return 'bg-gray-100 text-gray-600';
   };
 
   // Sort matches by score descending
@@ -97,7 +97,7 @@ export default function AnonymousSchoolMatches() {
               <div key={i} className="border border-gray-200 rounded-lg p-4 opacity-40">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-lg font-medium">••••••, ••••••</span>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-red/10 text-brand-red">
                     {85 + i * 3}% match
                   </span>
                 </div>
@@ -199,10 +199,10 @@ export default function AnonymousSchoolMatches() {
               {/* Role name with optional new badge */}
               {match.role_name && (
                 <div className="flex items-center gap-2 text-gray-900 mb-1">
-                  <Briefcase className="w-4 h-4 text-indigo-500 flex-shrink-0" />
+                  <Briefcase className="w-4 h-4 text-blue-500 flex-shrink-0" />
                   <span className="font-semibold truncate">{decodeHtmlEntities(match.role_name)}</span>
                   {match.is_new && (
-                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-rose-100 text-rose-800">
+                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-brand-red text-white">
                       <Sparkles className="w-3 h-3 mr-0.5" />
                       New
                     </span>
@@ -244,7 +244,7 @@ export default function AnonymousSchoolMatches() {
               {match.chinese_required !== undefined && (
                 <div className="flex items-center gap-2 mt-1 text-sm">
                   <Languages className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                  <span className={match.chinese_required ? 'text-red-600' : 'text-gray-500'}>
+                  <span className={match.chinese_required ? 'text-amber-600' : 'text-gray-500'}>
                     {match.chinese_required ? 'Chinese Required' : 'No Chinese'}
                   </span>
                 </div>
@@ -314,8 +314,8 @@ export default function AnonymousSchoolMatches() {
       )}
 
       {/* Info Note */}
-      <div className="mt-4 bg-blue-50 rounded-lg border border-blue-200 p-3">
-        <p className="text-xs text-blue-800">
+      <div className="mt-4 bg-blue-50 rounded-lg border border-blue-100 p-3">
+        <p className="text-xs text-blue-700">
           <strong>Note:</strong> School names are confidential. View the matches page for full details and filters.
         </p>
       </div>

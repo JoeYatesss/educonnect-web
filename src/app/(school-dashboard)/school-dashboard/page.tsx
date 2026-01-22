@@ -245,8 +245,8 @@ function SchoolDashboardContent() {
 
             <div className="bg-white rounded-xl p-5 shadow-md border border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                  <UserCheck className="w-5 h-5 text-purple-600" />
+                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                  <UserCheck className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase">Interviews</p>
@@ -339,8 +339,8 @@ function SchoolDashboardContent() {
               className="bg-white rounded-xl p-6 shadow-md border border-gray-100 hover:shadow-lg hover:border-brand-red/20 transition-all duration-200 group"
             >
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center group-hover:bg-purple-200 transition-colors">
-                  <UserCheck className="w-6 h-6 text-purple-600" />
+                <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                  <UserCheck className="w-6 h-6 text-blue-600" />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-brand-red transition-colors">
