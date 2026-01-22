@@ -146,8 +146,8 @@ export default function InterviewSelectionsPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                  <UserCheck className="w-5 h-5 text-blue-600" />
+                <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                  <UserCheck className="w-5 h-5 text-brand-red" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase">Total</p>
@@ -157,8 +157,8 @@ export default function InterviewSelectionsPage() {
             </div>
             <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                  <Calendar className="w-5 h-5 text-blue-600" />
+                <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                  <Calendar className="w-5 h-5 text-brand-red" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase">Scheduled</p>
@@ -170,8 +170,8 @@ export default function InterviewSelectionsPage() {
             </div>
             <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
-                  <Briefcase className="w-5 h-5 text-amber-600" />
+                <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                  <Briefcase className="w-5 h-5 text-brand-red" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase">Offers Extended</p>

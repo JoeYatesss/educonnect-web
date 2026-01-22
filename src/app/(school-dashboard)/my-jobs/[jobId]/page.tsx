@@ -197,8 +197,8 @@ export default function JobDetailPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                  <Users className="w-5 h-5 text-blue-600" />
+                <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                  <Users className="w-5 h-5 text-brand-red" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase tracking-wider">Matches</p>
@@ -209,8 +209,8 @@ export default function JobDetailPage() {
 
             <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                  <UserCheck className="w-5 h-5 text-purple-600" />
+                <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                  <UserCheck className="w-5 h-5 text-brand-red" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase tracking-wider">Selections</p>
@@ -221,8 +221,8 @@ export default function JobDetailPage() {
 
             <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-                  <GraduationCap className="w-5 h-5 text-green-600" />
+                <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                  <GraduationCap className="w-5 h-5 text-brand-red" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase tracking-wider">Subjects</p>
@@ -233,8 +233,8 @@ export default function JobDetailPage() {
 
             <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
-                  <Clock className="w-5 h-5 text-amber-600" />
+                <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                  <Clock className="w-5 h-5 text-brand-red" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase tracking-wider">Experience</p>
@@ -253,7 +253,7 @@ export default function JobDetailPage() {
                   <h3 className="text-sm font-medium text-gray-500 mb-2">Subjects</h3>
                   <div className="flex flex-wrap gap-1">
                     {job.subjects.map(s => (
-                      <span key={s} className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-sm">
+                      <span key={s} className="px-2 py-1 bg-brand-red/10 text-brand-red rounded text-sm">
                         {s}
                       </span>
                     ))}
@@ -265,7 +265,7 @@ export default function JobDetailPage() {
                   <h3 className="text-sm font-medium text-gray-500 mb-2">Age Groups</h3>
                   <div className="flex flex-wrap gap-1">
                     {job.age_groups.map(a => (
-                      <span key={a} className="px-2 py-1 bg-green-100 text-green-700 rounded text-sm capitalize">
+                      <span key={a} className="px-2 py-1 bg-brand-red/10 text-brand-red rounded text-sm capitalize">
                         {a.replace('_', ' ')}
                       </span>
                     ))}

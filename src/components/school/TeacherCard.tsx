@@ -73,8 +73,8 @@ export default function TeacherCard({
             disabled={saving}
             className={`absolute top-3 right-3 p-2 rounded-full shadow-md transition-all duration-200 ${
               isSaved
-                ? 'bg-pink-500 text-white hover:bg-pink-600'
-                : 'bg-white text-gray-600 hover:bg-pink-50 hover:text-pink-500'
+                ? 'bg-brand-red text-white hover:bg-red-600'
+                : 'bg-white text-gray-600 hover:bg-brand-red/10 hover:text-brand-red'
             }`}
           >
             <Heart className={`w-5 h-5 ${isSaved ? 'fill-current' : ''}`} />

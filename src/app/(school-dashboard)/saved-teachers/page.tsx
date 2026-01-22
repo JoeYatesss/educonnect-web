@@ -181,13 +181,13 @@ export default function SavedTeachersPage() {
 
                             <div className="flex flex-wrap gap-2 mb-3">
                               {(isFull ? teacher.cv_path : teacher.has_cv) && (
-                                <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full flex items-center gap-1">
+                                <span className="px-2 py-1 bg-brand-red/10 text-brand-red text-xs font-medium rounded-full flex items-center gap-1">
                                   <FileText className="w-3 h-3" />
                                   CV
                                 </span>
                               )}
                               {(isFull ? teacher.intro_video_path : teacher.has_video) && (
-                                <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded-full flex items-center gap-1">
+                                <span className="px-2 py-1 bg-brand-red/10 text-brand-red text-xs font-medium rounded-full flex items-center gap-1">
                                   <Video className="w-3 h-3" />
                                   Video
                                 </span>

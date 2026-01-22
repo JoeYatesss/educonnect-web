@@ -142,9 +142,9 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen">
+    <div className="h-screen overflow-y-auto scroll-smooth snap-y snap-proximity">
         {/* Hero Section */}
-        <section className="relative min-h-screen flex items-center justify-center bg-white pt-20">
+        <section className="relative min-h-screen flex items-center justify-center bg-white pt-20 snap-start">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Hero Content */}
@@ -229,7 +229,7 @@ export default function HomePage() {
       </section>
 
       {/* Database Banner */}
-      <section className="py-10 bg-brand-red">
+      <section className="py-10 bg-brand-red snap-start">
         <div className="container mx-auto px-6 max-w-7xl text-center">
           <p className="text-lg md:text-xl text-white italic">
             Discover premium teaching positions at top international schools across China.
@@ -238,7 +238,7 @@ export default function HomePage() {
       </section>
 
       {/* Connect with Excellence Section */}
-      <section className="min-h-screen flex items-center py-20 bg-slate-50">
+      <section className="min-h-screen flex items-center py-20 bg-slate-50 snap-start">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
@@ -293,9 +293,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* What You'll Need Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-6 max-w-7xl">
+      {/* What You'll Need & Partner Schools Combined Section */}
+      <section className="min-h-screen flex flex-col justify-center py-20 bg-white overflow-hidden snap-start">
+        {/* What You'll Need */}
+        <div className="container mx-auto px-6 max-w-7xl mb-20">
           <div className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
               What You&apos;ll Need to Get Started
@@ -349,60 +350,60 @@ export default function HomePage() {
             Don&apos;t worry if you don&apos;t have everything ready - you can complete your profile step by step
           </p>
         </div>
-      </section>
 
-      {/* Partner Schools Section */}
-      <section className="py-20 bg-white overflow-hidden">
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Our Partner Schools Across China
-            </h2>
-            <p className="text-xl text-gray-600">
-              We work with leading international schools in Shanghai, Beijing, Shenzhen, and Guangzhou
-            </p>
-          </div>
-        </div>
-        {/* Marquee Container */}
-        <div className="relative overflow-hidden">
-          {/* Gradient overlays for smooth fade effect */}
-          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10" />
-
-          {/* Scrolling track - needs inline-flex and min-w-max for seamless loop */}
-          <div className="inline-flex animate-marquee" style={{ minWidth: 'max-content' }}>
-            {/* First set of logos */}
-            <div className="flex items-center gap-12 px-6">
-              {partnerSchools.map((school, index) => (
-                <div key={`first-${index}`} className="relative w-36 h-20 flex-shrink-0">
-                  <Image
-                    src={school.src}
-                    alt={school.alt}
-                    fill
-                    className="object-contain opacity-70 hover:opacity-100 transition-opacity"
-                  />
-                </div>
-              ))}
+        {/* Partner Schools */}
+        <div className="pt-16">
+          <div className="container mx-auto px-6 max-w-7xl">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Our Partner Schools Across China
+              </h2>
+              <p className="text-xl text-gray-600">
+                We work with leading international schools in Shanghai, Beijing, Shenzhen, and Guangzhou
+              </p>
             </div>
-            {/* Duplicate set for seamless loop */}
-            <div className="flex items-center gap-12 px-6">
-              {partnerSchools.map((school, index) => (
-                <div key={`second-${index}`} className="relative w-36 h-20 flex-shrink-0">
-                  <Image
-                    src={school.src}
-                    alt={school.alt}
-                    fill
-                    className="object-contain opacity-70 hover:opacity-100 transition-opacity"
-                  />
-                </div>
-              ))}
+          </div>
+          {/* Marquee Container */}
+          <div className="relative overflow-hidden">
+            {/* Gradient overlays for smooth fade effect */}
+            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10" />
+            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10" />
+
+            {/* Scrolling track - needs inline-flex and min-w-max for seamless loop */}
+            <div className="inline-flex animate-marquee" style={{ minWidth: 'max-content' }}>
+              {/* First set of logos */}
+              <div className="flex items-center gap-12 px-6">
+                {partnerSchools.map((school, index) => (
+                  <div key={`first-${index}`} className="relative w-36 h-20 flex-shrink-0">
+                    <Image
+                      src={school.src}
+                      alt={school.alt}
+                      fill
+                      className="object-contain opacity-70 hover:opacity-100 transition-opacity"
+                    />
+                  </div>
+                ))}
+              </div>
+              {/* Duplicate set for seamless loop */}
+              <div className="flex items-center gap-12 px-6">
+                {partnerSchools.map((school, index) => (
+                  <div key={`second-${index}`} className="relative w-36 h-20 flex-shrink-0">
+                    <Image
+                      src={school.src}
+                      alt={school.alt}
+                      fill
+                      className="object-contain opacity-70 hover:opacity-100 transition-opacity"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Opportunities Section */}
-      <section id="opportunities" className="min-h-screen flex items-center py-20 bg-slate-50">
+      <section id="opportunities" className="min-h-screen flex items-center py-20 bg-slate-50 snap-start">
         <div className="container mx-auto px-6 max-w-7xl w-full">
           {/* Section Header */}
           <div className="text-center mb-16">
@@ -415,8 +416,8 @@ export default function HomePage() {
           </div>
 
           {/* Benefits Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-            <div className="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
+          <div className="flex flex-wrap justify-center gap-8">
+            <div className="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow w-full max-w-[360px]">
               <div className="w-24 h-24 mx-auto mb-6 relative">
                 <Image
                   src="/images/virtual_interview.png"
@@ -433,7 +434,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
+            <div className="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow w-full max-w-[360px]">
               <div className="w-24 h-24 mx-auto mb-6 relative">
                 <Image
                   src="/images/complete_support.jpeg"
@@ -450,7 +451,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
+            <div className="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow w-full max-w-[360px]">
               <div className="w-24 h-24 mx-auto mb-6 relative">
                 <Image
                   src="/images/high_school_english.png"
@@ -467,7 +468,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
+            <div className="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow w-full max-w-[360px]">
               <div className="w-16 h-16 mx-auto mb-6 bg-brand-red/10 rounded-full flex items-center justify-center">
                 <svg className="w-8 h-8 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -481,7 +482,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
+            <div className="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow w-full max-w-[360px]">
               <div className="w-16 h-16 mx-auto mb-6 bg-brand-red/10 rounded-full flex items-center justify-center">
                 <svg className="w-8 h-8 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -499,7 +500,7 @@ export default function HomePage() {
       </section>
 
       {/* Support Section */}
-      <section className="min-h-screen flex items-center py-20 bg-white">
+      <section className="min-h-screen flex items-center py-20 bg-white snap-start">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
@@ -573,7 +574,7 @@ export default function HomePage() {
       </section>
 
       {/* Success Stories Section */}
-      <section className="min-h-screen flex items-center py-20 bg-slate-50">
+      <section className="min-h-screen flex items-center py-20 bg-slate-50 snap-start">
         <div className="container mx-auto px-6 max-w-7xl w-full">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -583,11 +584,11 @@ export default function HomePage() {
               Hear from teachers who&apos;ve transformed their careers
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+          <div className="flex flex-wrap justify-center gap-8">
             {testimonials.map((testimonial, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden"
+                className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden w-full max-w-[380px]"
               >
                 {/* Quote icon header */}
                 <div className="bg-brand-red px-6 py-4">
@@ -623,7 +624,7 @@ export default function HomePage() {
       </section>
 
       {/* For Schools Section */}
-      <section className="min-h-screen flex items-center py-20 bg-white">
+      <section className="min-h-screen flex items-center py-20 bg-white snap-start">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="relative h-[350px] lg:h-[450px] rounded-2xl overflow-hidden shadow-xl">
@@ -682,7 +683,7 @@ export default function HomePage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="min-h-screen flex items-center py-20 bg-slate-50">
+      <section className="min-h-screen flex items-center py-20 bg-slate-50 snap-start">
         <div className="container mx-auto px-6 max-w-7xl w-full">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -701,17 +702,17 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="min-h-screen flex items-center py-20 bg-gray-900 text-white">
-        <div className="container mx-auto px-6 max-w-7xl text-center w-full">
-          <h2 className="font-montserrat text-4xl md:text-5xl font-bold mb-6">
+      <section className="py-20 bg-brand-red text-white snap-start">
+        <div className="container mx-auto px-6 max-w-7xl text-center">
+          <h2 className="font-montserrat text-3xl md:text-4xl font-bold mb-6">
             Ready to start your adventure?
           </h2>
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Join hundreds of teachers who have transformed their careers by teaching in China.
           </p>
           <button
             onClick={openSignup}
-            className="inline-block px-8 py-4 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+            className="inline-block px-8 py-4 bg-white text-brand-red font-semibold rounded-lg hover:bg-gray-100 transition-colors"
           >
             Apply Now
           </button>

@@ -217,8 +217,8 @@ function SchoolDashboardContent() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
             <div className="bg-white rounded-xl p-5 shadow-md border border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-pink-100 flex items-center justify-center">
-                  <Heart className="w-5 h-5 text-pink-600" />
+                <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                  <Heart className="w-5 h-5 text-brand-red" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase">Saved Teachers</p>
@@ -231,8 +231,8 @@ function SchoolDashboardContent() {
 
             <div className="bg-white rounded-xl p-5 shadow-md border border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                  <Briefcase className="w-5 h-5 text-blue-600" />
+                <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                  <Briefcase className="w-5 h-5 text-brand-red" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase">Active Jobs</p>
@@ -245,8 +245,8 @@ function SchoolDashboardContent() {
 
             <div className="bg-white rounded-xl p-5 shadow-md border border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                  <UserCheck className="w-5 h-5 text-blue-600" />
+                <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                  <UserCheck className="w-5 h-5 text-brand-red" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase">Interviews</p>
@@ -259,8 +259,8 @@ function SchoolDashboardContent() {
 
             <div className="bg-white rounded-xl p-5 shadow-md border border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-                  <Users className="w-5 h-5 text-green-600" />
+                <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                  <Users className="w-5 h-5 text-brand-red" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase">Total Matches</p>
@@ -273,8 +273,8 @@ function SchoolDashboardContent() {
 
             <div className="bg-white rounded-xl p-5 shadow-md border border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
-                  <Building2 className="w-5 h-5 text-amber-600" />
+                <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                  <Building2 className="w-5 h-5 text-brand-red" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase">Location</p>
@@ -316,8 +316,8 @@ function SchoolDashboardContent() {
               className="bg-white rounded-xl p-6 shadow-md border border-gray-100 hover:shadow-lg hover:border-brand-red/20 transition-all duration-200 group"
             >
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                  <Briefcase className="w-6 h-6 text-blue-600" />
+                <div className="w-12 h-12 rounded-lg bg-brand-red/10 flex items-center justify-center group-hover:bg-brand-red/20 transition-colors">
+                  <Briefcase className="w-6 h-6 text-brand-red" />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-brand-red transition-colors">
@@ -339,8 +339,8 @@ function SchoolDashboardContent() {
               className="bg-white rounded-xl p-6 shadow-md border border-gray-100 hover:shadow-lg hover:border-brand-red/20 transition-all duration-200 group"
             >
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                  <UserCheck className="w-6 h-6 text-blue-600" />
+                <div className="w-12 h-12 rounded-lg bg-brand-red/10 flex items-center justify-center group-hover:bg-brand-red/20 transition-colors">
+                  <UserCheck className="w-6 h-6 text-brand-red" />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-brand-red transition-colors">
@@ -362,8 +362,8 @@ function SchoolDashboardContent() {
               className="bg-white rounded-xl p-6 shadow-md border border-gray-100 hover:shadow-lg hover:border-brand-red/20 transition-all duration-200 group"
             >
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-pink-100 flex items-center justify-center group-hover:bg-pink-200 transition-colors">
-                  <Heart className="w-6 h-6 text-pink-600" />
+                <div className="w-12 h-12 rounded-lg bg-brand-red/10 flex items-center justify-center group-hover:bg-brand-red/20 transition-colors">
+                  <Heart className="w-6 h-6 text-brand-red" />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-brand-red transition-colors">
