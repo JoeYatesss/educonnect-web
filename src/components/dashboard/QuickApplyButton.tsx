@@ -99,8 +99,8 @@ export default function QuickApplyButton({
       {/* Confirmation Modal */}
       <Modal isOpen={showConfirm} onClose={() => setShowConfirm(false)} maxWidth="md">
         <div className="text-center">
-          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Send className="w-8 h-8 text-blue-600" />
+          <div className="w-16 h-16 bg-brand-red/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Send className="w-8 h-8 text-brand-red" />
           </div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">
             Apply to this Position?

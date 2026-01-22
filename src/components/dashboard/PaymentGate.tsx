@@ -56,7 +56,7 @@ export default function PaymentGate() {
 
   return (
     <>
-      <div className="rounded-lg bg-gradient-to-br from-red-50 to-orange-50 border-2 border-brand-red/20 shadow-lg p-8 mb-6">
+      <div className="rounded-lg bg-gradient-to-br from-brand-red/5 to-brand-red/10 border-2 border-brand-red/20 shadow-lg p-8 mb-6">
         <div className="flex items-start gap-6">
           {/* Icon */}
           <div className="flex-shrink-0">

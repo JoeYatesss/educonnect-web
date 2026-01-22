@@ -225,7 +225,7 @@ export default function ApplicationsList() {
         <h2 className="text-xl font-semibold text-gray-900">
           Your Applications
         </h2>
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-brand-red/10 text-brand-red">
           {applications.length} {applications.length === 1 ? 'application' : 'applications'}
         </span>
       </div>
@@ -243,14 +243,14 @@ export default function ApplicationsList() {
               {/* Application Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-start gap-3 flex-1">
-                  <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg flex items-center justify-center">
+                  <div className="flex-shrink-0 w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
                     <MapPin className="w-5 h-5 text-blue-600" />
                   </div>
 
                   <div className="flex-1">
                     {application.role_name && (
                       <div className="flex items-center gap-1 mb-1">
-                        <Briefcase className="w-4 h-4 text-indigo-600" />
+                        <Briefcase className="w-4 h-4 text-blue-600" />
                         <span className="text-base font-semibold text-gray-900">{decodeHtmlEntities(application.role_name)}</span>
                       </div>
                     )}
@@ -303,33 +303,33 @@ export default function ApplicationsList() {
                 <div className="mt-3 px-2 flex flex-wrap gap-2">
                   {/* New Badge */}
                   {application.is_new && (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-rose-100 text-rose-800">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-brand-red text-white">
                       <Sparkles className="w-3 h-3 mr-1" />
                       New
                     </span>
                   )}
                   {/* Company/School Name removed for anonymity */}
                   {application.job_type && (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-violet-100 text-violet-800">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-brand-red/10 text-brand-red">
                       <Briefcase className="w-3 h-3 mr-1" />
                       {application.job_type}
                     </span>
                   )}
                   {/* Contract Type - only show if different from job_type */}
                   {application.contract_type && application.contract_type !== application.job_type && (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-800">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
                       <FileText className="w-3 h-3 mr-1" />
                       {application.contract_type}
                     </span>
                   )}
                   {application.start_date && (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-cyan-100 text-cyan-800">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
                       <Calendar className="w-3 h-3 mr-1" />
                       Starts: {application.start_date}
                     </span>
                   )}
                   {application.apply_by && (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-amber-100 text-amber-800">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-amber-50 text-amber-700">
                       <Clock className="w-3 h-3 mr-1" />
                       Apply by: {application.apply_by}
                     </span>
@@ -337,7 +337,7 @@ export default function ApplicationsList() {
                   {/* Chinese Required */}
                   {application.chinese_required !== undefined && (
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
-                      application.chinese_required ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-600'
+                      application.chinese_required ? 'bg-amber-50 text-amber-700' : 'bg-gray-100 text-gray-600'
                     }`}>
                       <Languages className="w-3 h-3 mr-1" />
                       {application.chinese_required ? 'Chinese Required' : 'No Chinese'}
@@ -345,14 +345,14 @@ export default function ApplicationsList() {
                   )}
                   {/* Visa Sponsorship */}
                   {application.visa_sponsorship && (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-indigo-100 text-indigo-800">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-green-50 text-green-700">
                       <Plane className="w-3 h-3 mr-1" />
                       Visa Sponsored
                     </span>
                   )}
                   {/* Accommodation */}
                   {application.accommodation_provided && (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-teal-100 text-teal-800">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-green-50 text-green-700">
                       <Home className="w-3 h-3 mr-1" />
                       {application.accommodation_provided}
                     </span>
@@ -364,19 +364,19 @@ export default function ApplicationsList() {
               {application.is_job_application && (application.subjects?.length || application.age_groups?.length) && (
                 <div className="mt-2 px-2 flex flex-wrap gap-2">
                   {application.age_groups?.map((age, idx) => (
-                    <span key={idx} className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800">
+                    <span key={idx} className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700">
                       <Users className="w-3 h-3 mr-1" />
                       {age}
                     </span>
                   ))}
                   {application.subjects?.slice(0, 3).map((subject, idx) => (
-                    <span key={idx} className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-indigo-100 text-indigo-800">
+                    <span key={idx} className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700">
                       <BookOpen className="w-3 h-3 mr-1" />
                       {subject}
                     </span>
                   ))}
                   {application.subjects && application.subjects.length > 3 && (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-indigo-50 text-indigo-600">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-600">
                       +{application.subjects.length - 3} more
                     </span>
                   )}
@@ -460,7 +460,7 @@ export default function ApplicationsList() {
                           {index > 0 && (
                             <div
                               className={`absolute top-3 right-1/2 w-full h-0.5 -z-10 ${
-                                index <= currentIndex ? 'bg-blue-500' : 'bg-gray-200'
+                                index <= currentIndex ? 'bg-brand-red' : 'bg-gray-200'
                               }`}
                             />
                           )}
@@ -469,9 +469,9 @@ export default function ApplicationsList() {
                           <div
                             className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
                               isCompleted
-                                ? 'bg-blue-500 text-white'
+                                ? 'bg-brand-red text-white'
                                 : isCurrent
-                                ? 'bg-blue-500 text-white ring-4 ring-blue-100'
+                                ? 'bg-brand-red text-white ring-4 ring-brand-red/20'
                                 : 'bg-gray-200 text-gray-500'
                             }`}
                           >
@@ -485,7 +485,7 @@ export default function ApplicationsList() {
                           {/* Label */}
                           <span
                             className={`mt-1.5 text-xs text-center ${
-                              isCurrent ? 'font-medium text-blue-600' : 'text-gray-500'
+                              isCurrent ? 'font-medium text-brand-red' : 'text-gray-500'
                             }`}
                           >
                             {stage.label}

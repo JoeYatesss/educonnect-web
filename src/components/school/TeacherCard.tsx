@@ -73,8 +73,8 @@ export default function TeacherCard({
             disabled={saving}
             className={`absolute top-3 right-3 p-2 rounded-full shadow-md transition-all duration-200 ${
               isSaved
-                ? 'bg-pink-500 text-white hover:bg-pink-600'
-                : 'bg-white text-gray-600 hover:bg-pink-50 hover:text-pink-500'
+                ? 'bg-brand-red text-white hover:bg-red-600'
+                : 'bg-white text-gray-600 hover:bg-brand-red/10 hover:text-brand-red'
             }`}
           >
             <Heart className={`w-5 h-5 ${isSaved ? 'fill-current' : ''}`} />
@@ -84,13 +84,13 @@ export default function TeacherCard({
         {/* Badges */}
         <div className="absolute bottom-3 left-3 flex gap-2">
           {(isFull ? teacher.cv_path : (teacher as TeacherPreview).has_cv) && (
-            <span className="px-2 py-1 bg-blue-500 text-white text-xs font-medium rounded-full flex items-center gap-1">
+            <span className="px-2 py-1 bg-gray-800 text-white text-xs font-medium rounded-full flex items-center gap-1">
               <FileText className="w-3 h-3" />
               CV
             </span>
           )}
           {(isFull ? teacher.intro_video_path : (teacher as TeacherPreview).has_video) && (
-            <span className="px-2 py-1 bg-purple-500 text-white text-xs font-medium rounded-full flex items-center gap-1">
+            <span className="px-2 py-1 bg-gray-800 text-white text-xs font-medium rounded-full flex items-center gap-1">
               <Video className="w-3 h-3" />
               Video
             </span>
