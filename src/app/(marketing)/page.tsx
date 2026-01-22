@@ -702,7 +702,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-brand-red text-white snap-start">
+      <section className="py-20 bg-brand-red text-white">
         <div className="container mx-auto px-6 max-w-7xl text-center">
           <h2 className="font-montserrat text-3xl md:text-4xl font-bold mb-6">
             Ready to start your adventure?
