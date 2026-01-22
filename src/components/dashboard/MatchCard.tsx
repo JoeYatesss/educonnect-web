@@ -177,12 +177,12 @@ export default function MatchCard({ match, children }: MatchCardProps) {
   const isExternalJob = match.source && match.source !== 'manual';
   const daysUntilDeadline = match.application_deadline ? getDaysUntilDeadline(match.application_deadline) : null;
 
-  // Get gradient colors based on match score
+  // Get gradient colors based on match score - using brand red with opacity variations
   const getScoreGradient = (score: number) => {
-    if (score >= 90) return 'from-emerald-500 to-green-600';
-    if (score >= 80) return 'from-blue-500 to-cyan-600';
-    if (score >= 70) return 'from-amber-500 to-orange-600';
-    return 'from-gray-500 to-gray-600';
+    if (score >= 90) return 'bg-brand-red';
+    if (score >= 80) return 'bg-brand-red/90';
+    if (score >= 70) return 'bg-brand-red/75';
+    return 'bg-gray-400';
   };
 
   // Estimate score breakdown based on match reasons
@@ -202,40 +202,40 @@ export default function MatchCard({ match, children }: MatchCardProps) {
         score: hasLocation ? 100 : 50,
         weight: 0.35,
         icon: MapPin,
-        color: 'text-blue-600',
-        bgColor: 'bg-blue-500'
+        color: 'text-brand-red',
+        bgColor: 'bg-brand-red'
       },
       {
         label: 'Subject Match',
         score: hasSubject ? 90 : 70,
         weight: 0.25,
         icon: GraduationCap,
-        color: 'text-purple-600',
-        bgColor: 'bg-purple-500'
+        color: 'text-blue-600',
+        bgColor: 'bg-blue-500'
       },
       {
         label: 'Age Group Match',
         score: hasAgeGroup ? 100 : 75,
         weight: 0.20,
         icon: Users,
-        color: 'text-green-600',
-        bgColor: 'bg-green-500'
+        color: 'text-blue-600',
+        bgColor: 'bg-blue-500'
       },
       {
         label: 'Experience Match',
         score: hasExperience ? 85 : 65,
         weight: 0.15,
         icon: TrendingUp,
-        color: 'text-orange-600',
-        bgColor: 'bg-orange-500'
+        color: 'text-gray-600',
+        bgColor: 'bg-gray-500'
       },
       {
         label: 'Chinese Language',
         score: hasChinese ? 100 : 90,
         weight: 0.05,
         icon: MessageSquare,
-        color: 'text-red-600',
-        bgColor: 'bg-red-500'
+        color: 'text-amber-600',
+        bgColor: 'bg-amber-500'
       }
     ];
   };
@@ -247,7 +247,7 @@ export default function MatchCard({ match, children }: MatchCardProps) {
       {/* Header with Score, Source Badge, and Action Button */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className={`inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r ${getScoreGradient(match.match_score)} text-white font-bold text-lg shadow-md`}>
+          <div className={`inline-flex items-center px-4 py-2 rounded-lg ${getScoreGradient(match.match_score)} text-white font-bold text-lg shadow-md`}>
             {match.match_score}% Match
           </div>
         </div>
@@ -325,31 +325,31 @@ export default function MatchCard({ match, children }: MatchCardProps) {
       <div className="flex flex-wrap gap-2 mb-4">
         {/* New Job Badge */}
         {match.is_new && (
-          <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-rose-100 text-rose-800">
+          <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-brand-red text-white">
             <Sparkles className="w-4 h-4 mr-1" />
             New
           </span>
         )}
         {match.school_type && (
-          <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-purple-100 text-purple-800">
+          <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-brand-red/10 text-brand-red">
             <Building2 className="w-4 h-4 mr-1" />
             {match.school_type}
           </span>
         )}
         {match.age_groups?.map((age, idx) => (
-          <span key={idx} className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-blue-100 text-blue-800">
+          <span key={idx} className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-blue-50 text-blue-700">
             <Users className="w-4 h-4 mr-1" />
             {age}
           </span>
         ))}
         {match.subjects?.slice(0, 3).map((subject, idx) => (
-          <span key={idx} className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-indigo-100 text-indigo-800">
+          <span key={idx} className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-blue-50 text-blue-700">
             <BookOpen className="w-4 h-4 mr-1" />
             {subject}
           </span>
         ))}
         {match.subjects && match.subjects.length > 3 && (
-          <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-indigo-50 text-indigo-600">
+          <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-blue-50 text-blue-600">
             +{match.subjects.length - 3} more
           </span>
         )}
@@ -361,7 +361,7 @@ export default function MatchCard({ match, children }: MatchCardProps) {
         {/* Chinese Required */}
         {match.chinese_required !== undefined && (
           <span className={`inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium ${
-            match.chinese_required ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-600'
+            match.chinese_required ? 'bg-amber-50 text-amber-700' : 'bg-gray-100 text-gray-600'
           }`}>
             <Languages className="w-4 h-4 mr-1" />
             {match.chinese_required ? 'Chinese Required' : 'No Chinese'}
@@ -369,7 +369,7 @@ export default function MatchCard({ match, children }: MatchCardProps) {
         )}
         {/* Contract Type - only show if different from job_type */}
         {match.contract_type && match.contract_type !== match.job_type && (
-          <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-slate-100 text-slate-800">
+          <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-gray-100 text-gray-700">
             <FileText className="w-4 h-4 mr-1" />
             {match.contract_type}
           </span>
@@ -381,7 +381,7 @@ export default function MatchCard({ match, children }: MatchCardProps) {
         <div className="flex flex-wrap gap-2 mb-4">
           {/* Job Type */}
           {match.job_type && (
-            <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-violet-100 text-violet-800">
+            <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-brand-red/10 text-brand-red">
               <Briefcase className="w-4 h-4 mr-1" />
               {match.job_type}
             </span>
@@ -391,10 +391,10 @@ export default function MatchCard({ match, children }: MatchCardProps) {
           {(match.apply_by || (match.application_deadline && daysUntilDeadline !== null)) && (
             <span className={`inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium ${
               daysUntilDeadline !== null && daysUntilDeadline <= 7
-                ? 'bg-red-100 text-red-800'
+                ? 'bg-amber-50 text-amber-700 font-semibold'
                 : daysUntilDeadline !== null && daysUntilDeadline <= 14
-                ? 'bg-orange-100 text-orange-800'
-                : 'bg-amber-100 text-amber-800'
+                ? 'bg-amber-50 text-amber-700'
+                : 'bg-gray-100 text-gray-700'
             }`}>
               <Clock className="w-4 h-4 mr-1" />
               {match.apply_by
@@ -413,7 +413,7 @@ export default function MatchCard({ match, children }: MatchCardProps) {
 
           {/* Start Date */}
           {match.start_date && (
-            <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-cyan-100 text-cyan-800">
+            <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-gray-100 text-gray-700">
               <Calendar className="w-4 h-4 mr-1" />
               Starts: {match.start_date}
             </span>
@@ -421,7 +421,7 @@ export default function MatchCard({ match, children }: MatchCardProps) {
 
           {/* Visa Sponsorship */}
           {match.visa_sponsorship && (
-            <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-indigo-100 text-indigo-800">
+            <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-green-50 text-green-700">
               <Plane className="w-4 h-4 mr-1" />
               Visa Sponsored
             </span>
@@ -429,7 +429,7 @@ export default function MatchCard({ match, children }: MatchCardProps) {
 
           {/* Accommodation */}
           {match.accommodation_provided && (
-            <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-teal-100 text-teal-800">
+            <span className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-green-50 text-green-700">
               <Home className="w-4 h-4 mr-1" />
               {match.accommodation_provided}
             </span>
@@ -483,10 +483,10 @@ export default function MatchCard({ match, children }: MatchCardProps) {
       {isExternalJob && match.job_functions && (
         <div className="mb-4">
           <p className="text-sm text-gray-600 font-semibold mb-2 flex items-center gap-2">
-            <Briefcase className="w-4 h-4 text-indigo-600" />
+            <Briefcase className="w-4 h-4 text-blue-600" />
             Job Functions:
           </p>
-          <div className="bg-indigo-50 rounded-lg p-4 border border-indigo-200">
+          <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
             <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
               {formatJobDescription(match.job_functions)}
             </p>
@@ -518,7 +518,7 @@ export default function MatchCard({ match, children }: MatchCardProps) {
             <Building2 className="w-4 h-4" />
             About the School:
           </p>
-          <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
             <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
               {formatJobDescription(match.about_school)}
             </p>

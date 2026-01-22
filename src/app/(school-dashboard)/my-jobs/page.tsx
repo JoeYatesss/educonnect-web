@@ -133,8 +133,8 @@ export default function MyJobsPage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
               <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                    <Briefcase className="w-5 h-5 text-blue-600" />
+                  <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                    <Briefcase className="w-5 h-5 text-brand-red" />
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 uppercase tracking-wider">Active Jobs</p>
@@ -147,8 +147,8 @@ export default function MyJobsPage() {
 
               <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-                    <Users className="w-5 h-5 text-green-600" />
+                  <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                    <Users className="w-5 h-5 text-brand-red" />
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 uppercase tracking-wider">Total Matches</p>
@@ -159,8 +159,8 @@ export default function MyJobsPage() {
 
               <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                    <UserCheck className="w-5 h-5 text-purple-600" />
+                  <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                    <UserCheck className="w-5 h-5 text-brand-red" />
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 uppercase tracking-wider">Interview Selections</p>
@@ -171,8 +171,8 @@ export default function MyJobsPage() {
 
               <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
-                    <Briefcase className="w-5 h-5 text-amber-600" />
+                  <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                    <Briefcase className="w-5 h-5 text-brand-red" />
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 uppercase tracking-wider">Total Jobs</p>
@@ -247,11 +247,11 @@ export default function MyJobsPage() {
                     <div className="flex items-center gap-6">
                       <div className="flex items-center gap-4 text-sm">
                         <div className="text-center">
-                          <p className="text-xl font-bold text-blue-600">{job.match_count}</p>
+                          <p className="text-xl font-bold text-brand-red">{job.match_count}</p>
                           <p className="text-gray-500">Matches</p>
                         </div>
                         <div className="text-center">
-                          <p className="text-xl font-bold text-purple-600">{job.selection_count}</p>
+                          <p className="text-xl font-bold text-brand-red">{job.selection_count}</p>
                           <p className="text-gray-500">Selections</p>
                         </div>
                       </div>

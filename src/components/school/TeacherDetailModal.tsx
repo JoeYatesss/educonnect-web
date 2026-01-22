@@ -73,7 +73,7 @@ export default function TeacherDetailModal({
                 disabled={saving}
                 className={`p-2 rounded-lg transition-colors ${
                   isSaved
-                    ? 'bg-pink-100 text-pink-600 hover:bg-pink-200'
+                    ? 'bg-brand-red/10 text-brand-red hover:bg-brand-red/20'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >

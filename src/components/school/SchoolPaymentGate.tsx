@@ -92,7 +92,7 @@ export default function SchoolPaymentGate() {
   }
 
   return (
-    <div className="mb-8 rounded-xl bg-gradient-to-br from-blue-50 via-white to-purple-50 p-8 border border-blue-200 shadow-lg">
+    <div className="mb-8 rounded-xl bg-gradient-to-br from-brand-red/5 via-white to-brand-red/10 p-8 border border-brand-red/20 shadow-lg">
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left: Info */}
         <div className="flex-1">
@@ -148,7 +148,7 @@ export default function SchoolPaymentGate() {
 
                 <button
                   onClick={() => setShowInvoiceForm(true)}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-200"
                 >
                   <FileText className="w-5 h-5" />
                   Request Invoice
@@ -165,7 +165,7 @@ export default function SchoolPaymentGate() {
                     required
                     value={invoiceForm.companyName}
                     onChange={(e) => setInvoiceForm({ ...invoiceForm, companyName: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-brand-red text-sm"
                     placeholder="School or Company Name"
                   />
                 </div>
@@ -179,7 +179,7 @@ export default function SchoolPaymentGate() {
                     rows={3}
                     value={invoiceForm.billingAddress}
                     onChange={(e) => setInvoiceForm({ ...invoiceForm, billingAddress: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-brand-red text-sm"
                     placeholder="Full billing address"
                   />
                 </div>
@@ -192,7 +192,7 @@ export default function SchoolPaymentGate() {
                     rows={2}
                     value={invoiceForm.additionalNotes}
                     onChange={(e) => setInvoiceForm({ ...invoiceForm, additionalNotes: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-brand-red text-sm"
                     placeholder="Any special requirements"
                   />
                 </div>

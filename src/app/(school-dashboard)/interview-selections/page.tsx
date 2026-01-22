@@ -13,13 +13,13 @@ import {
 } from 'lucide-react';
 
 const STATUS_OPTIONS: { value: InterviewSelectionStatus; label: string; color: string }[] = [
-  { value: 'selected_for_interview', label: 'Selected', color: 'bg-blue-100 text-blue-700' },
-  { value: 'interview_scheduled', label: 'Interview Scheduled', color: 'bg-purple-100 text-purple-700' },
-  { value: 'interview_completed', label: 'Interview Completed', color: 'bg-indigo-100 text-indigo-700' },
-  { value: 'offer_extended', label: 'Offer Extended', color: 'bg-amber-100 text-amber-700' },
-  { value: 'offer_accepted', label: 'Offer Accepted', color: 'bg-green-100 text-green-700' },
-  { value: 'offer_declined', label: 'Offer Declined', color: 'bg-red-100 text-red-700' },
-  { value: 'withdrawn', label: 'Withdrawn', color: 'bg-gray-100 text-gray-700' },
+  { value: 'selected_for_interview', label: 'Selected', color: 'bg-brand-red/10 text-brand-red' },
+  { value: 'interview_scheduled', label: 'Interview Scheduled', color: 'bg-blue-50 text-blue-700' },
+  { value: 'interview_completed', label: 'Interview Completed', color: 'bg-blue-50 text-blue-700' },
+  { value: 'offer_extended', label: 'Offer Extended', color: 'bg-amber-50 text-amber-700' },
+  { value: 'offer_accepted', label: 'Offer Accepted', color: 'bg-green-50 text-green-700' },
+  { value: 'offer_declined', label: 'Offer Declined', color: 'bg-red-50 text-red-700' },
+  { value: 'withdrawn', label: 'Withdrawn', color: 'bg-gray-100 text-gray-600' },
 ];
 
 function getStatusConfig(status: InterviewSelectionStatus) {
@@ -146,8 +146,8 @@ export default function InterviewSelectionsPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                  <UserCheck className="w-5 h-5 text-blue-600" />
+                <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                  <UserCheck className="w-5 h-5 text-brand-red" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase">Total</p>
@@ -157,8 +157,8 @@ export default function InterviewSelectionsPage() {
             </div>
             <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                  <Calendar className="w-5 h-5 text-purple-600" />
+                <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                  <Calendar className="w-5 h-5 text-brand-red" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase">Scheduled</p>
@@ -170,8 +170,8 @@ export default function InterviewSelectionsPage() {
             </div>
             <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
-                  <Briefcase className="w-5 h-5 text-amber-600" />
+                <div className="w-10 h-10 rounded-lg bg-brand-red/10 flex items-center justify-center">
+                  <Briefcase className="w-5 h-5 text-brand-red" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase">Offers Extended</p>
