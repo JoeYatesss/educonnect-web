@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function MarketingFooter() {
   return (
-    <footer className="bg-gray-900 text-gray-300">
+    <footer className="bg-gray-900 text-gray-300 snap-none">
       <div className="container mx-auto px-6 py-12 max-w-7xl">
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           {/* Company Column */}

@@ -591,7 +591,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gray-900 text-white">
+      <section className="py-20 bg-brand-red text-white">
         <div className="container mx-auto px-6 max-w-7xl text-center">
           <h2 className="font-montserrat text-4xl md:text-5xl font-bold mb-6">
             Ready to start your adventure?

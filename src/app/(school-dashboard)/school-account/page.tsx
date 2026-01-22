@@ -335,10 +335,10 @@ export default function SchoolAccountPage() {
               Contact our school support team for assistance with your account.
             </p>
             <a
-              href="mailto:schools@educonnect.com"
+              href="mailto:team@educonnectchina.com"
               className="text-brand-red font-medium hover:underline"
             >
-              schools@educonnect.com
+              team@educonnectchina.com
             </a>
           </div>
         </div>
