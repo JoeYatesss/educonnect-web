@@ -172,6 +172,9 @@ const formatJobDescription = (text: string | undefined | null): string => {
 
 export default function MatchCard({ match, children }: MatchCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false);
+  const [isJobFunctionsExpanded, setIsJobFunctionsExpanded] = useState(false);
+  const [isAboutSchoolExpanded, setIsAboutSchoolExpanded] = useState(false);
 
   // Check if this is an external job (TES)
   const isExternalJob = match.source && match.source !== 'manual';
@@ -467,30 +470,54 @@ export default function MatchCard({ match, children }: MatchCardProps) {
       {/* Requirements (for external jobs) */}
       {isExternalJob && match.requirements && (
         <div className="mb-4">
-          <p className="text-sm text-gray-600 font-semibold mb-2 flex items-center gap-2">
-            <FileText className="w-4 h-4 text-blue-600" />
-            Requirements:
-          </p>
-          <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-            <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
-              {formatJobDescription(match.requirements)}
-            </p>
-          </div>
+          <button
+            onClick={() => setIsRequirementsExpanded(!isRequirementsExpanded)}
+            className="w-full flex items-center justify-between text-sm text-gray-600 font-semibold mb-2 hover:text-gray-900 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <FileText className="w-4 h-4 text-blue-600" />
+              Requirements:
+            </div>
+            {isRequirementsExpanded ? (
+              <ChevronUp className="w-4 h-4" />
+            ) : (
+              <ChevronDown className="w-4 h-4" />
+            )}
+          </button>
+          {isRequirementsExpanded && (
+            <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 animate-in fade-in duration-200">
+              <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
+                {formatJobDescription(match.requirements)}
+              </p>
+            </div>
+          )}
         </div>
       )}
 
       {/* Job Functions (for external jobs) */}
       {isExternalJob && match.job_functions && (
         <div className="mb-4">
-          <p className="text-sm text-gray-600 font-semibold mb-2 flex items-center gap-2">
-            <Briefcase className="w-4 h-4 text-blue-600" />
-            Job Functions:
-          </p>
-          <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
-            <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
-              {formatJobDescription(match.job_functions)}
-            </p>
-          </div>
+          <button
+            onClick={() => setIsJobFunctionsExpanded(!isJobFunctionsExpanded)}
+            className="w-full flex items-center justify-between text-sm text-gray-600 font-semibold mb-2 hover:text-gray-900 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <Briefcase className="w-4 h-4 text-blue-600" />
+              Job Functions:
+            </div>
+            {isJobFunctionsExpanded ? (
+              <ChevronUp className="w-4 h-4" />
+            ) : (
+              <ChevronDown className="w-4 h-4" />
+            )}
+          </button>
+          {isJobFunctionsExpanded && (
+            <div className="bg-blue-50 rounded-lg p-4 border border-blue-100 animate-in fade-in duration-200">
+              <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
+                {formatJobDescription(match.job_functions)}
+              </p>
+            </div>
+          )}
         </div>
       )}
 
@@ -514,15 +541,27 @@ export default function MatchCard({ match, children }: MatchCardProps) {
       {/* About the School (for external jobs) */}
       {isExternalJob && match.about_school && (
         <div className="mb-4">
-          <p className="text-sm text-gray-600 font-semibold mb-2 flex items-center gap-2">
-            <Building2 className="w-4 h-4" />
-            About the School:
-          </p>
-          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-            <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
-              {formatJobDescription(match.about_school)}
-            </p>
-          </div>
+          <button
+            onClick={() => setIsAboutSchoolExpanded(!isAboutSchoolExpanded)}
+            className="w-full flex items-center justify-between text-sm text-gray-600 font-semibold mb-2 hover:text-gray-900 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <Building2 className="w-4 h-4" />
+              About the School:
+            </div>
+            {isAboutSchoolExpanded ? (
+              <ChevronUp className="w-4 h-4" />
+            ) : (
+              <ChevronDown className="w-4 h-4" />
+            )}
+          </button>
+          {isAboutSchoolExpanded && (
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 animate-in fade-in duration-200">
+              <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
+                {formatJobDescription(match.about_school)}
+              </p>
+            </div>
+          )}
         </div>
       )}
 
