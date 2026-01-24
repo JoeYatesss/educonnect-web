@@ -142,9 +142,9 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="h-screen overflow-y-auto scroll-smooth">
+    <div className="min-h-screen scroll-smooth">
         {/* Hero Section */}
-        <section className="relative min-h-screen flex items-center justify-center bg-white pt-20">
+        <section className="relative flex items-center justify-center bg-white py-24">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Hero Content */}
@@ -229,7 +229,7 @@ export default function HomePage() {
       </section>
 
       {/* Database Banner */}
-      <section className="py-10 bg-brand-red">
+      <section className="py-16 bg-brand-red">
         <div className="container mx-auto px-6 max-w-7xl text-center">
           <p className="text-lg md:text-xl text-white italic">
             Discover premium teaching positions at top international schools across China.
@@ -238,7 +238,7 @@ export default function HomePage() {
       </section>
 
       {/* Connect with Excellence Section */}
-      <section className="min-h-screen flex items-center py-20 bg-slate-50">
+      <section className="flex items-center py-24 bg-slate-50">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
@@ -294,9 +294,9 @@ export default function HomePage() {
       </section>
 
       {/* What You'll Need & Partner Schools Combined Section */}
-      <section className="min-h-screen flex flex-col justify-center py-20 bg-white overflow-hidden">
+      <section className="py-24 bg-white">
         {/* What You'll Need */}
-        <div className="container mx-auto px-6 max-w-7xl mb-20">
+        <div className="container mx-auto px-6 max-w-7xl mb-16">
           <div className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
               What You&apos;ll Need to Get Started
@@ -343,7 +343,7 @@ export default function HomePage() {
         </div>
 
         {/* Partner Schools */}
-        <div className="pt-16">
+        <div className="pt-20">
           <div className="container mx-auto px-6 max-w-7xl">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -394,7 +394,7 @@ export default function HomePage() {
       </section>
 
       {/* Opportunities Section */}
-      <section id="opportunities" className="min-h-screen flex items-center py-20 bg-slate-50">
+      <section id="opportunities" className="py-24 bg-slate-50">
         <div className="container mx-auto px-6 max-w-7xl w-full">
           {/* Section Header */}
           <div className="text-center mb-16">
@@ -464,7 +464,7 @@ export default function HomePage() {
       </section>
 
       {/* Support Section */}
-      <section className="min-h-screen flex items-center py-20 bg-white">
+      <section className="py-24 bg-white">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
@@ -538,7 +538,7 @@ export default function HomePage() {
       </section>
 
       {/* Success Stories Section */}
-      <section className="min-h-screen flex items-center py-20 bg-slate-50">
+      <section className="py-24 bg-slate-50">
         <div className="container mx-auto px-6 max-w-7xl w-full">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -588,7 +588,7 @@ export default function HomePage() {
       </section>
 
       {/* For Schools Section */}
-      <section className="min-h-screen flex items-center py-20 bg-white">
+      <section className="py-24 bg-white">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="relative h-[350px] lg:h-[450px] rounded-2xl overflow-hidden shadow-xl">
@@ -647,7 +647,7 @@ export default function HomePage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="min-h-screen flex items-center py-20 bg-slate-50">
+      <section className="py-24 bg-slate-50">
         <div className="container mx-auto px-6 max-w-7xl w-full">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
