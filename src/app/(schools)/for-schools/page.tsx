@@ -116,7 +116,7 @@ export default function ForSchoolsPage() {
               </span>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
                 <span className="block text-gray-900">Find.</span>
-                <span className="block text-gray-900 italic">Connect.</span>
+                <span className="block text-gray-700 italic">Connect.</span>
                 <span className="block text-brand-red">Hire.</span>
               </h1>
 
@@ -187,7 +187,7 @@ export default function ForSchoolsPage() {
                     <span className="flex-shrink-0 w-6 h-6 bg-brand-red rounded-full flex items-center justify-center text-white font-bold text-sm">
                       &#10003;
                     </span>
-                    <span className="text-gray-700">WeChat Pay accepted</span>
+                    <span className="text-gray-700">WeChat and Alipay accepted</span>
                   </li>
                 </ul>
                 <Link

@@ -97,7 +97,7 @@ export default function LegalPage() {
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-start gap-2"><span className="text-brand-red mt-1">•</span><span>Match you with suitable teaching positions in China</span></li>
                   <li className="flex items-start gap-2"><span className="text-brand-red mt-1">•</span><span>Communicate with schools and educational institutions on your behalf</span></li>
-                  <li className="flex items-start gap-2"><span className="text-brand-red mt-1">•</span><span>Provide relocation and visa support services</span></li>
+                  <li className="flex items-start gap-2"><span className="text-brand-red mt-1">•</span><span>Provide relocation support and guidance services</span></li>
                   <li className="flex items-start gap-2"><span className="text-brand-red mt-1">•</span><span>Send relevant job opportunities and updates (with consent)</span></li>
                   <li className="flex items-start gap-2"><span className="text-brand-red mt-1">•</span><span>Improve our services and user experience</span></li>
                   <li className="flex items-start gap-2"><span className="text-brand-red mt-1">•</span><span>Comply with legal and regulatory requirements</span></li>
@@ -138,7 +138,7 @@ export default function LegalPage() {
                 <p className="text-gray-700 mb-4">EduConnect provides:</p>
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-start gap-2"><span className="text-brand-red mt-1">•</span><span>Matching services between qualified teachers and educational institutions in China</span></li>
-                  <li className="flex items-start gap-2"><span className="text-brand-red mt-1">•</span><span>Visa and relocation support services</span></li>
+                  <li className="flex items-start gap-2"><span className="text-brand-red mt-1">•</span><span>Relocation support and guidance services</span></li>
                   <li className="flex items-start gap-2"><span className="text-brand-red mt-1">•</span><span>Career guidance and cultural support</span></li>
                   <li className="flex items-start gap-2"><span className="text-brand-red mt-1">•</span><span>Ongoing assistance during your teaching placement</span></li>
                 </ul>
