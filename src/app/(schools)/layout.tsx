@@ -15,11 +15,15 @@ export default function SchoolsLayout({
   children: React.ReactNode;
 }) {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [language, setLanguage] = useState<'en' | 'zh'>('en');
 
   return (
     <div className="min-h-screen flex flex-col">
-      <SchoolsNav onOpenLogin={() => setIsLoginModalOpen(true)} />
-      <main className="flex-1">
+      <SchoolsNav 
+        onOpenLogin={() => setIsLoginModalOpen(true)} 
+        onLanguageChange={setLanguage}
+      />
+      <main className="flex-1" data-language={language}>
         {children}
       </main>
       <MarketingFooter />
