@@ -4,12 +4,14 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Menu, X, ChevronRight } from 'lucide-react';
+import LanguageToggle from './LanguageToggle';
 
 interface SchoolsNavProps {
   onOpenLogin: () => void;
+  onLanguageChange?: (lang: 'en' | 'zh') => void;
 }
 
-export default function SchoolsNav({ onOpenLogin }: SchoolsNavProps) {
+export default function SchoolsNav({ onOpenLogin, onLanguageChange }: SchoolsNavProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -49,6 +51,7 @@ export default function SchoolsNav({ onOpenLogin }: SchoolsNavProps) {
               </Link>
             ))}
             <div className="flex items-center gap-4 ml-4 border-l border-gray-200 pl-6">
+              <LanguageToggle onLanguageChange={onLanguageChange} />
               <button
                 onClick={onOpenLogin}
                 className="bg-white text-gray-700 px-6 py-3 rounded font-semibold border border-gray-300 hover:border-brand-red hover:text-brand-red transition-all duration-200"
@@ -94,6 +97,9 @@ export default function SchoolsNav({ onOpenLogin }: SchoolsNavProps) {
                 </Link>
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t border-gray-200">
+                <div className="flex justify-center">
+                  <LanguageToggle onLanguageChange={onLanguageChange} />
+                </div>
                 <button
                   onClick={() => {
                     onOpenLogin();

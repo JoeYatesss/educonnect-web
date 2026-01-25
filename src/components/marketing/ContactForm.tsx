@@ -75,7 +75,7 @@ export function ContactForm() {
             onChange={handleChange}
             required
             disabled={status === 'loading'}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none transition-all disabled:opacity-50"
+            className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none transition-all disabled:opacity-50"
           />
         </div>
 
@@ -92,7 +92,7 @@ export function ContactForm() {
             onChange={handleChange}
             required
             disabled={status === 'loading'}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none transition-all disabled:opacity-50"
+            className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none transition-all disabled:opacity-50"
           />
         </div>
 
@@ -108,12 +108,11 @@ export function ContactForm() {
             onChange={handleChange}
             required
             disabled={status === 'loading'}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none transition-all disabled:opacity-50"
+            className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none transition-all disabled:opacity-50"
           >
             <option value="">Please select a topic</option>
             <option value="general">General Inquiry</option>
             <option value="teaching">Teaching Opportunities</option>
-            <option value="visa">Visa & Documentation</option>
             <option value="support">Support Services</option>
             <option value="other">Other</option>
           </select>
@@ -133,7 +132,7 @@ export function ContactForm() {
             required
             disabled={status === 'loading'}
             placeholder="Tell us how we can help you..."
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none transition-all resize-none disabled:opacity-50"
+            className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none transition-all resize-none disabled:opacity-50"
           />
         </div>
 

@@ -256,7 +256,7 @@ export default function TeacherResourcesPage() {
                 <div>
                   <h3 className="font-semibold text-xl text-gray-900 mb-2">China Integration Guide</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">
-                    Comprehensive guide covering visas, banking, accommodation, cultural tips, and everything
+                    Comprehensive guide covering banking, accommodation, cultural tips, and everything
                     you need to know about settling into life in China.
                   </p>
                 </div>

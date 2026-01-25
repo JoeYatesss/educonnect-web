@@ -157,7 +157,7 @@ export default function SchoolSignupPage() {
               id="email"
               type="email"
               autoComplete="email"
-              className={`mt-1 appearance-none block w-full px-3 py-2 border ${
+              className={`mt-1 appearance-none block w-full px-3 py-2 bg-white border ${
                 errors.email ? 'border-red-300' : 'border-gray-300'
               } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
               placeholder="school@example.com"
@@ -174,7 +174,7 @@ export default function SchoolSignupPage() {
                 id="password"
                 type="password"
                 autoComplete="new-password"
-                className={`mt-1 appearance-none block w-full px-3 py-2 border ${
+                className={`mt-1 appearance-none block w-full px-3 py-2 bg-white border ${
                   errors.password ? 'border-red-300' : 'border-gray-300'
                 } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
                 placeholder="Min 8 characters"
@@ -190,7 +190,7 @@ export default function SchoolSignupPage() {
                 id="confirmPassword"
                 type="password"
                 autoComplete="new-password"
-                className={`mt-1 appearance-none block w-full px-3 py-2 border ${
+                className={`mt-1 appearance-none block w-full px-3 py-2 bg-white border ${
                   errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
                 } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
                 placeholder="Re-enter password"
@@ -211,7 +211,7 @@ export default function SchoolSignupPage() {
               {...register('schoolName')}
               id="schoolName"
               type="text"
-              className={`mt-1 appearance-none block w-full px-3 py-2 border ${
+              className={`mt-1 appearance-none block w-full px-3 py-2 bg-white border ${
                 errors.schoolName ? 'border-red-300' : 'border-gray-300'
               } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
               placeholder="International School of Beijing"
@@ -226,7 +226,7 @@ export default function SchoolSignupPage() {
               {...register('city')}
               id="city"
               type="text"
-              className={`mt-1 appearance-none block w-full px-3 py-2 border ${
+              className={`mt-1 appearance-none block w-full px-3 py-2 bg-white border ${
                 errors.city ? 'border-red-300' : 'border-gray-300'
               } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
               placeholder="Beijing"
@@ -240,7 +240,7 @@ export default function SchoolSignupPage() {
             <select
               {...register('annualRecruitmentVolume')}
               id="annualRecruitmentVolume"
-              className={`mt-1 block w-full px-3 py-2 border ${
+              className={`mt-1 block w-full px-3 py-2 bg-white border ${
                 errors.annualRecruitmentVolume ? 'border-red-300' : 'border-gray-300'
               } rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
             >
@@ -266,7 +266,7 @@ export default function SchoolSignupPage() {
               {...register('contactName')}
               id="contactName"
               type="text"
-              className={`mt-1 appearance-none block w-full px-3 py-2 border ${
+              className={`mt-1 appearance-none block w-full px-3 py-2 bg-white border ${
                 errors.contactName ? 'border-red-300' : 'border-gray-300'
               } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
               placeholder="John Smith"
@@ -282,7 +282,7 @@ export default function SchoolSignupPage() {
                 {...register('contactPhone')}
                 id="contactPhone"
                 type="tel"
-                className="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 appearance-none block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 placeholder="+86 138 xxxx xxxx"
               />
             </div>
@@ -295,7 +295,7 @@ export default function SchoolSignupPage() {
                 {...register('wechatId')}
                 id="wechatId"
                 type="text"
-                className="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 appearance-none block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 placeholder="wechat_id"
               />
             </div>
@@ -314,11 +314,11 @@ export default function SchoolSignupPage() {
 
         <p className="text-xs text-center text-gray-500">
           By creating an account, you agree to our{' '}
-          <Link href="/terms" className="text-blue-600 hover:text-blue-500">
+          <Link href="/legal#terms" className="text-blue-600 hover:text-blue-500">
             Terms of Service
           </Link>{' '}
           and{' '}
-          <Link href="/privacy" className="text-blue-600 hover:text-blue-500">
+          <Link href="/legal#privacy" className="text-blue-600 hover:text-blue-500">
             Privacy Policy
           </Link>
           .

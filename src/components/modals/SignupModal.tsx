@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema, type SignupFormData } from '@/lib/validations';
@@ -295,7 +296,7 @@ export default function SignupModal({ isOpen, onClose, onSwitchToLogin }: Signup
                     {...register('firstName')}
                     id="firstName"
                     type="text"
-                    className={`mt-1 block w-full px-3 py-2 border ${
+                    className={`mt-1 block w-full px-3 py-2 bg-white border ${
                       errors.firstName ? 'border-red-300' : 'border-gray-300'
                     } rounded-md shadow-sm text-sm focus:ring-2 focus:ring-gray-900 focus:border-transparent`}
                     placeholder="John"
@@ -313,7 +314,7 @@ export default function SignupModal({ isOpen, onClose, onSwitchToLogin }: Signup
                     {...register('lastName')}
                     id="lastName"
                     type="text"
-                    className={`mt-1 block w-full px-3 py-2 border ${
+                    className={`mt-1 block w-full px-3 py-2 bg-white border ${
                       errors.lastName ? 'border-red-300' : 'border-gray-300'
                     } rounded-md shadow-sm text-sm focus:ring-2 focus:ring-gray-900 focus:border-transparent`}
                     placeholder="Doe"
@@ -334,7 +335,7 @@ export default function SignupModal({ isOpen, onClose, onSwitchToLogin }: Signup
                   id="email"
                   type="email"
                   autoComplete="email"
-                  className={`mt-1 block w-full px-3 py-2 border ${
+                  className={`mt-1 block w-full px-3 py-2 bg-white border ${
                     errors.email ? 'border-red-300' : 'border-gray-300'
                   } rounded-md shadow-sm text-sm focus:ring-2 focus:ring-gray-900 focus:border-transparent`}
                   placeholder="you@example.com"
@@ -355,7 +356,7 @@ export default function SignupModal({ isOpen, onClose, onSwitchToLogin }: Signup
                     id="password"
                     type="password"
                     autoComplete="new-password"
-                    className={`mt-1 block w-full px-3 py-2 border ${
+                    className={`mt-1 block w-full px-3 py-2 bg-white border ${
                       errors.password ? 'border-red-300' : 'border-gray-300'
                     } rounded-md shadow-sm text-sm focus:ring-2 focus:ring-gray-900 focus:border-transparent`}
                     placeholder="Min 8 characters"
@@ -374,7 +375,7 @@ export default function SignupModal({ isOpen, onClose, onSwitchToLogin }: Signup
                     id="confirmPassword"
                     type="password"
                     autoComplete="new-password"
-                    className={`mt-1 block w-full px-3 py-2 border ${
+                    className={`mt-1 block w-full px-3 py-2 bg-white border ${
                       errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
                     } rounded-md shadow-sm text-sm focus:ring-2 focus:ring-gray-900 focus:border-transparent`}
                     placeholder="Confirm password"
@@ -615,6 +616,19 @@ export default function SignupModal({ isOpen, onClose, onSwitchToLogin }: Signup
               </div>
             </div>
           </div>
+
+          {/* Privacy & Terms */}
+          <p className="text-xs text-center text-gray-500">
+            By creating an account, you agree to our{' '}
+            <Link href="/legal#terms" className="text-brand-red hover:text-red-700">
+              Terms of Service
+            </Link>{' '}
+            and{' '}
+            <Link href="/legal#privacy" className="text-brand-red hover:text-red-700">
+              Privacy Policy
+            </Link>
+            .
+          </p>
 
           {/* Submit Button */}
           <button

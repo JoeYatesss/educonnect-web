@@ -3,7 +3,7 @@ import { ContactForm } from '@/components/marketing/ContactForm';
 
 export const metadata: Metadata = {
   title: 'Contact Us | Get in Touch | EduConnect',
-  description: 'Have questions about teaching in China? Contact EduConnect for support with applications, visa assistance, and teaching opportunities.',
+  description: 'Have questions about teaching in China? Contact EduConnect for support with applications and teaching opportunities.',
 };
 
 export default function ContactPage() {
